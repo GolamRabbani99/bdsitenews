@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+@theme {
+  --color-paper: #faf7f1;
+  --color-ink: #1c1815;
+  --color-ink-soft: #5f574e;
+  --color-rule: #d8d1c5;
+  --color-crimson: #b3202c;
+  --font-serif-news: var(--font-newsreader), Georgia, serif;
+  --font-bengali: var(--font-bengali), sans-serif;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+.rule-double {
+  border-top: 3px double var(--color-ink);
+}
