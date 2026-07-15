@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import articles from "@/data/articles.json";
+import { Cover } from "@/components/Cover";
 import { site } from "@/lib/site";
 
 type Article = (typeof articles)[number];
+type WithImage = { image?: { url: string; alt: string; credit?: string } };
 
 export function generateStaticParams() {
   return articles.map((a) => ({ slug: a.slug }));
@@ -62,6 +64,14 @@ export default async function ArticlePage({
             timeZone: "Asia/Dhaka",
           })}
         </p>
+
+        <Cover
+          slug={article.slug}
+          category={article.category}
+          title={article.title}
+          image={(article as WithImage).image}
+          className="mt-6"
+        />
 
         <p className="mt-6 border-l-4 border-crimson pl-4 text-lg font-semibold leading-relaxed">
           {article.lead}

@@ -2,7 +2,10 @@ import Link from "next/link";
 import { site } from "@/lib/site";
 import stories from "@/data/stories.json";
 import articles from "@/data/articles.json";
+import { Cover } from "@/components/Cover";
 import { StoryGrid, type Story } from "@/components/StoryGrid";
+
+type WithImage = { image?: { url: string; alt: string; credit?: string } };
 
 const wire = stories as Story[];
 
@@ -54,7 +57,14 @@ export default function Home() {
         href={`/news/${hero.slug}`}
         className="group block border-b border-rule py-10 text-center font-[family-name:var(--font-bengali)]"
       >
-        <p className="text-xs font-bold tracking-[0.25em] text-crimson">
+        <Cover
+          slug={hero.slug}
+          category={hero.category}
+          title={hero.title}
+          image={(hero as WithImage).image}
+          className="mx-auto max-w-4xl"
+        />
+        <p className="mt-6 text-xs font-bold tracking-[0.25em] text-crimson">
           {hero.category}
         </p>
         <h2 lang="bn" className="mx-auto mt-4 max-w-4xl text-3xl font-semibold leading-snug group-hover:underline sm:text-4xl">
@@ -76,6 +86,13 @@ export default function Home() {
             href={`/news/${article.slug}`}
             className="group flex flex-col"
           >
+            <Cover
+              slug={article.slug}
+              category={article.category}
+              title={article.title}
+              image={(article as WithImage).image}
+              className="mb-3"
+            />
             <p className="text-[11px] font-bold tracking-[0.2em] text-crimson">
               {article.category}
             </p>
