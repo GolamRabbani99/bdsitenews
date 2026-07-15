@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import articles from "@/data/articles.json";
+import { AdSlot } from "@/components/AdSlot";
 import { Cover } from "@/components/Cover";
+import { SiteFooter } from "@/components/SiteFooter";
 import { site } from "@/lib/site";
 
 type Article = (typeof articles)[number];
@@ -77,6 +79,8 @@ export default async function ArticlePage({
           {article.lead}
         </p>
 
+        <AdSlot slot="in-article" />
+
         {article.body.map((paragraph, i) => (
           <p key={i} className="mt-5 text-base leading-loose">
             {paragraph}
@@ -111,6 +115,8 @@ export default async function ArticlePage({
           ← প্রচ্ছদে ফিরুন
         </Link>
       </p>
+
+      <SiteFooter />
     </main>
   );
 }

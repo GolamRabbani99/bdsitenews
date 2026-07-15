@@ -2,10 +2,19 @@ import Link from "next/link";
 import { site } from "@/lib/site";
 import stories from "@/data/stories.json";
 import articles from "@/data/articles.json";
+import { AdSlot } from "@/components/AdSlot";
 import { Cover } from "@/components/Cover";
+import { SiteFooter } from "@/components/SiteFooter";
 import { StoryGrid, type Story } from "@/components/StoryGrid";
 
 type WithImage = { image?: { url: string; alt: string; credit?: string } };
+
+/** Sports-first: the newest খেলাধুলা story leads the page. */
+function orderForHome() {
+  const sports = articles.filter((a) => a.category === "খেলাধুলা");
+  const rest = articles.filter((a) => a.category !== "খেলাধুলা");
+  return [...sports, ...rest];
+}
 
 const wire = stories as Story[];
 
@@ -20,7 +29,7 @@ function todayLine(): string {
 }
 
 export default function Home() {
-  const [hero, ...rest] = articles;
+  const [hero, ...rest] = orderForHome();
 
   return (
     <main className="mx-auto max-w-6xl px-4 pb-16">
@@ -51,6 +60,8 @@ export default function Home() {
       </header>
 
       <div className="rule-double" />
+
+      <AdSlot slot="leaderboard" />
 
       {/* Hero article (Bangla) */}
       <Link
@@ -106,31 +117,24 @@ export default function Home() {
         ))}
       </section>
 
-      {/* English wire headlines */}
+      <AdSlot slot="in-grid" />
+
+      {/* Wire headlines — sports first for the Bangladeshi audience */}
       <section className="pt-10">
         <h2 className="text-center font-[family-name:var(--font-serif-news)] text-2xl font-medium">
-          World Wire{" "}
+          News Wire{" "}
           <span className="font-[family-name:var(--font-bengali)] text-lg text-ink-soft">
-            · আন্তর্জাতিক শিরোনাম
+            · খেলাসহ সর্বশেষ শিরোনাম
           </span>
         </h2>
-        <StoryGrid stories={wire} />
+        <p className="mt-2 text-center font-[family-name:var(--font-bengali)] text-xs text-ink-soft">
+          শিরোনামগুলো মূল প্রতিবেদনের লিংকে নিয়ে যায় — বিবিসি, গার্ডিয়ান, আল-জাজিরা,
+          প্রথম আলো, ডেইলি স্টারসহ নির্ভরযোগ্য সূত্র থেকে।
+        </p>
+        <StoryGrid stories={wire} defaultCategory="Sports" />
       </section>
 
-      {/* Footer */}
-      <footer className="mt-16 border-t border-rule pt-8 text-center text-sm text-ink-soft">
-        <p className="font-[family-name:var(--font-bengali)]">
-          {site.description}
-        </p>
-        <p className="mt-3 font-[family-name:var(--font-bengali)] text-xs">
-          বাংলা প্রতিবেদনগুলো আন্তর্জাতিক সংবাদমাধ্যমের যাচাইকৃত তথ্যের ভিত্তিতে
-          নিজস্ব ভাষায় লেখা; প্রতিটি প্রতিবেদনে তথ্যসূত্র উল্লেখ করা আছে।
-        </p>
-        <p className="mt-3 text-xs">
-          World Wire headlines link to the original reports at BBC, The Guardian,
-          Al Jazeera, NPR, TechCrunch and ESPN.
-        </p>
-      </footer>
+      <SiteFooter />
     </main>
   );
 }

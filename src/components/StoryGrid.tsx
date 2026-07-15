@@ -22,12 +22,20 @@ function timeLabel(iso: string): string {
   });
 }
 
-export function StoryGrid({ stories }: { stories: Story[] }) {
+export function StoryGrid({
+  stories,
+  defaultCategory = "All",
+}: {
+  stories: Story[];
+  defaultCategory?: string;
+}) {
   const categories = useMemo(
     () => ["All", ...Array.from(new Set(stories.map((s) => s.category))).sort()],
     [stories],
   );
-  const [active, setActive] = useState("All");
+  const [active, setActive] = useState(
+    categories.includes(defaultCategory) ? defaultCategory : "All",
+  );
 
   const visible =
     active === "All" ? stories : stories.filter((s) => s.category === active);
