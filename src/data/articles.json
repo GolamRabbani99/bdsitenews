@@ -12,11 +12,25 @@
    "বিশ্ব জ্বালানি বাণিজ্যের অন্যতম গুরুত্বপূর্ণ এই নৌপথে সংঘাত দীর্ঘায়িত হলে জ্বালানি তেলের বাজারে অস্থিরতার আশঙ্কা রয়েছে — যার প্রভাব বাংলাদেশের মতো আমদানিনির্ভর দেশগুলোর ওপরও পড়তে পারে।"
   ],
   "sources": [
-   {"name": "BBC World", "url": "https://www.bbc.co.uk/news/articles/cy0608wy8pro"},
-   {"name": "The Guardian", "url": "https://www.theguardian.com/world/live/2026/jul/14/us-iran-war-live-updates-strikes-strait-of-hormuz-middle-east-crisis-trump-latest-news"},
-   {"name": "Al Jazeera", "url": "https://www.aljazeera.com/news/2026/7/14/us-strikes-new-targets-in-iran-as-tehran-hits-gulf-states-hormuz"}
+   {
+    "name": "BBC World",
+    "url": "https://www.bbc.co.uk/news/articles/cy0608wy8pro"
+   },
+   {
+    "name": "The Guardian",
+    "url": "https://www.theguardian.com/world/live/2026/jul/14/us-iran-war-live-updates-strikes-strait-of-hormuz-middle-east-crisis-trump-latest-news"
+   },
+   {
+    "name": "Al Jazeera",
+    "url": "https://www.aljazeera.com/news/2026/7/14/us-strikes-new-targets-in-iran-as-tehran-hits-gulf-states-hormuz"
+   }
   ],
-  "publishedAt": "2026-07-15T04:00:00+06:00"
+  "publishedAt": "2026-07-15T04:00:00+06:00",
+  "image": {
+   "url": "/covers/us-iran-hormuz-blockade.jpg",
+   "alt": "উপগ্রহ থেকে তোলা হরমুজ প্রণালির ছবি",
+   "credit": "NASA/MODIS (পাবলিক ডোমেইন)"
+  }
  },
  {
   "slug": "spain-beat-france-world-cup-final",
@@ -30,11 +44,25 @@
    "বিশ্বকাপ ফুটবল ঘিরে বাংলাদেশের ক্রীড়াপ্রেমীদের মধ্যেও ব্যাপক আগ্রহ রয়েছে; ফাইনালের লড়াই নিয়ে এরই মধ্যে শুরু হয়েছে জল্পনা।"
   ],
   "sources": [
-   {"name": "Al Jazeera", "url": "https://www.aljazeera.com/sports/2026/7/14/spain-deliver-masterclass-to-beat-france-2-0-and-reach-world-cup-final"},
-   {"name": "ESPN", "url": "https://www.espn.com/soccer/story/_/id/49361129/spain-shut-france-advance-world-cup-final"},
-   {"name": "NPR News", "url": "https://www.npr.org/2026/07/14/nx-s1-5893692/2026-world-cup-fifa-spain-france-semifinal"}
+   {
+    "name": "Al Jazeera",
+    "url": "https://www.aljazeera.com/sports/2026/7/14/spain-deliver-masterclass-to-beat-france-2-0-and-reach-world-cup-final"
+   },
+   {
+    "name": "ESPN",
+    "url": "https://www.espn.com/soccer/story/_/id/49361129/spain-shut-france-advance-world-cup-final"
+   },
+   {
+    "name": "NPR News",
+    "url": "https://www.npr.org/2026/07/14/nx-s1-5893692/2026-world-cup-fifa-spain-france-semifinal"
+   }
   ],
-  "publishedAt": "2026-07-15T04:00:00+06:00"
+  "publishedAt": "2026-07-15T04:00:00+06:00",
+  "image": {
+   "url": "/covers/spain-beat-france-world-cup-final.jpg",
+   "alt": "ফিফা বিশ্বকাপে স্পেন দলের ম্যাচের মুহূর্ত",
+   "credit": "Mahdi Zare/Fars News Agency, CC BY 4.0 — Wikimedia Commons"
+  }
  },
  {
   "slug": "uk-teen-social-media-curfew",
@@ -47,7 +75,10 @@
    "কিশোর-কিশোরীদের মানসিক স্বাস্থ্যে সোশ্যাল মিডিয়ার প্রভাব নিয়ে বিশ্বজুড়ে বিতর্কের মধ্যেই যুক্তরাজ্যের এই পদক্ষেপ এলো। বাংলাদেশসহ দক্ষিণ এশিয়ার দেশগুলোতেও কিশোরদের স্ক্রিন-আসক্তি নিয়ে অভিভাবকদের উদ্বেগ ক্রমেই বাড়ছে।"
   ],
   "sources": [
-   {"name": "The Guardian", "url": "https://www.theguardian.com/technology/2026/jul/14/uk-16-17-year-olds-midnight-social-media-curfew"}
+   {
+    "name": "The Guardian",
+    "url": "https://www.theguardian.com/technology/2026/jul/14/uk-16-17-year-olds-midnight-social-media-curfew"
+   }
   ],
   "publishedAt": "2026-07-15T04:00:00+06:00"
  },
@@ -63,10 +94,21 @@
    "যুক্তরাষ্ট্রে বসবাসরত বিপুলসংখ্যক বাংলাদেশি অভিবাসী সম্প্রদায়ের মধ্যেও অভিবাসন অভিযান ঘিরে উদ্বেগ রয়েছে।"
   ],
   "sources": [
-   {"name": "NPR News", "url": "https://www.npr.org/2026/07/14/nx-s1-5893456/ice-vehicle-biddeford-houston"},
-   {"name": "The Guardian", "url": "https://www.theguardian.com/us-news/2026/jul/14/ice-vehicle-stops-texas-maine-shootings"}
+   {
+    "name": "NPR News",
+    "url": "https://www.npr.org/2026/07/14/nx-s1-5893456/ice-vehicle-biddeford-houston"
+   },
+   {
+    "name": "The Guardian",
+    "url": "https://www.theguardian.com/us-news/2026/jul/14/ice-vehicle-stops-texas-maine-shootings"
+   }
   ],
-  "publishedAt": "2026-07-15T04:00:00+06:00"
+  "publishedAt": "2026-07-15T04:00:00+06:00",
+  "image": {
+   "url": "/covers/us-ice-pauses-vehicle-stops.jpg",
+   "alt": "যুক্তরাষ্ট্রের অভিবাসন সংস্থা আইসের অভিযান",
+   "credit": "U.S. Department of Homeland Security (পাবলিক ডোমেইন)"
+  }
  },
  {
   "slug": "senate-blocks-defence-bill",
@@ -79,10 +121,21 @@
    "ইরানের সঙ্গে চলমান সংঘাতের মধ্যে ওয়াশিংটনের এই রাজনৈতিক বিভক্তি মার্কিন পররাষ্ট্রনীতির গতিপথে প্রভাব ফেলতে পারে বলে পর্যবেক্ষকদের ধারণা।"
   ],
   "sources": [
-   {"name": "Al Jazeera", "url": "https://www.aljazeera.com/news/2026/7/14/senate-democrats-block-defence-bill-over-iran-war-israel-provisions"},
-   {"name": "The Guardian", "url": "https://www.theguardian.com/world/2026/jul/14/us-military-aid-israel-house-democrats"}
+   {
+    "name": "Al Jazeera",
+    "url": "https://www.aljazeera.com/news/2026/7/14/senate-democrats-block-defence-bill-over-iran-war-israel-provisions"
+   },
+   {
+    "name": "The Guardian",
+    "url": "https://www.theguardian.com/world/2026/jul/14/us-military-aid-israel-house-democrats"
+   }
   ],
-  "publishedAt": "2026-07-15T04:00:00+06:00"
+  "publishedAt": "2026-07-15T04:00:00+06:00",
+  "image": {
+   "url": "/covers/senate-blocks-defence-bill.jpg",
+   "alt": "যুক্তরাষ্ট্রের কংগ্রেস ভবন ক্যাপিটল",
+   "credit": "Architect of the Capitol (পাবলিক ডোমেইন)"
+  }
  },
  {
   "slug": "ny-data-centre-moratorium",
@@ -95,9 +148,17 @@
    "প্রযুক্তি অবকাঠামো সম্প্রসারণ ও পরিবেশ সুরক্ষার ভারসাম্য নিয়ে এই বিতর্ক বাংলাদেশের জন্যও প্রাসঙ্গিক — দেশে ডিজিটাল অবকাঠামো ও ডেটা সেন্টার খাত দ্রুত বাড়ছে।"
   ],
   "sources": [
-   {"name": "Al Jazeera", "url": "https://www.aljazeera.com/economy/2026/7/14/new-york-imposes-landmark-one-year-ban-on-large-data-centres"}
+   {
+    "name": "Al Jazeera",
+    "url": "https://www.aljazeera.com/economy/2026/7/14/new-york-imposes-landmark-one-year-ban-on-large-data-centres"
+   }
   ],
-  "publishedAt": "2026-07-15T04:00:00+06:00"
+  "publishedAt": "2026-07-15T04:00:00+06:00",
+  "image": {
+   "url": "/covers/ny-data-centre-moratorium.jpg",
+   "alt": "ডেটা সেন্টারের সার্ভার র‍্যাক",
+   "credit": "Carl Lender, CC BY 2.0 — Wikimedia Commons"
+  }
  },
  {
   "slug": "apple-ios27-siri-public-beta",
@@ -110,9 +171,17 @@
    "বাংলাদেশের অ্যাপল ব্যবহারকারীরাও সেটিংস থেকে বেটা আপডেট চালু করে নতুন সিরি পরখ করতে পারবেন।"
   ],
   "sources": [
-   {"name": "TechCrunch", "url": "https://techcrunch.com/2026/07/14/apple-opens-its-new-siri-ai-to-everyone-with-the-ios-27-public-beta/"}
+   {
+    "name": "TechCrunch",
+    "url": "https://techcrunch.com/2026/07/14/apple-opens-its-new-siri-ai-to-everyone-with-the-ios-27-public-beta/"
+   }
   ],
-  "publishedAt": "2026-07-15T04:00:00+06:00"
+  "publishedAt": "2026-07-15T04:00:00+06:00",
+  "image": {
+   "url": "/covers/apple-ios27-siri-public-beta.jpg",
+   "alt": "হাতে ধরা আইফোন",
+   "credit": "Jeremy Levin, CC0 — Wikimedia Commons"
+  }
  },
  {
   "slug": "boe-governor-ai-cooperation",
@@ -125,8 +194,16 @@
    "বাংলাদেশের আর্থিক খাতেও প্রযুক্তিনির্ভরতা বাড়ছে; বৈশ্বিক নিয়ন্ত্রণকাঠামোর এই বিতর্ক দেশের নীতিনির্ধারকদের জন্যও গুরুত্ব বহন করে।"
   ],
   "sources": [
-   {"name": "The Guardian", "url": "https://www.theguardian.com/technology/2026/jul/14/global-cooperation-needed-to-tackle-ai-threats-says-bank-of-england-governor"}
+   {
+    "name": "The Guardian",
+    "url": "https://www.theguardian.com/technology/2026/jul/14/global-cooperation-needed-to-tackle-ai-threats-says-bank-of-england-governor"
+   }
   ],
-  "publishedAt": "2026-07-15T04:00:00+06:00"
+  "publishedAt": "2026-07-15T04:00:00+06:00",
+  "image": {
+   "url": "/covers/boe-governor-ai-cooperation.jpg",
+   "alt": "লন্ডনের থ্রেডনিডল স্ট্রিটে ব্যাংক অব ইংল্যান্ড ভবন",
+   "credit": "Steve Daniels, CC BY-SA 2.0 — geograph.org.uk"
+  }
  }
 ]
