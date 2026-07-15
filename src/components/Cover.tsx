@@ -33,16 +33,24 @@ export function Cover({
   image?: CoverImage | null;
   className?: string;
 }) {
+  const seed = seedFrom(slug);
+
   if (image?.url) {
+    // Per-article variation so a page of covers doesn't move in lockstep.
+    const duration = 14 + (seed % 8);
+    const direction = seed % 2 === 0 ? "alternate" : "alternate-reverse";
     return (
       <figure className={className}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={image.url}
-          alt={image.alt}
-          className="aspect-video w-full object-cover"
-          loading="lazy"
-        />
+        <div className="aspect-video w-full overflow-hidden">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={image.url}
+            alt={image.alt}
+            className="kenburns h-full w-full object-cover"
+            style={{ animationDuration: `${duration}s`, animationDirection: direction }}
+            loading="lazy"
+          />
+        </div>
         {image.credit && (
           <figcaption className="mt-1 text-right text-[10px] text-ink-soft">
             ছবি: {image.credit}
@@ -53,7 +61,6 @@ export function Cover({
   }
 
   const palette = PALETTES[category] ?? DEFAULT_PALETTE;
-  const seed = seedFrom(slug);
   const angle = 15 + (seed % 30);          // subtle per-article variation
   const offset = 60 + (seed % 120);
   const gid = `g-${slug}`;
