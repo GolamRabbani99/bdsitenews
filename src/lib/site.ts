@@ -5,7 +5,7 @@ export const site = {
   tagline: "Original journalism, verified facts.",
   taglineBn: "যাচাই করা তথ্যে মৌলিক সাংবাদিকতা",
   description:
-    "AI-assisted, human-approved news from trusted global sources — in Bangla and English.",
+    "Original journalism in Bangla and English — verified facts, trusted sources.",
   baseUrl: "https://www.bdsitenews.com",
   contactEmail: "golamrabbani.com@gmail.com", // swap to contact@bdsitenews.com when mailbox exists
 
