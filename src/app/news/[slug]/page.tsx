@@ -40,9 +40,13 @@ export async function generateMetadata({
       title: article.title,
       description: article.lead,
       publishedTime: article.publishedAt,
-      // Photo articles share with their photo; others inherit the
-      // branded default card from app/opengraph-image.tsx.
-      ...(image ? { images: [{ url: `${site.baseUrl}${image.url}`, alt: image.alt }] } : {}),
+      // Photo articles share with their photo; others get the branded
+      // default card generated at /opengraph-image.
+      images: [
+        image
+          ? { url: `${site.baseUrl}${image.url}`, alt: image.alt }
+          : { url: `${site.baseUrl}/opengraph-image`, alt: site.name },
+      ],
     },
     twitter: {
       card: "summary_large_image",
