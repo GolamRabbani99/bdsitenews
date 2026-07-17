@@ -38,7 +38,12 @@
     "url": "https://www.aljazeera.com/sports/2026/7/15/argentina-stun-england-in-2-1-comeback-win-to-reach-2026-world-cup-final"
    }
   ],
-  "publishedAt": "2026-07-16T14:00:00+06:00"
+  "publishedAt": "2026-07-16T14:00:00+06:00",
+  "image": {
+   "url": "/covers/messi-qatar-2022-vs-2026-data.jpg",
+   "alt": "গ্যালারির সামনে মুষ্টিবদ্ধ হাতে উদযাপন করছেন লিওনেল মেসি",
+   "credit": "Hossein Zohrevand, CC BY 4.0 — Wikimedia Commons (ক্রপকৃত)"
+  }
  },
  {
   "slug": "why-messi-walks-science",
