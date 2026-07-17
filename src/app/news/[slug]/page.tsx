@@ -9,6 +9,7 @@ import { site } from "@/lib/site";
 
 type Article = (typeof articles)[number];
 type WithImage = { image?: { url: string; alt: string; credit?: string } };
+type WithStats = { stats?: { title: string; headers: string[]; rows: string[][] } };
 
 export function generateStaticParams() {
   return articles.map((a) => ({ slug: a.slug }));
@@ -86,6 +87,34 @@ export default async function ArticlePage({
             {paragraph}
           </p>
         ))}
+
+        {(article as WithStats).stats && (
+          <div className="mt-8 overflow-x-auto">
+            <p className="border-l-4 border-crimson pl-3 text-sm font-bold">
+              {(article as WithStats).stats!.title}
+            </p>
+            <table className="mt-3 w-full border-collapse text-sm">
+              <thead>
+                <tr className="bg-ink text-paper">
+                  {(article as WithStats).stats!.headers.map((h, i) => (
+                    <th key={i} className="px-3 py-2 text-left font-semibold">{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {(article as WithStats).stats!.rows.map((row, i) => (
+                  <tr key={i} className={i % 2 ? "bg-paper" : "bg-rule/30"}>
+                    {row.map((cell, j) => (
+                      <td key={j} className={`px-3 py-2 ${j === 0 ? "font-semibold" : ""}`}>
+                        {cell}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
 
         <footer className="mt-10 border-t border-rule pt-5">
           <p className="text-sm font-semibold">তথ্যসূত্র</p>
