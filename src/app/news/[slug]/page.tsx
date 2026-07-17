@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import articles from "@/data/articles.json";
 import { AdSlot } from "@/components/AdSlot";
 import { Cover } from "@/components/Cover";
+import { ShareBar } from "@/components/ShareBar";
 import { SiteFooter } from "@/components/SiteFooter";
 import { site } from "@/lib/site";
 
@@ -23,9 +24,31 @@ export async function generateMetadata({
   const { slug } = await params;
   const article = articles.find((a) => a.slug === slug);
   if (!article) return {};
+
+  const url = `${site.baseUrl}/news/${article.slug}`;
+  const image = (article as WithImage).image;
+
   return {
     title: `${article.title} — ${site.name}`,
     description: article.lead,
+    alternates: { canonical: url },
+    openGraph: {
+      type: "article",
+      url,
+      siteName: site.name,
+      locale: "bn_BD",
+      title: article.title,
+      description: article.lead,
+      publishedTime: article.publishedAt,
+      // Photo articles share with their photo; others inherit the
+      // branded default card from app/opengraph-image.tsx.
+      ...(image ? { images: [{ url: `${site.baseUrl}${image.url}`, alt: image.alt }] } : {}),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: article.title,
+      description: article.lead,
+    },
   };
 }
 
@@ -115,6 +138,11 @@ export default async function ArticlePage({
             </table>
           </div>
         )}
+
+        <ShareBar
+          url={`${site.baseUrl}/news/${article.slug}`}
+          title={article.title}
+        />
 
         <footer className="mt-10 border-t border-rule pt-5">
           <p className="text-sm font-semibold">তথ্যসূত্র</p>
