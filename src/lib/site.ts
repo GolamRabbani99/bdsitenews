@@ -12,4 +12,8 @@ export const site = {
   // Paste your AdSense publisher ID (ca-pub-XXXXXXXX) after approval —
   // ad slots activate automatically; empty string shows nothing.
   adsensePublisherId: "",
+
+  // Paste your Google Analytics 4 Measurement ID (G-XXXXXXXXXX) —
+  // tracking activates automatically; empty string loads nothing.
+  gaMeasurementId: "",
 };

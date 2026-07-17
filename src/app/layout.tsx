@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Newsreader, Noto_Sans_Bengali } from "next/font/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { site } from "@/lib/site";
 import "./globals.css";
 
@@ -28,6 +29,7 @@ export default function RootLayout({
       <body className={`${newsreader.variable} ${bengali.variable}`}>
         {children}
       </body>
+      {site.gaMeasurementId && <GoogleAnalytics gaId={site.gaMeasurementId} />}
     </html>
   );
 }
