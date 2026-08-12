@@ -1,5 +1,293 @@
 [
  {
+  "title": "Analyzing My Lobsters Submissions",
+  "url": "https://abhinavsarkar.net/notes/2026-lobsters-submissions/",
+  "summary": "Comments",
+  "category": "Technology",
+  "source": "Lobsters",
+  "publishedAt": "2026-08-12T08:53:15+00:00"
+ },
+ {
+  "title": "Sources: AI coding startup Cognition is in early talks with investors to raise $1B+ at a $40B+ valuation, after raising $1B at a $26B valuation in May (Rebecca Torrence/Bloomberg)",
+  "url": "https://www.techmeme.com/260812/p7#a260812p7",
+  "summary": "Rebecca Torrence / Bloomberg : Sources: AI coding startup Cognition is in early talks with investors to raise $1B+ at a $40B+ valuation, after raising",
+  "category": "Technology",
+  "source": "Techmeme",
+  "publishedAt": "2026-08-12T08:30:03+00:00"
+ },
+ {
+  "title": "Introducing Automatic Key Verification",
+  "url": "https://signal.org/blog/automatic-key-verification/",
+  "summary": "Comments",
+  "category": "Technology",
+  "source": "Lobsters",
+  "publishedAt": "2026-08-12T07:10:32+00:00"
+ },
+ {
+  "title": "C++26: std::indirect",
+  "url": "https://www.sandordargo.com/blog/2026/08/12/cpp26-indirect",
+  "summary": "Comments",
+  "category": "Technology",
+  "source": "Lobsters",
+  "publishedAt": "2026-08-12T06:45:23+00:00"
+ },
+ {
+  "title": "LinkedIn CringeBot 3000",
+  "url": "https://www.cringebot3000.com/",
+  "summary": "Article URL: https://www.cringebot3000.com/ Comments URL: https://news.ycombinator.com/item?id=49268564 Points: 112 # Comments: 33",
+  "category": "Technology",
+  "source": "Hacker News",
+  "publishedAt": "2026-08-12T06:30:49+00:00"
+ },
+ {
+  "title": "Some health and fitness obsessives are using AI for hyperpersonalized training, building custom dashboards and tools to analyze their sleep, workouts, and diet (Wall Street Journal)",
+  "url": "https://www.techmeme.com/260812/p6#a260812p6",
+  "summary": "Wall Street Journal : Some health and fitness obsessives are using AI for hyperpersonalized training, building custom dashboards and tools to analyze ",
+  "category": "Technology",
+  "source": "Techmeme",
+  "publishedAt": "2026-08-12T06:30:02+00:00"
+ },
+ {
+  "title": "Briter: Africa-focused startups raised $3.3B in H1 2026, up 73% YoY, driven by Zipline's $950M raise; US- and UAE-incorporated entities raised half the capital (Nduka Orjinmo/Bloomberg)",
+  "url": "https://www.techmeme.com/260812/p5#a260812p5",
+  "summary": "Nduka Orjinmo / Bloomberg : Briter: Africa-focused startups raised $3.3B in H1 2026, up 73% YoY, driven by Zipline's $950M raise; US- and UAE-incorpor",
+  "category": "Technology",
+  "source": "Techmeme",
+  "publishedAt": "2026-08-12T05:45:01+00:00"
+ },
+ {
+  "title": "Bengaluru-based Yulu, which gets ~95% of its revenue from renting e-bikes to gig workers, raised a $93M Series C, sources say at a ~$170M post-money valuation (Jagmeet Singh/TechCrunch)",
+  "url": "https://www.techmeme.com/260812/p4#a260812p4",
+  "summary": "Jagmeet Singh / TechCrunch : Bengaluru-based Yulu, which gets ~95% of its revenue from renting e-bikes to gig workers, raised a $93M Series C, sources",
+  "category": "Technology",
+  "source": "Techmeme",
+  "publishedAt": "2026-08-12T05:30:01+00:00"
+ },
+ {
+  "title": "Why Go is an Ideal Language for AI-Assisted Software Engineering",
+  "url": "https://developers.googleblog.com/why-go-is-an-ideal-language-for-ai-assisted-software-engineering/",
+  "summary": "Comments",
+  "category": "Technology",
+  "source": "Lobsters",
+  "publishedAt": "2026-08-12T05:20:40+00:00"
+ },
+ {
+  "title": "Sources: Singapore-based data center operator DayOne confidentially files for a US IPO, aims to list as soon as next quarter, and is considering raising ~$5B (Bloomberg)",
+  "url": "https://www.techmeme.com/260812/p3#a260812p3",
+  "summary": "Bloomberg : Sources: Singapore-based data center operator DayOne confidentially files for a US IPO, aims to list as soon as next quarter, and is consi",
+  "category": "Technology",
+  "source": "Techmeme",
+  "publishedAt": "2026-08-12T05:15:01+00:00"
+ },
+ {
+  "title": "Researchers say suspected Chinese hackers used open-source AI agents to build an autonomous hacking tool that compromised Taiwanese government websites in July (Tom Wilson/Financial Times)",
+  "url": "https://www.techmeme.com/260812/p2#a260812p2",
+  "summary": "Tom Wilson / Financial Times : Researchers say suspected Chinese hackers used open-source AI agents to build an autonomous hacking tool that compromis",
+  "category": "Technology",
+  "source": "Techmeme",
+  "publishedAt": "2026-08-12T05:00:13+00:00"
+ },
+ {
+  "title": "OpenAI VP of Global Policy Ann O'Leary says AI policy in the US is anchored in the states and informed by California's AI transparency law passed in 2025 (Chase DiFeliciantonio/Politico)",
+  "url": "https://www.techmeme.com/260812/p1#a260812p1",
+  "summary": "Chase DiFeliciantonio / Politico : OpenAI VP of Global Policy Ann O'Leary says AI policy in the US is anchored in the states and informed by Californi",
+  "category": "Technology",
+  "source": "Techmeme",
+  "publishedAt": "2026-08-12T04:55:02+00:00"
+ },
+ {
+  "title": "llama.cpp",
+  "url": "https://llama.app",
+  "summary": "Article URL: https://llama.app Comments URL: https://news.ycombinator.com/item?id=49267928 Points: 191 # Comments: 79",
+  "category": "Technology",
+  "source": "Hacker News",
+  "publishedAt": "2026-08-12T04:51:59+00:00"
+ },
+ {
+  "title": "Dropbox is an obvious PE Target?",
+  "url": "https://s-1.vercel.app/posts/why-dropbox-is-a-obvious-pe-target/",
+  "summary": "Article URL: https://s-1.vercel.app/posts/why-dropbox-is-a-obvious-pe-target/ Comments URL: https://news.ycombinator.com/item?id=49267818 Points: 53 #",
+  "category": "Technology",
+  "source": "Hacker News",
+  "publishedAt": "2026-08-12T04:30:34+00:00"
+ },
+ {
+  "title": "India’s Yulu raises $93M as quick-commerce boom fuels e-bike demand",
+  "url": "https://techcrunch.com/2026/08/11/indias-yulu-raises-93m-as-quick-commerce-boom-fuels-e-bike-demand/",
+  "summary": "Yulu aims to have a fleet of 200,000 bikes in the next two years and faster electric two-wheelers, aiming at new logistics use cases.",
+  "category": "Technology",
+  "source": "TechCrunch",
+  "publishedAt": "2026-08-12T04:30:00+00:00"
+ },
+ {
+  "title": "Closed-Loop LLM Co-Pilots for Digital Agriculture",
+  "url": "https://arxiv.org/abs/2608.09949",
+  "summary": "arXiv:2608.09949v1 Announce Type: new Abstract: This study evaluates the application of Large Language Models (LLMs) in complex biological systems, ev",
+  "category": "Technology",
+  "source": "arXiv cs.AI",
+  "publishedAt": "2026-08-12T04:00:00+00:00"
+ },
+ {
+  "title": "SPOTting the Future: Lookahead Explanations for Deep Reinforcement Learning",
+  "url": "https://arxiv.org/abs/2608.09967",
+  "summary": "arXiv:2608.09967v1 Announce Type: new Abstract: Deep reinforcement learning (DRL) agents achieve strong performance in complex environments, yet their",
+  "category": "Technology",
+  "source": "arXiv cs.AI",
+  "publishedAt": "2026-08-12T04:00:00+00:00"
+ },
+ {
+  "title": "MIDAS: Mutual Information Disentanglement with Uncertainty-Aware Fusion for Incomplete Multimodal Sentiment Analysis",
+  "url": "https://arxiv.org/abs/2608.09986",
+  "summary": "arXiv:2608.09986v1 Announce Type: new Abstract: Most existing multimodal sentiment analysis approaches assume access to complete multimodal inputs. Ho",
+  "category": "Technology",
+  "source": "arXiv cs.AI",
+  "publishedAt": "2026-08-12T04:00:00+00:00"
+ },
+ {
+  "title": "Towards Sustainable Artificial Intelligence: A Comprehensive Review and Comparative Analysis of Deep Learning Models' Carbon Footprint",
+  "url": "https://arxiv.org/abs/2608.09998",
+  "summary": "arXiv:2608.09998v1 Announce Type: new Abstract: Artificial Intelligence (AI) and Machine Learning (ML) have become powerful tools for supporting and a",
+  "category": "Technology",
+  "source": "arXiv cs.AI",
+  "publishedAt": "2026-08-12T04:00:00+00:00"
+ },
+ {
+  "title": "ReCBM: Uncertainty-Gated Relational Reasoning for Concept Bottleneck Models",
+  "url": "https://arxiv.org/abs/2608.10004",
+  "summary": "arXiv:2608.10004v1 Announce Type: new Abstract: Concept Bottleneck Models (CBMs) provide an interpretable framework by grounding predictions in human-",
+  "category": "Technology",
+  "source": "arXiv cs.AI",
+  "publishedAt": "2026-08-12T04:00:00+00:00"
+ },
+ {
+  "title": "Automating and Scaling Behavioral Scientific Research on AI Agents",
+  "url": "https://arxiv.org/abs/2608.10030",
+  "summary": "arXiv:2608.10030v1 Announce Type: new Abstract: As AI agents are increasingly deployed in complex environments, understanding their behaviors becomes ",
+  "category": "Technology",
+  "source": "arXiv cs.AI",
+  "publishedAt": "2026-08-12T04:00:00+00:00"
+ },
+ {
+  "title": "CHORUS: Complementary Experts for High-Coverage Testbench Stimulus Generation",
+  "url": "https://arxiv.org/abs/2608.10090",
+  "summary": "arXiv:2608.10090v1 Announce Type: new Abstract: Large language models (LLMs) have advanced code generation, where executable feedback provides a more ",
+  "category": "Technology",
+  "source": "arXiv cs.AI",
+  "publishedAt": "2026-08-12T04:00:00+00:00"
+ },
+ {
+  "title": "MESA:Task-Adaptive Multi-Structure Evidence Selection for Long-Horizon Agent Memory",
+  "url": "https://arxiv.org/abs/2608.10108",
+  "summary": "arXiv:2608.10108v1 Announce Type: new Abstract: Long-horizon agents accumulate trajectories spanning hundreds of interleaved reasoning, action, and ob",
+  "category": "Technology",
+  "source": "arXiv cs.AI",
+  "publishedAt": "2026-08-12T04:00:00+00:00"
+ },
+ {
+  "title": "The CASE Framework: A Multi-Disciplinary Control Architecture for Governing Enterprise Agentic AI",
+  "url": "https://arxiv.org/abs/2608.10153",
+  "summary": "arXiv:2608.10153v1 Announce Type: new Abstract: Enterprises are deploying autonomous AI agents faster than they can govern them, and prevailing approa",
+  "category": "Technology",
+  "source": "arXiv cs.AI",
+  "publishedAt": "2026-08-12T04:00:00+00:00"
+ },
+ {
+  "title": "SBCO: Self-Supervised, Verifier-Grounded Harness Optimization For Planning Agents",
+  "url": "https://arxiv.org/abs/2608.10157",
+  "summary": "arXiv:2608.10157v1 Announce Type: new Abstract: Self-improving agents seek to reduce the human engineering effort behind AI systems by enabling them t",
+  "category": "Technology",
+  "source": "arXiv cs.AI",
+  "publishedAt": "2026-08-12T04:00:00+00:00"
+ },
+ {
+  "title": "Generating Attacks for LLMs with GFlowNets",
+  "url": "https://arxiv.org/abs/2608.10171",
+  "summary": "arXiv:2608.10171v1 Announce Type: new Abstract: The rapid advancement of Large Language Models (LLMs) has facilitated their ubiquitous integration int",
+  "category": "Technology",
+  "source": "arXiv cs.AI",
+  "publishedAt": "2026-08-12T04:00:00+00:00"
+ },
+ {
+  "title": "TRACE: Trustworthy Retrieval-Augmented Conversational Engine",
+  "url": "https://arxiv.org/abs/2608.10176",
+  "summary": "arXiv:2608.10176v1 Announce Type: new Abstract: Public service chatbots are expected to deliver recommendations from an underlying public service dire",
+  "category": "Technology",
+  "source": "arXiv cs.AI",
+  "publishedAt": "2026-08-12T04:00:00+00:00"
+ },
+ {
+  "title": "Post-Hoc Sparse Coding of Latent Communication Between Vision-Language Model Agents",
+  "url": "https://arxiv.org/abs/2608.10198",
+  "summary": "arXiv:2608.10198v1 Announce Type: new Abstract: Latent-space communication allows heterogeneous vision-language model agents to exchange continuous re",
+  "category": "Technology",
+  "source": "arXiv cs.AI",
+  "publishedAt": "2026-08-12T04:00:00+00:00"
+ },
+ {
+  "title": "Edge Phoneme Recognition for Children's Speech through Age-Aware Training",
+  "url": "https://arxiv.org/abs/2608.10206",
+  "summary": "arXiv:2608.10206v1 Announce Type: new Abstract: Detecting phonemes from children's speech has historically been difficult due to the scarcity of train",
+  "category": "Technology",
+  "source": "arXiv cs.AI",
+  "publishedAt": "2026-08-12T04:00:00+00:00"
+ },
+ {
+  "title": "Mitigating Bus Bunching with Reinforcement Learning Enhanced by Semantic Stop Embedding",
+  "url": "https://arxiv.org/abs/2608.10207",
+  "summary": "arXiv:2608.10207v1 Announce Type: new Abstract: Bus bunching degrades service regularity and increases passenger waiting in high-frequency transit. Ex",
+  "category": "Technology",
+  "source": "arXiv cs.AI",
+  "publishedAt": "2026-08-12T04:00:00+00:00"
+ },
+ {
+  "title": "Evaluation-Conditioned Training: Teaching Models to Generalize to Stronger Oversight Regimes",
+  "url": "https://arxiv.org/abs/2608.10209",
+  "summary": "arXiv:2608.10209v1 Announce Type: new Abstract: Feedback signals used to train Large Language Models (LLMs) are the primary driver of their behavior a",
+  "category": "Technology",
+  "source": "arXiv cs.AI",
+  "publishedAt": "2026-08-12T04:00:00+00:00"
+ },
+ {
+  "title": "Decodable But Not Detachable: Training Data Granularity Determines Parametric Modularity in Large Language Models",
+  "url": "https://arxiv.org/abs/2608.10214",
+  "summary": "arXiv:2608.10214v1 Announce Type: new Abstract: Do large language models contain domain-specific parametric shells: concentrated, causally necessary n",
+  "category": "Technology",
+  "source": "arXiv cs.AI",
+  "publishedAt": "2026-08-12T04:00:00+00:00"
+ },
+ {
+  "title": "Mind Viruses: Self-Propagating Ideas in Multi-Agent LLM Systems",
+  "url": "https://arxiv.org/abs/2608.10218",
+  "summary": "arXiv:2608.10218v1 Announce Type: new Abstract: AI agents are becoming more autonomous and increasingly interconnected, exposing them to new emergent ",
+  "category": "Technology",
+  "source": "arXiv cs.AI",
+  "publishedAt": "2026-08-12T04:00:00+00:00"
+ },
+ {
+  "title": "Self-evolving Agentic Customer Support System at LinkedIn",
+  "url": "https://arxiv.org/abs/2608.10224",
+  "summary": "arXiv:2608.10224v1 Announce Type: new Abstract: Enterprise support agents operate in rapidly changing environments where policies, product capabilitie",
+  "category": "Technology",
+  "source": "arXiv cs.AI",
+  "publishedAt": "2026-08-12T04:00:00+00:00"
+ },
+ {
+  "title": "Beyond Decision Boundaries: Relational Geometry Attacks on Contrastive Embedding Manifolds",
+  "url": "https://arxiv.org/abs/2608.10237",
+  "summary": "arXiv:2608.10237v1 Announce Type: new Abstract: Contrastive learning and Siamese embedding models have become the foundation of modern verification sy",
+  "category": "Technology",
+  "source": "arXiv cs.AI",
+  "publishedAt": "2026-08-12T04:00:00+00:00"
+ },
+ {
+  "title": "DARPA heavy lift challenge ends with winner at a 3.84:1 payload to weight ratio",
+  "url": "https://dronexl.co/2026/08/10/darpa-lift-challenge-results-avidrone/",
+  "summary": "Article URL: https://dronexl.co/2026/08/10/darpa-lift-challenge-results-avidrone/ Comments URL: https://news.ycombinator.com/item?id=49267527 Points: ",
+  "category": "Technology",
+  "source": "Hacker News",
+  "publishedAt": "2026-08-12T03:27:31+00:00"
+ },
+ {
   "title": "Making a game on a custom bytecode VM in 7 days and 3kB",
   "url": "https://laurent.le-brun.eu/blog/making-a-game-on-a-custom-bytecode-vm-in-7-days-and-3kb",
   "summary": "Comments",
@@ -8,12 +296,20 @@
   "publishedAt": "2026-08-12T03:00:38+00:00"
  },
  {
-  "title": "Company Offering '100% Human-Written, Never AI' Medical Research Is 100% AI",
-  "url": "https://www.404media.co/company-offering-100-human-written-never-ai-peer-review-is-entirely-ai/",
-  "summary": "Article URL: https://www.404media.co/company-offering-100-human-written-never-ai-peer-review-is-entirely-ai/ Comments URL: https://news.ycombinator.co",
+  "title": "RangeFrom, Part 1․․",
+  "url": "https://erk.dev/2026/08/12/rangefrom-part-1",
+  "summary": "Comments",
+  "category": "Technology",
+  "source": "Lobsters",
+  "publishedAt": "2026-08-12T02:52:02+00:00"
+ },
+ {
+  "title": "The Human Is the Loop",
+  "url": "https://brentfitzgerald.com/posts/the-human-is-the-loop/",
+  "summary": "Article URL: https://brentfitzgerald.com/posts/the-human-is-the-loop/ Comments URL: https://news.ycombinator.com/item?id=49267108 Points: 95 # Comment",
   "category": "Technology",
   "source": "Hacker News",
-  "publishedAt": "2026-08-12T02:05:42+00:00"
+  "publishedAt": "2026-08-12T02:15:01+00:00"
  },
  {
   "title": "The lifesaving secret hidden inside a horseshoe crab's blue blood",
@@ -24,28 +320,12 @@
   "publishedAt": "2026-08-12T01:45:51+00:00"
  },
  {
-  "title": "New Bedford police officer accused of using Flock cameras to track ex-partner",
-  "url": "https://newbedfordlight.org/new-bedford-police-officer-accused-of-using-flock-cameras-to-track-and-follow-ex-romantic-partner/",
-  "summary": "Article URL: https://newbedfordlight.org/new-bedford-police-officer-accused-of-using-flock-cameras-to-track-and-follow-ex-romantic-partner/ Comments U",
-  "category": "Technology",
-  "source": "Hacker News",
-  "publishedAt": "2026-08-12T01:42:46+00:00"
- },
- {
-  "title": "A look at Candy Crush's continued popularity 15 years after its launch, with an estimated 81.5M MAUs and in-app revenue of $876.5M in fiscal year 2025 (Alanna Okun/Bloomberg)",
+  "title": "A look at Candy Crush's continued popularity 15 years after its launch, with an estimated 81.5M MAUs and in-app revenue of $876.5M in FY 2025 (Alanna Okun/Bloomberg)",
   "url": "https://www.techmeme.com/260811/p43#a260811p43",
   "summary": "Alanna Okun / Bloomberg : A look at Candy Crush's continued popularity 15 years after its launch, with an estimated 81.5M MAUs and in-app revenue of $",
   "category": "Technology",
   "source": "Techmeme",
   "publishedAt": "2026-08-12T01:00:13+00:00"
- },
- {
-  "title": "DEF CON crowd suspected in fake-hotspot attack on Delta flight",
-  "url": "https://arstechnica.com/information-technology/2026/08/def-con-crowd-suspected-in-fake-hotspot-attack-on-delta-flight/",
-  "summary": "Article URL: https://arstechnica.com/information-technology/2026/08/def-con-crowd-suspected-in-fake-hotspot-attack-on-delta-flight/ Comments URL: http",
-  "category": "Technology",
-  "source": "Hacker News",
-  "publishedAt": "2026-08-12T00:58:00+00:00"
  },
  {
   "title": "Saber denies replacing Rideshare Stimulator&#8217;s writers with ChatGPT",
@@ -56,12 +336,12 @@
   "publishedAt": "2026-08-12T00:39:26+00:00"
  },
  {
-  "title": "Text Watermarking for Non-Academics",
-  "url": "https://blog.gaborkoos.com/posts/2026-08-12-Text-Watermarking-for-Non-Academics/",
-  "summary": "https://blog.gaborkoos.com/posts/2026-08-12-What-Does-a-Text-Watermark-Actually-Prove/ Comments",
+  "title": "DEF CON crowd suspected in fake-hotspot attack on Delta flight",
+  "url": "https://arstechnica.com/information-technology/2026/08/def-con-crowd-suspected-in-fake-hotspot-attack-on-delta-flight/",
+  "summary": "FBI Atlanta confirms it's looking into the incident, no arrests made.",
   "category": "Technology",
-  "source": "Lobsters",
-  "publishedAt": "2026-08-12T00:29:31+00:00"
+  "source": "Ars Technica",
+  "publishedAt": "2026-08-12T00:08:40+00:00"
  },
  {
   "title": "A profile of Suno, which has been used by more than 100M people since 2023 and has 2M+ paid subscribers, as it faces copyright lawsuits from UMG and Sony Music (Bloomberg)",
@@ -88,9 +368,9 @@
   "publishedAt": "2026-08-11T22:55:01+00:00"
  },
  {
-  "title": "The CFTC uses its \"emergency authority\" to order Kalshi to continue operating in New York after the state filed a lawsuit in July seeking to shutter Kalshi (Nikhilesh De/CoinDesk)",
+  "title": "The US CFTC uses its \"emergency authority\" to order Kalshi to continue operating in New York after the state filed a lawsuit in July seeking to shutter Kalshi (Nikhilesh De/CoinDesk)",
   "url": "https://www.techmeme.com/260811/p40#a260811p40",
-  "summary": "Nikhilesh De / CoinDesk : The CFTC uses its &ldquo;emergency authority&rdquo; to order Kalshi to continue operating in New York after the state filed ",
+  "summary": "Nikhilesh De / CoinDesk : The US CFTC uses its &ldquo;emergency authority&rdquo; to order Kalshi to continue operating in New York after the state fil",
   "category": "Technology",
   "source": "Techmeme",
   "publishedAt": "2026-08-11T22:40:01+00:00"
@@ -114,7 +394,7 @@
  {
   "title": "WorldClaw Agentic 3D open-world generation at scale",
   "url": "https://tencent-hunyuan.github.io/Hunyuan3D-WorldClaw/",
-  "summary": "Article URL: https://tencent-hunyuan.github.io/Hunyuan3D-WorldClaw/ Comments URL: https://news.ycombinator.com/item?id=49265051 Points: 147 # Comments",
+  "summary": "Article URL: https://tencent-hunyuan.github.io/Hunyuan3D-WorldClaw/ Comments URL: https://news.ycombinator.com/item?id=49265051 Points: 219 # Comments",
   "category": "Technology",
   "source": "Hacker News",
   "publishedAt": "2026-08-11T21:56:18+00:00"
@@ -126,14 +406,6 @@
   "category": "Technology",
   "source": "Techmeme",
   "publishedAt": "2026-08-11T21:55:00+00:00"
- },
- {
-  "title": "pg_clickhouse v0.10: Subquery pushdown and 1000x faster TPC-H queries",
-  "url": "https://clickhouse.com/blog/pg_clickhouse-whats-new-july-2026",
-  "summary": "Article URL: https://clickhouse.com/blog/pg_clickhouse-whats-new-july-2026 Comments URL: https://news.ycombinator.com/item?id=49265031 Points: 40 # Co",
-  "category": "Technology",
-  "source": "Hacker News",
-  "publishedAt": "2026-08-11T21:54:25+00:00"
  },
  {
   "title": "Accel raised $3.5B in funds for early-stage investments, including a $1.35B global expansion fund for larger early-stage rounds and rapid follow-on investments (Natasha Mascarenhas/Bloomberg)",
@@ -176,14 +448,6 @@
   "publishedAt": "2026-08-11T21:20:11+00:00"
  },
  {
-  "title": "Emergent Introspective Awareness in Large Language Models",
-  "url": "https://arxiv.org/abs/2601.01828",
-  "summary": "Article URL: https://arxiv.org/abs/2601.01828 Comments URL: https://news.ycombinator.com/item?id=49264583 Points: 36 # Comments: 14",
-  "category": "Technology",
-  "source": "Hacker News",
-  "publishedAt": "2026-08-11T21:14:10+00:00"
- },
- {
   "title": "Researchers find that feeding a frontier model's encrypted reasoning traces to a weaker model from the same provider can make it output the traces in plaintext (Will Knight/Wired)",
   "url": "https://www.techmeme.com/260811/p37#a260811p37",
   "summary": "Will Knight / Wired : Researchers find that feeding a frontier model's encrypted reasoning traces to a weaker model from the same provider can make it",
@@ -208,275 +472,11 @@
   "publishedAt": "2026-08-11T20:55:02+00:00"
  },
  {
-  "title": "CoreWeave reports Q2 revenue up 112% YoY to $2.58B, vs. $2.56B est., and a $104B revenue backlog, with 1.5 GW of contracted power; CRWV jumps 9%+ after hours (Jordan Novet/CNBC)",
-  "url": "https://www.techmeme.com/260811/p35#a260811p35",
-  "summary": "Jordan Novet / CNBC : CoreWeave reports Q2 revenue up 112% YoY to $2.58B, vs. $2.56B est., and a $104B revenue backlog, with 1.5 GW of contracted powe",
-  "category": "Technology",
-  "source": "Techmeme",
-  "publishedAt": "2026-08-11T20:40:00+00:00"
- },
- {
-  "title": "Super Micro reports Q4 revenue up 93% YoY to $11.1B, vs. $11.3B est., and forecasts Q1 and FY 2027 revenue above estimates; SMCI jumps 9%+ after hours (Dina Bass/Bloomberg)",
-  "url": "https://www.techmeme.com/260811/p34#a260811p34",
-  "summary": "Dina Bass / Bloomberg : Super Micro reports Q4 revenue up 93% YoY to $11.1B, vs. $11.3B est., and forecasts Q1 and FY 2027 revenue above estimates; SM",
-  "category": "Technology",
-  "source": "Techmeme",
-  "publishedAt": "2026-08-11T20:30:01+00:00"
- },
- {
   "title": "Meta can't stop states' $1.4 trillion lawsuit from going to trial",
   "url": "https://arstechnica.com/tech-policy/2026/08/meta-cant-stop-states-1-4-trillion-lawsuit-from-going-to-trial/",
   "summary": "Judges tell Meta that Section 230 provides a defense, not immunity from lawsuits.",
   "category": "Technology",
   "source": "Ars Technica",
   "publishedAt": "2026-08-11T20:27:16+00:00"
- },
- {
-  "title": "Filings show Uber divested from long-time partner Serve Robotics in Q2, as the companies clash over how to deploy delivery robots; Serve has a DoorDash deal (Natalie Lung/Bloomberg)",
-  "url": "https://www.techmeme.com/260811/p33#a260811p33",
-  "summary": "Natalie Lung / Bloomberg : Filings show Uber divested from long-time partner Serve Robotics in Q2, as the companies clash over how to deploy delivery ",
-  "category": "Technology",
-  "source": "Techmeme",
-  "publishedAt": "2026-08-11T20:20:37+00:00"
- },
- {
-  "title": "Uber surprised robotics company Serve by selling its entire stake",
-  "url": "https://techcrunch.com/2026/08/11/uber-surprised-robotics-company-serve-by-selling-its-entire-stake/",
-  "summary": "The divestiture comes as the two once-tight companies have started to diverge on the business side.",
-  "category": "Technology",
-  "source": "TechCrunch",
-  "publishedAt": "2026-08-11T20:02:02+00:00"
- },
- {
-  "title": "Compression is prediction",
-  "url": "https://ngrok.com/blog/compression-is-prediction",
-  "summary": "Article URL: https://ngrok.com/blog/compression-is-prediction Comments URL: https://news.ycombinator.com/item?id=49263497 Points: 294 # Comments: 128",
-  "category": "Technology",
-  "source": "Hacker News",
-  "publishedAt": "2026-08-11T19:49:44+00:00"
- },
- {
-  "title": "Gemini becomes Google's fastest-growing product ever as it hits 1B users",
-  "url": "https://arstechnica.com/ai/2026/08/google-says-gemini-has-reached-1b-users-faster-than-any-other-google-product/",
-  "summary": "But will Gemini's surge survive slowing model releases?",
-  "category": "Technology",
-  "source": "Ars Technica",
-  "publishedAt": "2026-08-11T19:48:12+00:00"
- },
- {
-  "title": "ChatGPT and Gemini both just passed 1 billion users",
-  "url": "https://www.theverge.com/ai-artificial-intelligence/978113/chatgpt-gemini-1-billion-users",
-  "summary": "For the 14th time, a Google product has hit 1 billion users. Google CEO Sundar Pichai posted on X that a billion people are using Gemini every month, ",
-  "category": "Technology",
-  "source": "The Verge",
-  "publishedAt": "2026-08-11T19:41:42+00:00"
- },
- {
-  "title": "FBI says cybercriminals are hacking into victims’ online accounts to steal their intimate pictures",
-  "url": "https://techcrunch.com/2026/08/11/fbi-says-cybercriminals-are-hacking-into-victims-online-accounts-to-steal-their-intimate-pictures/",
-  "summary": "In a new alert, the FBI said cybercriminals are targeting adults and minors in an attempt to steal their personal and intimate pictures in extortion c",
-  "category": "Technology",
-  "source": "TechCrunch",
-  "publishedAt": "2026-08-11T19:38:23+00:00"
- },
- {
-  "title": "Nvidia Nemotron 3.5 Lightning and NeMo Switchyard",
-  "url": "https://blogs.nvidia.com/blog/nemotron-lightning-switchyard-rtx-dgx/",
-  "summary": "Article URL: https://blogs.nvidia.com/blog/nemotron-lightning-switchyard-rtx-dgx/ Comments URL: https://news.ycombinator.com/item?id=49263340 Points: ",
-  "category": "Technology",
-  "source": "Hacker News",
-  "publishedAt": "2026-08-11T19:35:52+00:00"
- },
- {
-  "title": "Similarweb: Bluesky's mobile MAUs fell 27% YoY to 10.4M in June and DAUs fell 26% to 3M in July; X's mobile MAUs fell 3% to 302M and DAUs fell 7% to 123.7M (Sarah Perez/TechCrunch)",
-  "url": "https://www.techmeme.com/260811/p32#a260811p32",
-  "summary": "Sarah Perez / TechCrunch : Similarweb: Bluesky's mobile MAUs fell 27% YoY to 10.4M in June and DAUs fell 26% to 3M in July; X's mobile MAUs fell 3% to",
-  "category": "Technology",
-  "source": "Techmeme",
-  "publishedAt": "2026-08-11T19:30:03+00:00"
- },
- {
-  "title": "OpenAI launches ChatGPT desktop app for Linux",
-  "url": "https://techcrunch.com/2026/08/11/openai-launches-chatgpt-desktop-app-for-linux/",
-  "summary": "OpenAI is finally bringing a dedicated ChatGPT desktop app to Linux operating systems.",
-  "category": "Technology",
-  "source": "TechCrunch",
-  "publishedAt": "2026-08-11T19:15:35+00:00"
- },
- {
-  "title": "Threads has a VR app now",
-  "url": "https://www.theverge.com/tech/978181/meta-threads-quest-vr-app",
-  "summary": "Meta has launched a Threads app for Meta Quest VR headsets, the company announced on Tuesday. The launch follows Meta bringing the app to its Ray-Ban ",
-  "category": "Technology",
-  "source": "The Verge",
-  "publishedAt": "2026-08-11T19:10:14+00:00"
- },
- {
-  "title": "Making holograms with a pen plotter",
-  "url": "https://blog.jordan.matelsky.com/Penplotter-holography/",
-  "summary": "Article URL: https://blog.jordan.matelsky.com/Penplotter-holography/ Comments URL: https://news.ycombinator.com/item?id=49262811 Points: 126 # Comment",
-  "category": "Technology",
-  "source": "Hacker News",
-  "publishedAt": "2026-08-11T18:51:35+00:00"
- },
- {
-  "title": "Google’s Gemini app surges to 1 billion users",
-  "url": "https://techcrunch.com/2026/08/11/googles-gemini-app-surges-to-one-billion-users/",
-  "summary": "Google also shared numbers of how people are actually using the chatbot, with 63% of Gemini users talking directly to the assistant using the voice fe",
-  "category": "Technology",
-  "source": "TechCrunch",
-  "publishedAt": "2026-08-11T18:49:12+00:00"
- },
- {
-  "title": "Royal Bank of Canada and Bank of Montreal agree to sell payments company Moneris to PE firm Francisco Partners for CA$2B in cash, splitting proceeds equally (Bloomberg)",
-  "url": "https://www.techmeme.com/260811/p31#a260811p31",
-  "summary": "Bloomberg : Royal Bank of Canada and Bank of Montreal agree to sell payments company Moneris to PE firm Francisco Partners for CA$2B in cash, splittin",
-  "category": "Technology",
-  "source": "Techmeme",
-  "publishedAt": "2026-08-11T18:45:02+00:00"
- },
- {
-  "title": "Google’s free streaming service now lets you pick shows and movies to watch",
-  "url": "https://www.theverge.com/tech/978152/google-tv-freeplay-on-demand",
-  "summary": "Google TV Freeplay, the company's free, ad-supported streaming service, now supports video on demand. Instead of tuning into Google TV Freeplay's sele",
-  "category": "Technology",
-  "source": "The Verge",
-  "publishedAt": "2026-08-11T18:35:16+00:00"
- },
- {
-  "title": "Used EV buying guide: The $30,000 edition",
-  "url": "https://arstechnica.com/cars/2026/08/used-ev-buying-guide-the-30000-edition/",
-  "summary": "Depending on the model, you might have hundreds to choose from—or just one.",
-  "category": "Technology",
-  "source": "Ars Technica",
-  "publishedAt": "2026-08-11T18:31:53+00:00"
- },
- {
-  "title": "Sources: David Sacks' Craft Ventures is targeting around $1B for a new fund, its first since Sacks stepped down as the White House AI and crypto czar (The Information)",
-  "url": "https://www.techmeme.com/260811/p30#a260811p30",
-  "summary": "The Information : Sources: David Sacks' Craft Ventures is targeting around $1B for a new fund, its first since Sacks stepped down as the White House A",
-  "category": "Technology",
-  "source": "Techmeme",
-  "publishedAt": "2026-08-11T18:25:01+00:00"
- },
- {
-  "title": "How we used to get jobs: A newspaper classifieds story",
-  "url": "https://ironicsans.ghost.io/how-we-used-to-get-jobs/",
-  "summary": "Article URL: https://ironicsans.ghost.io/how-we-used-to-get-jobs/ Comments URL: https://news.ycombinator.com/item?id=49262211 Points: 117 # Comments: ",
-  "category": "Technology",
-  "source": "Hacker News",
-  "publishedAt": "2026-08-11T18:09:56+00:00"
- },
- {
-  "title": "Less than 2.5% of Taylor Farms' recalled lettuce went to Taco Bells",
-  "url": "https://arstechnica.com/health/2026/08/less-than-2-5-of-taylor-farms-recalled-lettuce-went-to-taco-bells/",
-  "summary": "FDA report reveals where Taylor Farms sent its lettuce—and it raises questions.",
-  "category": "Technology",
-  "source": "Ars Technica",
-  "publishedAt": "2026-08-11T18:00:14+00:00"
- },
- {
-  "title": "Another OpenAI executive takes off",
-  "url": "https://www.theverge.com/ai-artificial-intelligence/978048/brad-lightcap-openai-executive-departure",
-  "summary": "Brad Lightcap, OpenAI's special projects lead and the company's former COO, announced his departure after an eight-year stint at the AI lab. In an int",
-  "category": "Technology",
-  "source": "The Verge",
-  "publishedAt": "2026-08-11T17:50:01+00:00"
- },
- {
-  "title": "Bluesky’s active user base is shrinking as its focus expands beyond the app",
-  "url": "https://techcrunch.com/2026/08/11/blueskys-active-user-base-is-shrinking-as-its-focus-expands-beyond-the-app/",
-  "summary": "Over a year following its post-election surge, Bluesky’s mobile app is seeing a continued decline in active users, though its remaining community is s",
-  "category": "Technology",
-  "source": "TechCrunch",
-  "publishedAt": "2026-08-11T17:46:14+00:00"
- },
- {
-  "title": "What’s Scaleup Europe, the $5.7B fund that just backed satellite company ICEYE?",
-  "url": "https://techcrunch.com/2026/08/11/whats-scaleup-europe-the-5-7b-fund-that-just-backed-satellite-company-iceye/",
-  "summary": "Scaleup Europe, a public-private fund with a $5.7 billion target, made its first investment by backing Finnish satellite company ICEYE.",
-  "category": "Technology",
-  "source": "TechCrunch",
-  "publishedAt": "2026-08-11T17:41:49+00:00"
- },
- {
-  "title": "Brad Lightcap, OpenAI’s longtime COO, is leaving to ‘start something new’",
-  "url": "https://techcrunch.com/2026/08/11/brad-lightcap-openais-longtime-coo-is-leaving-to-start-something-new/",
-  "summary": "One of OpenAI's longest-serving executives is headed out the door, although the longtime COO told staff that he was \"excited to help you all advance t",
-  "category": "Technology",
-  "source": "TechCrunch",
-  "publishedAt": "2026-08-11T17:41:34+00:00"
- },
- {
-  "title": "General Catalyst leads $1.1B round into 2-month-old River AI",
-  "url": "https://techcrunch.com/2026/08/11/general-catalyst-leads-1-1b-round-into-2-month-old-river-ai/",
-  "summary": "River AI, a startup founded by xAI co-founder Igor Babuschkin, has a fascinating vision for personal agents and secured $1.1 billion out of the gate.",
-  "category": "Technology",
-  "source": "TechCrunch",
-  "publishedAt": "2026-08-11T17:41:22+00:00"
- },
- {
-  "title": "SpaceXAI rolls out Grok Bot AI agent app in beta on Mac, iOS, Windows, and Linux, initially for SuperGrok Heavy, Cursor Ultra, and Cursor Teams Premium users (Zac Hall/9to5Mac)",
-  "url": "https://www.techmeme.com/260811/p29#a260811p29",
-  "summary": "Zac Hall / 9to5Mac : SpaceXAI rolls out Grok Bot AI agent app in beta on Mac, iOS, Windows, and Linux, initially for SuperGrok Heavy, Cursor Ultra, an",
-  "category": "Technology",
-  "source": "Techmeme",
-  "publishedAt": "2026-08-11T17:40:00+00:00"
- },
- {
-  "title": "My Anti AI computer",
-  "url": "https://punkx.org/jackdoe/home.html",
-  "summary": "I made this computer to have a place where I can calm my mind, and to re-learn patience; the irony is that I used AI to write the OS and the drivers a",
-  "category": "Technology",
-  "source": "Lobsters",
-  "publishedAt": "2026-08-11T17:31:53+00:00"
- },
- {
-  "title": "The budget-friendly Pixel Buds 2a are even cheaper right now",
-  "url": "https://www.theverge.com/gadgets/977929/pixel-buds-2a-starfox-switch-deal-sale",
-  "summary": "Looking for great pair of earbuds that work particularly well with Android phones? The Google Pixel Buds 2a are currently discounted to $99 (usually $",
-  "category": "Technology",
-  "source": "The Verge",
-  "publishedAt": "2026-08-11T17:31:06+00:00"
- },
- {
-  "title": "Grok Bot",
-  "url": "https://x.ai/bot",
-  "summary": "Article URL: https://x.ai/bot Comments URL: https://news.ycombinator.com/item?id=49261514 Points: 171 # Comments: 147",
-  "category": "Technology",
-  "source": "Hacker News",
-  "publishedAt": "2026-08-11T17:23:09+00:00"
- },
- {
-  "title": "CSS properties you should know for better text designs",
-  "url": "https://master.dev/blog/typographic-css-tricks/",
-  "summary": "Article URL: https://master.dev/blog/typographic-css-tricks/ Comments URL: https://news.ycombinator.com/item?id=49261417 Points: 82 # Comments: 7",
-  "category": "Technology",
-  "source": "Hacker News",
-  "publishedAt": "2026-08-11T17:16:06+00:00"
- },
- {
-  "title": "RSI Simulator",
-  "url": "https://www.paradigm.xyz/writing/rsi-simulator",
-  "summary": "https://www.paradigm.xyz/research/rsi/game Comments URL: https://news.ycombinator.com/item?id=49261192 Points: 35 # Comments: 13",
-  "category": "Technology",
-  "source": "Hacker News",
-  "publishedAt": "2026-08-11T17:01:21+00:00"
- },
- {
-  "title": "AMIE, our research medical AI system, demonstrates real-time clinical video consultation capabilities in a first-of-its-kind study.",
-  "url": "https://blog.google/innovation-and-ai/models-and-research/google-research/amie-video-consultations/",
-  "summary": "AMIE promotional video",
-  "category": "Technology",
-  "source": "Google AI Blog",
-  "publishedAt": "2026-08-11T17:00:00+00:00"
- },
- {
-  "title": "Google’s upcoming Pixel phones are for the fans, even if its launch event isn’t",
-  "url": "https://www.theverge.com/tech/977844/made-by-google-pixel-11-launch-power-users-notification-led",
-  "summary": "Last year's Made by Google event for the Pixel 10 resembled a late night talk show, complete with Jimmy Fallon as host, and it aired an hour after the",
-  "category": "Technology",
-  "source": "The Verge",
-  "publishedAt": "2026-08-11T17:00:00+00:00"
  }
 ]
