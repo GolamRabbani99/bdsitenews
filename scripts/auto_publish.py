@@ -291,7 +291,9 @@ def main() -> int:
     log(f"  → {update_wire(items)} headlines on the homepage wire")
 
     log("\n[3/3] writing Bangla articles…")
-    api_key = os.environ.get("ANTHROPIC_API_KEY", "").strip()
+    # Strip BOM/whitespace: keys pasted or piped on Windows often carry a
+    # UTF-8 BOM, which breaks the ASCII-only HTTP auth header.
+    api_key = os.environ.get("ANTHROPIC_API_KEY", "").strip().lstrip("﻿").strip()
     if not api_key:
         log("  ANTHROPIC_API_KEY not set — wire updated, no new articles written.")
         return 0
