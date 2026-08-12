@@ -1,19 +1,67 @@
 [
  {
+  "title": "Making a game on a custom bytecode VM in 7 days and 3kB",
+  "url": "https://laurent.le-brun.eu/blog/making-a-game-on-a-custom-bytecode-vm-in-7-days-and-3kb",
+  "summary": "Comments",
+  "category": "Technology",
+  "source": "Lobsters",
+  "publishedAt": "2026-08-12T03:00:38+00:00"
+ },
+ {
+  "title": "Company Offering '100% Human-Written, Never AI' Medical Research Is 100% AI",
+  "url": "https://www.404media.co/company-offering-100-human-written-never-ai-peer-review-is-entirely-ai/",
+  "summary": "Article URL: https://www.404media.co/company-offering-100-human-written-never-ai-peer-review-is-entirely-ai/ Comments URL: https://news.ycombinator.co",
+  "category": "Technology",
+  "source": "Hacker News",
+  "publishedAt": "2026-08-12T02:05:42+00:00"
+ },
+ {
+  "title": "The lifesaving secret hidden inside a horseshoe crab's blue blood",
+  "url": "https://whdh.com/news/the-lifesaving-secret-hidden-inside-a-horseshoe-crabs-blue-blood-and-the-race-to-protect-the-species/",
+  "summary": "Article URL: https://whdh.com/news/the-lifesaving-secret-hidden-inside-a-horseshoe-crabs-blue-blood-and-the-race-to-protect-the-species/ Comments URL:",
+  "category": "Technology",
+  "source": "Hacker News",
+  "publishedAt": "2026-08-12T01:45:51+00:00"
+ },
+ {
+  "title": "New Bedford police officer accused of using Flock cameras to track ex-partner",
+  "url": "https://newbedfordlight.org/new-bedford-police-officer-accused-of-using-flock-cameras-to-track-and-follow-ex-romantic-partner/",
+  "summary": "Article URL: https://newbedfordlight.org/new-bedford-police-officer-accused-of-using-flock-cameras-to-track-and-follow-ex-romantic-partner/ Comments U",
+  "category": "Technology",
+  "source": "Hacker News",
+  "publishedAt": "2026-08-12T01:42:46+00:00"
+ },
+ {
+  "title": "A look at Candy Crush's continued popularity 15 years after its launch, with an estimated 81.5M MAUs and in-app revenue of $876.5M in fiscal year 2025 (Alanna Okun/Bloomberg)",
+  "url": "https://www.techmeme.com/260811/p43#a260811p43",
+  "summary": "Alanna Okun / Bloomberg : A look at Candy Crush's continued popularity 15 years after its launch, with an estimated 81.5M MAUs and in-app revenue of $",
+  "category": "Technology",
+  "source": "Techmeme",
+  "publishedAt": "2026-08-12T01:00:13+00:00"
+ },
+ {
+  "title": "DEF CON crowd suspected in fake-hotspot attack on Delta flight",
+  "url": "https://arstechnica.com/information-technology/2026/08/def-con-crowd-suspected-in-fake-hotspot-attack-on-delta-flight/",
+  "summary": "Article URL: https://arstechnica.com/information-technology/2026/08/def-con-crowd-suspected-in-fake-hotspot-attack-on-delta-flight/ Comments URL: http",
+  "category": "Technology",
+  "source": "Hacker News",
+  "publishedAt": "2026-08-12T00:58:00+00:00"
+ },
+ {
+  "title": "Saber denies replacing Rideshare Stimulator&#8217;s writers with ChatGPT",
+  "url": "https://www.theverge.com/games/978558/rideshare-stimulator-writer-ai-saber-interactive",
+  "summary": "After a former lead writer claimed Saber \"replaced me with ChatGPT,\" CEO Matthew Karch now claims, \"Neither Saber nor Unigine have replaced any writer",
+  "category": "Technology",
+  "source": "The Verge",
+  "publishedAt": "2026-08-12T00:39:26+00:00"
+ },
+ {
   "title": "Text Watermarking for Non-Academics",
   "url": "https://blog.gaborkoos.com/posts/2026-08-12-Text-Watermarking-for-Non-Academics/",
   "summary": "https://blog.gaborkoos.com/posts/2026-08-12-What-Does-a-Text-Watermark-Actually-Prove/ Comments",
   "category": "Technology",
   "source": "Lobsters",
   "publishedAt": "2026-08-12T00:29:31+00:00"
- },
- {
-  "title": "DEF CON crowd suspected in fake-hotspot attack on Delta flight",
-  "url": "https://arstechnica.com/information-technology/2026/08/def-con-crowd-suspected-in-fake-hotspot-attack-on-delta-flight/",
-  "summary": "FBI Atlanta confirms it's looking into the incident, no arrests made.",
-  "category": "Technology",
-  "source": "Ars Technica",
-  "publishedAt": "2026-08-12T00:08:40+00:00"
  },
  {
   "title": "A profile of Suno, which has been used by more than 100M people since 2023 and has 2M+ paid subscribers, as it faces copyright lawsuits from UMG and Sony Music (Bloomberg)",
@@ -24,12 +72,12 @@
   "publishedAt": "2026-08-11T23:55:01+00:00"
  },
  {
-  "title": "US hires over 2k video gamers as air traffic controllers",
-  "url": "https://www.cbsnews.com/news/video-gamer-air-traffic-controllers-faa-recruitment-sean-duffy/",
-  "summary": "Article URL: https://www.cbsnews.com/news/video-gamer-air-traffic-controllers-faa-recruitment-sean-duffy/ Comments URL: https://news.ycombinator.com/i",
+  "title": "Who's Hiring? - Not-A-Coder Edition - Aug 2026",
+  "url": "https://lobste.rs/s/cnoaqr/who_s_hiring_not_coder_edition_aug_2026",
+  "summary": "Welcome to the first official post of \"Who's Hiring? - Not-A-Coder Edition!\" This is a version of the original \"Who's Hiring?\" posts that targets role",
   "category": "Technology",
-  "source": "Hacker News",
-  "publishedAt": "2026-08-11T23:26:17+00:00"
+  "source": "Lobsters",
+  "publishedAt": "2026-08-11T23:46:21+00:00"
  },
  {
   "title": "OpenAI launches a ChatGPT desktop app for Linux in preview, supporting ChatGPT Work, Codex, and more; Computer Use outside the in-app browser is not available (Frederic Lardinois/The New Stack)",
@@ -66,7 +114,7 @@
  {
   "title": "WorldClaw Agentic 3D open-world generation at scale",
   "url": "https://tencent-hunyuan.github.io/Hunyuan3D-WorldClaw/",
-  "summary": "Article URL: https://tencent-hunyuan.github.io/Hunyuan3D-WorldClaw/ Comments URL: https://news.ycombinator.com/item?id=49265051 Points: 82 # Comments:",
+  "summary": "Article URL: https://tencent-hunyuan.github.io/Hunyuan3D-WorldClaw/ Comments URL: https://news.ycombinator.com/item?id=49265051 Points: 147 # Comments",
   "category": "Technology",
   "source": "Hacker News",
   "publishedAt": "2026-08-11T21:56:18+00:00"
@@ -82,7 +130,7 @@
  {
   "title": "pg_clickhouse v0.10: Subquery pushdown and 1000x faster TPC-H queries",
   "url": "https://clickhouse.com/blog/pg_clickhouse-whats-new-july-2026",
-  "summary": "Article URL: https://clickhouse.com/blog/pg_clickhouse-whats-new-july-2026 Comments URL: https://news.ycombinator.com/item?id=49265031 Points: 30 # Co",
+  "summary": "Article URL: https://clickhouse.com/blog/pg_clickhouse-whats-new-july-2026 Comments URL: https://news.ycombinator.com/item?id=49265031 Points: 40 # Co",
   "category": "Technology",
   "source": "Hacker News",
   "publishedAt": "2026-08-11T21:54:25+00:00"
@@ -112,14 +160,6 @@
   "publishedAt": "2026-08-11T21:39:11+00:00"
  },
  {
-  "title": "Suzanne: AI tool for designing and manufacturing physical products",
-  "url": "https://www.suzanne3d.com/",
-  "summary": "Article URL: https://www.suzanne3d.com/ Comments URL: https://news.ycombinator.com/item?id=49264755 Points: 27 # Comments: 20",
-  "category": "Technology",
-  "source": "Hacker News",
-  "publishedAt": "2026-08-11T21:28:26+00:00"
- },
- {
   "title": "An FCC filing points to new Sonos headphones coming soon",
   "url": "https://www.theverge.com/tech/978355/sonos-headphones-fcc-filing",
   "summary": "It looks like we'll be getting a successor to the Sonos Ace headphones sometime this fall, which was hinted at by CEO Tom Conrad during a third quarte",
@@ -138,7 +178,7 @@
  {
   "title": "Emergent Introspective Awareness in Large Language Models",
   "url": "https://arxiv.org/abs/2601.01828",
-  "summary": "Article URL: https://arxiv.org/abs/2601.01828 Comments URL: https://news.ycombinator.com/item?id=49264583 Points: 18 # Comments: 8",
+  "summary": "Article URL: https://arxiv.org/abs/2601.01828 Comments URL: https://news.ycombinator.com/item?id=49264583 Points: 36 # Comments: 14",
   "category": "Technology",
   "source": "Hacker News",
   "publishedAt": "2026-08-11T21:14:10+00:00"
@@ -210,7 +250,7 @@
  {
   "title": "Compression is prediction",
   "url": "https://ngrok.com/blog/compression-is-prediction",
-  "summary": "Article URL: https://ngrok.com/blog/compression-is-prediction Comments URL: https://news.ycombinator.com/item?id=49263497 Points: 210 # Comments: 92",
+  "summary": "Article URL: https://ngrok.com/blog/compression-is-prediction Comments URL: https://news.ycombinator.com/item?id=49263497 Points: 294 # Comments: 128",
   "category": "Technology",
   "source": "Hacker News",
   "publishedAt": "2026-08-11T19:49:44+00:00"
@@ -274,7 +314,7 @@
  {
   "title": "Making holograms with a pen plotter",
   "url": "https://blog.jordan.matelsky.com/Penplotter-holography/",
-  "summary": "Article URL: https://blog.jordan.matelsky.com/Penplotter-holography/ Comments URL: https://news.ycombinator.com/item?id=49262811 Points: 104 # Comment",
+  "summary": "Article URL: https://blog.jordan.matelsky.com/Penplotter-holography/ Comments URL: https://news.ycombinator.com/item?id=49262811 Points: 126 # Comment",
   "category": "Technology",
   "source": "Hacker News",
   "publishedAt": "2026-08-11T18:51:35+00:00"
@@ -322,18 +362,10 @@
  {
   "title": "How we used to get jobs: A newspaper classifieds story",
   "url": "https://ironicsans.ghost.io/how-we-used-to-get-jobs/",
-  "summary": "Article URL: https://ironicsans.ghost.io/how-we-used-to-get-jobs/ Comments URL: https://news.ycombinator.com/item?id=49262211 Points: 99 # Comments: 8",
+  "summary": "Article URL: https://ironicsans.ghost.io/how-we-used-to-get-jobs/ Comments URL: https://news.ycombinator.com/item?id=49262211 Points: 117 # Comments: ",
   "category": "Technology",
   "source": "Hacker News",
   "publishedAt": "2026-08-11T18:09:56+00:00"
- },
- {
-  "title": "Ethical Cold Outreach",
-  "url": "https://blog.val.town/ethical-cold-outreach",
-  "summary": "Article URL: https://blog.val.town/ethical-cold-outreach Comments URL: https://news.ycombinator.com/item?id=49262172 Points: 29 # Comments: 22",
-  "category": "Technology",
-  "source": "Hacker News",
-  "publishedAt": "2026-08-11T18:06:55+00:00"
  },
  {
   "title": "Less than 2.5% of Taylor Farms' recalled lettuce went to Taco Bells",
@@ -350,14 +382,6 @@
   "category": "Technology",
   "source": "The Verge",
   "publishedAt": "2026-08-11T17:50:01+00:00"
- },
- {
-  "title": "OpenSSH 10.5/10.5p1",
-  "url": "https://www.openssh.org/releasenotes.html#10.5",
-  "summary": "Article URL: https://www.openssh.org/releasenotes.html#10.5 Comments URL: https://news.ycombinator.com/item?id=49261895 Points: 92 # Comments: 30",
-  "category": "Technology",
-  "source": "Hacker News",
-  "publishedAt": "2026-08-11T17:49:37+00:00"
  },
  {
   "title": "Bluesky’s active user base is shrinking as its focus expands beyond the app",
@@ -418,23 +442,15 @@
  {
   "title": "Grok Bot",
   "url": "https://x.ai/bot",
-  "summary": "Article URL: https://x.ai/bot Comments URL: https://news.ycombinator.com/item?id=49261514 Points: 107 # Comments: 106",
+  "summary": "Article URL: https://x.ai/bot Comments URL: https://news.ycombinator.com/item?id=49261514 Points: 171 # Comments: 147",
   "category": "Technology",
   "source": "Hacker News",
   "publishedAt": "2026-08-11T17:23:09+00:00"
  },
  {
-  "title": "Sources: Nvidia is developing a Nemotron 4 model with 1T+ parameters, up from Nemotron 3 Ultra's 550B parameters but smaller than leading Chinese open models (The Information)",
-  "url": "https://www.techmeme.com/260811/p28#a260811p28",
-  "summary": "The Information : Sources: Nvidia is developing a Nemotron 4 model with 1T+ parameters, up from Nemotron 3 Ultra's 550B parameters but smaller than le",
-  "category": "Technology",
-  "source": "Techmeme",
-  "publishedAt": "2026-08-11T17:20:08+00:00"
- },
- {
   "title": "CSS properties you should know for better text designs",
   "url": "https://master.dev/blog/typographic-css-tricks/",
-  "summary": "Article URL: https://master.dev/blog/typographic-css-tricks/ Comments URL: https://news.ycombinator.com/item?id=49261417 Points: 66 # Comments: 6",
+  "summary": "Article URL: https://master.dev/blog/typographic-css-tricks/ Comments URL: https://news.ycombinator.com/item?id=49261417 Points: 82 # Comments: 7",
   "category": "Technology",
   "source": "Hacker News",
   "publishedAt": "2026-08-11T17:16:06+00:00"
@@ -442,7 +458,7 @@
  {
   "title": "RSI Simulator",
   "url": "https://www.paradigm.xyz/writing/rsi-simulator",
-  "summary": "https://www.paradigm.xyz/research/rsi/game Comments URL: https://news.ycombinator.com/item?id=49261192 Points: 27 # Comments: 11",
+  "summary": "https://www.paradigm.xyz/research/rsi/game Comments URL: https://news.ycombinator.com/item?id=49261192 Points: 35 # Comments: 13",
   "category": "Technology",
   "source": "Hacker News",
   "publishedAt": "2026-08-11T17:01:21+00:00"
@@ -462,21 +478,5 @@
   "category": "Technology",
   "source": "The Verge",
   "publishedAt": "2026-08-11T17:00:00+00:00"
- },
- {
-  "title": "Made by Google 2026: all the Pixel news and announcements",
-  "url": "https://www.theverge.com/tech/977561/made-by-google-2026-pixel-11-news",
-  "summary": "Google is gearing up to reveal a bunch of new Pixel devices on August 12th. A series of leaks leading up to the event suggest that the Pixel 11 lineup",
-  "category": "Technology",
-  "source": "The Verge",
-  "publishedAt": "2026-08-11T17:00:00+00:00"
- },
- {
-  "title": "Mojo 1.0 is here",
-  "url": "https://www.modular.com/blog/modular-26-5-mojo-1-0-is-here",
-  "summary": "Comments",
-  "category": "Technology",
-  "source": "Lobsters",
-  "publishedAt": "2026-08-11T16:59:09+00:00"
  }
 ]
