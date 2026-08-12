@@ -42,7 +42,7 @@
  {
   "title": "WorldClaw Agentic 3D open-world generation at scale",
   "url": "https://tencent-hunyuan.github.io/Hunyuan3D-WorldClaw/",
-  "summary": "Article URL: https://tencent-hunyuan.github.io/Hunyuan3D-WorldClaw/ Comments URL: https://news.ycombinator.com/item?id=49265051 Points: 67 # Comments:",
+  "summary": "Article URL: https://tencent-hunyuan.github.io/Hunyuan3D-WorldClaw/ Comments URL: https://news.ycombinator.com/item?id=49265051 Points: 73 # Comments:",
   "category": "Technology",
   "source": "Hacker News",
   "publishedAt": "2026-08-11T21:56:18+00:00"
@@ -58,7 +58,7 @@
  {
   "title": "pg_clickhouse v0.10: Subquery pushdown and 1000x faster TPC-H queries",
   "url": "https://clickhouse.com/blog/pg_clickhouse-whats-new-july-2026",
-  "summary": "Article URL: https://clickhouse.com/blog/pg_clickhouse-whats-new-july-2026 Comments URL: https://news.ycombinator.com/item?id=49265031 Points: 23 # Co",
+  "summary": "Article URL: https://clickhouse.com/blog/pg_clickhouse-whats-new-july-2026 Comments URL: https://news.ycombinator.com/item?id=49265031 Points: 27 # Co",
   "category": "Technology",
   "source": "Hacker News",
   "publishedAt": "2026-08-11T21:54:25+00:00"
@@ -90,7 +90,7 @@
  {
   "title": "Suzanne: AI tool for designing and manufacturing physical products",
   "url": "https://www.suzanne3d.com/",
-  "summary": "Article URL: https://www.suzanne3d.com/ Comments URL: https://news.ycombinator.com/item?id=49264755 Points: 25 # Comments: 16",
+  "summary": "Article URL: https://www.suzanne3d.com/ Comments URL: https://news.ycombinator.com/item?id=49264755 Points: 26 # Comments: 19",
   "category": "Technology",
   "source": "Hacker News",
   "publishedAt": "2026-08-11T21:28:26+00:00"
@@ -114,7 +114,7 @@
  {
   "title": "Emergent Introspective Awareness in Large Language Models",
   "url": "https://arxiv.org/abs/2601.01828",
-  "summary": "Article URL: https://arxiv.org/abs/2601.01828 Comments URL: https://news.ycombinator.com/item?id=49264583 Points: 17 # Comments: 4",
+  "summary": "Article URL: https://arxiv.org/abs/2601.01828 Comments URL: https://news.ycombinator.com/item?id=49264583 Points: 17 # Comments: 6",
   "category": "Technology",
   "source": "Hacker News",
   "publishedAt": "2026-08-11T21:14:10+00:00"
@@ -186,7 +186,7 @@
  {
   "title": "Compression is prediction",
   "url": "https://ngrok.com/blog/compression-is-prediction",
-  "summary": "Article URL: https://ngrok.com/blog/compression-is-prediction Comments URL: https://news.ycombinator.com/item?id=49263497 Points: 196 # Comments: 89",
+  "summary": "Article URL: https://ngrok.com/blog/compression-is-prediction Comments URL: https://news.ycombinator.com/item?id=49263497 Points: 203 # Comments: 92",
   "category": "Technology",
   "source": "Hacker News",
   "publishedAt": "2026-08-11T19:49:44+00:00"
@@ -250,7 +250,7 @@
  {
   "title": "Making holograms with a pen plotter",
   "url": "https://blog.jordan.matelsky.com/Penplotter-holography/",
-  "summary": "Article URL: https://blog.jordan.matelsky.com/Penplotter-holography/ Comments URL: https://news.ycombinator.com/item?id=49262811 Points: 101 # Comment",
+  "summary": "Article URL: https://blog.jordan.matelsky.com/Penplotter-holography/ Comments URL: https://news.ycombinator.com/item?id=49262811 Points: 103 # Comment",
   "category": "Technology",
   "source": "Hacker News",
   "publishedAt": "2026-08-11T18:51:35+00:00"
@@ -306,7 +306,7 @@
  {
   "title": "Ethical Cold Outreach",
   "url": "https://blog.val.town/ethical-cold-outreach",
-  "summary": "Article URL: https://blog.val.town/ethical-cold-outreach Comments URL: https://news.ycombinator.com/item?id=49262172 Points: 15 # Comments: 7",
+  "summary": "Article URL: https://blog.val.town/ethical-cold-outreach Comments URL: https://news.ycombinator.com/item?id=49262172 Points: 24 # Comments: 18",
   "category": "Technology",
   "source": "Hacker News",
   "publishedAt": "2026-08-11T18:06:55+00:00"
@@ -330,7 +330,7 @@
  {
   "title": "OpenSSH 10.5/10.5p1",
   "url": "https://www.openssh.org/releasenotes.html#10.5",
-  "summary": "Article URL: https://www.openssh.org/releasenotes.html#10.5 Comments URL: https://news.ycombinator.com/item?id=49261895 Points: 87 # Comments: 30",
+  "summary": "Article URL: https://www.openssh.org/releasenotes.html#10.5 Comments URL: https://news.ycombinator.com/item?id=49261895 Points: 90 # Comments: 30",
   "category": "Technology",
   "source": "Hacker News",
   "publishedAt": "2026-08-11T17:49:37+00:00"
@@ -394,7 +394,7 @@
  {
   "title": "Grok Bot",
   "url": "https://x.ai/bot",
-  "summary": "Article URL: https://x.ai/bot Comments URL: https://news.ycombinator.com/item?id=49261514 Points: 99 # Comments: 98",
+  "summary": "Article URL: https://x.ai/bot Comments URL: https://news.ycombinator.com/item?id=49261514 Points: 103 # Comments: 103",
   "category": "Technology",
   "source": "Hacker News",
   "publishedAt": "2026-08-11T17:23:09+00:00"
@@ -410,7 +410,7 @@
  {
   "title": "CSS properties you should know for better text designs",
   "url": "https://master.dev/blog/typographic-css-tricks/",
-  "summary": "Article URL: https://master.dev/blog/typographic-css-tricks/ Comments URL: https://news.ycombinator.com/item?id=49261417 Points: 65 # Comments: 6",
+  "summary": "Article URL: https://master.dev/blog/typographic-css-tricks/ Comments URL: https://news.ycombinator.com/item?id=49261417 Points: 66 # Comments: 6",
   "category": "Technology",
   "source": "Hacker News",
   "publishedAt": "2026-08-11T17:16:06+00:00"
@@ -418,7 +418,7 @@
  {
   "title": "RSI Simulator",
   "url": "https://www.paradigm.xyz/writing/rsi-simulator",
-  "summary": "https://www.paradigm.xyz/research/rsi/game Comments URL: https://news.ycombinator.com/item?id=49261192 Points: 23 # Comments: 10",
+  "summary": "https://www.paradigm.xyz/research/rsi/game Comments URL: https://news.ycombinator.com/item?id=49261192 Points: 25 # Comments: 10",
   "category": "Technology",
   "source": "Hacker News",
   "publishedAt": "2026-08-11T17:01:21+00:00"
@@ -466,7 +466,7 @@
  {
   "title": "Mojo 1.0",
   "url": "https://www.modular.com/blog/modular-26-5-mojo-1-0-is-here",
-  "summary": "Article URL: https://www.modular.com/blog/modular-26-5-mojo-1-0-is-here Comments URL: https://news.ycombinator.com/item?id=49261128 Points: 254 # Comm",
+  "summary": "Article URL: https://www.modular.com/blog/modular-26-5-mojo-1-0-is-here Comments URL: https://news.ycombinator.com/item?id=49261128 Points: 260 # Comm",
   "category": "Technology",
   "source": "Hacker News",
   "publishedAt": "2026-08-11T16:56:46+00:00"
