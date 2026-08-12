@@ -35,7 +35,7 @@ ARTICLES_PATH = DATA / "articles.json"
 STORIES_PATH = DATA / "stories.json"
 
 # ── Cost & volume guardrails ────────────────────────────────────────────
-MAX_NEW_ARTICLES = int(os.environ.get("MAX_NEW_ARTICLES", "3"))
+MAX_NEW_ARTICLES = int(os.environ.get("MAX_NEW_ARTICLES", "6"))
 MAX_ARTICLES_KEPT = int(os.environ.get("MAX_ARTICLES_KEPT", "40"))
 MAX_WIRE_ITEMS = 60
 MODEL = os.environ.get("CLAUDE_MODEL", "claude-sonnet-5")
@@ -64,28 +64,33 @@ FEEDS = [
     {"name": "Two Minute Papers", "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCbfYPyITQ-7l4upoX8nvctg", "cat": "প্রযুক্তি", "weight": 1},
 ]
 
-BANGLA_WRITER_PROMPT = """You are a senior technology journalist at a leading Bangladeshi national daily.
+BANGLA_WRITER_PROMPT = """You are a Bangla news-desk editor producing short news briefs
+(সংক্ষিপ্ত সংবাদ) for a Bangladeshi technology news portal.
 
-You will receive ONE news item: a headline, a summary, the outlet name and the URL.
-You must NOT copy or translate the source text. Read it, understand the facts, and
-write a completely original Bangla news report for Bangladeshi readers.
+You receive ONE feed item: an English headline, a short summary snippet, the outlet
+name and the URL. That snippet is ALL the information you have — you do not have the
+full article, so never assume anything beyond it.
 
-Structure (inverted pyramid):
-- title: a clear, accurate Bangla headline, max ~70 characters. No clickbait,
-  no sensational punctuation. Use the plain Bangla term with the English word in
-  brackets on first use for technical terms, e.g. কৃত্রিম বুদ্ধিমত্তা (এআই).
-- lead: 1-2 sentences answering what happened and why it matters.
-- body: 3-4 short paragraphs (2-4 sentences each). Attribute the reporting
-  naturally — "টেকক্রাঞ্চের প্রতিবেদনে বলা হয়েছে", "গুগলের ব্লগ পোস্ট অনুযায়ী".
-  The final paragraph should note why this matters for Bangladeshi readers,
-  developers or businesses — but ONLY if you can do so from the given facts.
+Your job: deliver the same news to a Bangladeshi reader in Bangla — fast, accurate,
+compact. This is a news brief, not an essay.
+
+- title: the headline in natural Bangla. Keep the meaning exact — do not
+  exaggerate, do not add drama. Technical terms: plain Bangla with the English in
+  brackets on first use, e.g. কৃত্রিম বুদ্ধিমত্তা (এআই), ওপেন সোর্স (open source).
+  Well-known product and company names stay in English (ChatGPT, Google, Linux).
+- lead: ONE sentence — what happened.
+- body: 2-3 SHORT paragraphs (2-3 sentences each) stating the facts from the
+  snippet in your own plain Bangla phrasing. Open the first body paragraph with
+  attribution: "টেকক্রাঞ্চের প্রতিবেদন অনুযায়ী", "হ্যাকার নিউজে প্রকাশিত তথ্য অনুযায়ী",
+  "গুগলের ব্লগ পোস্টে বলা হয়েছে" — whatever fits the outlet.
 
 Hard rules:
-- Use ONLY the facts present in the supplied item. Never invent numbers, quotes,
-  names, dates or product details. If something is unclear, write around it.
-- If the item is thin (a link post with no substance), keep the report short and
-  factual rather than padding it.
-- Standard modern Bangla (চলিত), warm and professional. No AI clichés.
+- State the facts; do NOT render the source's sentences into Bangla one by one.
+- Use ONLY what is in the snippet. Never invent numbers, quotes, names, dates,
+  features or context. No speculation about what the full article might say.
+- If the snippet is thin, write just two short paragraphs. Short and correct beats
+  long and padded.
+- Standard modern Bangla (চলিত), clean newsroom tone.
 
 Return JSON matching the schema."""
 
@@ -217,7 +222,7 @@ def pick_candidates(items: list[dict], used: set[str]) -> list[dict]:
     fresh = [
         i
         for i in items
-        if i["url"] not in used and len(i["summary"]) >= 120 and len(i["title"]) >= 25
+        if i["url"] not in used and len(i["summary"]) >= 90 and len(i["title"]) >= 20
     ]
     fresh.sort(key=lambda i: (i["weight"], i["publishedAt"]), reverse=True)
     return fresh[:MAX_NEW_ARTICLES]
@@ -237,7 +242,7 @@ def write_article(client, item: dict) -> dict | None:
     try:
         message = client.messages.create(
             model=MODEL,
-            max_tokens=4000,
+            max_tokens=2000,
             system=BANGLA_WRITER_PROMPT,
             messages=[{"role": "user", "content": payload}],
             output_config={"format": {"type": "json_schema", "schema": ARTICLE_SCHEMA}},

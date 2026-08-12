@@ -32,7 +32,7 @@ jobs:
       - name: Collect, write and publish
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          MAX_NEW_ARTICLES: "3"
+          MAX_NEW_ARTICLES: "6"
           CLAUDE_MODEL: claude-sonnet-5
         run: python scripts/auto_publish.py
 
