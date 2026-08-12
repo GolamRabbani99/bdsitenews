@@ -35,7 +35,8 @@ ARTICLES_PATH = DATA / "articles.json"
 STORIES_PATH = DATA / "stories.json"
 
 # ── Cost & volume guardrails ────────────────────────────────────────────
-MAX_NEW_ARTICLES = int(os.environ.get("MAX_NEW_ARTICLES", "6"))
+MAX_NEW_ARTICLES = int(os.environ.get("MAX_NEW_ARTICLES", "8"))
+MAX_PER_CATEGORY = int(os.environ.get("MAX_PER_CATEGORY", "2"))
 MAX_ARTICLES_KEPT = int(os.environ.get("MAX_ARTICLES_KEPT", "40"))
 MAX_WIRE_ITEMS = 60
 MODEL = os.environ.get("CLAUDE_MODEL", "claude-sonnet-5")
@@ -91,17 +92,59 @@ for _person, _query in AI_VOICES:
             ),
             "cat": "প্রযুক্তি",
             "weight": 4,  # highest priority — this is the differentiating beat
-            "kind": "person",
+            "kind": "gnews",
             "person": _person,
         }
     )
 
+# ── Bangladesh desks ────────────────────────────────────────────────────
+# Bangla-language Google News queries, one per section of the paper. These
+# fill বাংলাদেশ / রাজনীতি / অপরাধ / খেলা / বিনোদন / অর্থনীতি / শিক্ষা /
+# প্রবাস / জেলা — the categories a Bangladeshi reader actually opens.
+BD_DESKS = [
+    ("বাংলাদেশ", "বাংলাদেশ সরকার জাতীয়", 5),
+    ("রাজনীতি", "বাংলাদেশ রাজনীতি নির্বাচন", 5),
+    ("অপরাধ", "বাংলাদেশ আদালত মামলা তদন্ত", 3),
+    ("খেলা", "বাংলাদেশ ক্রিকেট ফুটবল খেলা", 5),
+    ("বিনোদন", "বাংলাদেশ বিনোদন সিনেমা নাটক", 3),
+    ("অর্থনীতি", "বাংলাদেশ অর্থনীতি ব্যবসা বাণিজ্য", 5),
+    ("শিক্ষা", "বাংলাদেশ শিক্ষা পরীক্ষা ভর্তি", 4),
+    ("প্রবাস", "প্রবাসী বাংলাদেশি রেমিট্যান্স ভিসা", 4),
+    ("জেলা", "চট্টগ্রাম সিলেট রাজশাহী খুলনা জেলা", 2),
+]
+
+for _cat, _query, _weight in BD_DESKS:
+    FEEDS.append(
+        {
+            "name": f"বাংলাদেশ ডেস্ক · {_cat}",
+            "url": (
+                "https://news.google.com/rss/search?q="
+                + _query.replace(" ", "+")
+                + "+when:2d&hl=bn&gl=BD&ceid=BD:bn"
+            ),
+            "cat": _cat,
+            "weight": _weight,
+            "kind": "gnews",
+        }
+    )
+
+# Direct feeds from established Bangladeshi outlets
+FEEDS += [
+    {"name": "প্রথম আলো", "url": "https://www.prothomalo.com/feed", "cat": "বাংলাদেশ", "weight": 4},
+    {"name": "ঢাকা পোস্ট", "url": "https://www.dhakapost.com/rss/rss.xml", "cat": "বাংলাদেশ", "weight": 3},
+    {"name": "রাইজিংবিডি", "url": "https://www.risingbd.com/rss/rss.xml", "cat": "বাংলাদেশ", "weight": 3},
+]
+
 BANGLA_WRITER_PROMPT = """You are a Bangla news-desk editor producing short news briefs
 (সংক্ষিপ্ত সংবাদ) for a Bangladeshi technology news portal.
 
-You receive ONE feed item: an English headline, a short summary snippet, the outlet
-name and the URL. That snippet is ALL the information you have — you do not have the
-full article, so never assume anything beyond it.
+You receive ONE feed item: a headline (in English OR Bangla), a short summary
+snippet, the outlet name and the URL. That snippet is ALL the information you have —
+you do not have the full article, so never assume anything beyond it.
+
+If the source item is ALREADY in Bangla, you must still write your own sentences.
+Do not lift, lightly edit, or re-order the source's phrasing — read it, take the
+facts, and compose the brief fresh in your own words.
 
 Your job: deliver the same news to a Bangladeshi reader in Bangla — fast, accurate,
 compact. This is a news brief, not an essay.
@@ -135,6 +178,15 @@ Hard rules:
   numbers, reasons or background you were not given. An honest two-line brief is
   correct; an invented paragraph is not.
 - Standard modern Bangla (চলিত), clean newsroom tone.
+
+LEGAL SAFETY — crime, courts and allegations (অপরাধ / আদালত):
+- Never state or imply that a named person committed a crime. Write "অভিযোগ",
+  "অভিযুক্ত", "পুলিশের ভাষ্য অনুযায়ী", "আদালতে দায়ের করা মামলায় বলা হয়েছে".
+- Only name individuals if the source names them AND the matter is already
+  before police or a court. Never name suspects who have only been accused
+  informally, and never name victims of sexual crimes or children.
+- Attribute every allegation to whoever made it. If the source is vague about
+  who alleges what, keep the brief general and do not name anyone.
 
 Return JSON matching the schema."""
 
@@ -219,7 +271,7 @@ def collect() -> list[dict]:
 
             source = feed["name"]
             person = feed.get("person")
-            if feed.get("kind") == "person":
+            if feed.get("kind") == "gnews":
                 # Google News titles read "Headline - Publisher"; split so we
                 # attribute the real outlet rather than "Google News".
                 if " - " in title:
@@ -329,6 +381,7 @@ def pick_candidates(items: list[dict], used: set[str]) -> list[dict]:
 
     picked: list[dict] = []
     per_person: dict[str, int] = {}
+    per_category: dict[str, int] = {}
     for item in fresh:
         # One brief per real-world story, however many outlets covered it.
         if any(_same_story(item["title"], p["title"]) for p in picked):
@@ -339,6 +392,11 @@ def pick_candidates(items: list[dict], used: set[str]) -> list[dict]:
             if per_person.get(person, 0) >= 1:
                 continue
             per_person[person] = per_person.get(person, 0) + 1
+        # Spread the run across desks so the front page isn't all one section.
+        cat = item["category"]
+        if per_category.get(cat, 0) >= MAX_PER_CATEGORY:
+            continue
+        per_category[cat] = per_category.get(cat, 0) + 1
         picked.append(item)
         if len(picked) >= MAX_NEW_ARTICLES:
             break

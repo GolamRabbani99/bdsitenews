@@ -12,25 +12,50 @@ export type Article = {
   stats?: { title: string; headers: string[]; rows: string[][] };
 };
 
-/** Bangla category ⇄ ASCII slug, so category pages are indexable URLs. */
+/**
+ * Bangla category ⇄ ASCII slug. `aliases` keeps older articles working after
+ * a rename (খেলাধুলা → খেলা, আন্তর্জাতিক → বিশ্ব) without rewriting data.
+ */
 export const CATEGORIES = [
-  { slug: "tech", bn: "প্রযুক্তি" },
-  { slug: "sports", bn: "খেলাধুলা" },
-  { slug: "world", bn: "আন্তর্জাতিক" },
-  { slug: "business", bn: "অর্থনীতি" },
-  { slug: "politics", bn: "রাজনীতি" },
-  { slug: "bangladesh", bn: "বাংলাদেশ" },
+  { slug: "bangladesh", bn: "বাংলাদেশ", aliases: [] as string[] },
+  { slug: "politics", bn: "রাজনীতি", aliases: [] },
+  { slug: "crime", bn: "অপরাধ", aliases: ["আইন-আদালত"] },
+  { slug: "sports", bn: "খেলা", aliases: ["খেলাধুলা"] },
+  { slug: "entertainment", bn: "বিনোদন", aliases: [] },
+  { slug: "business", bn: "অর্থনীতি", aliases: ["ব্যবসা"] },
+  { slug: "world", bn: "বিশ্ব", aliases: ["আন্তর্জাতিক"] },
+  { slug: "tech", bn: "প্রযুক্তি", aliases: [] },
+  { slug: "education", bn: "শিক্ষা", aliases: [] },
+  { slug: "probash", bn: "প্রবাস", aliases: ["প্রবাসী"] },
+  { slug: "district", bn: "জেলা", aliases: [] },
+  { slug: "fact-check", bn: "ফ্যাক্ট চেক", aliases: [] },
+  { slug: "explainer", bn: "ব্যাখ্যা", aliases: [] },
 ] as const;
 
+/** Canonical Bangla name for a category label (handles renamed categories). */
+export function canonicalCategory(bn: string): string {
+  const hit = CATEGORIES.find(
+    (c) => c.bn === bn || (c.aliases as readonly string[]).includes(bn),
+  );
+  return hit?.bn ?? bn;
+}
+
 export function categorySlug(bn: string): string {
-  return CATEGORIES.find((c) => c.bn === bn)?.slug ?? "news";
+  const hit = CATEGORIES.find(
+    (c) => c.bn === bn || (c.aliases as readonly string[]).includes(bn),
+  );
+  return hit?.slug ?? "news";
 }
 
 export function categoryBn(slug: string): string | undefined {
   return CATEGORIES.find((c) => c.slug === slug)?.bn;
 }
 
-const all = articlesData as Article[];
+// Normalise every article's category once, at load.
+const all = (articlesData as Article[]).map((a) => ({
+  ...a,
+  category: canonicalCategory(a.category),
+}));
 
 /** Newest first — the ordering every news site uses. */
 export function allArticles(): Article[] {
@@ -48,13 +73,15 @@ export function byCategory(bn: string): Article[] {
   return allArticles().filter((a) => a.category === bn);
 }
 
-/** Categories that actually have articles, ordered by article count. */
+/**
+ * Categories that actually have articles, kept in masthead order. Empty
+ * sections are hidden rather than shipping dead pages to Google — they
+ * appear on their own as the desks fill up.
+ */
 export function activeCategories() {
   const counts = new Map<string, number>();
   for (const a of all) counts.set(a.category, (counts.get(a.category) ?? 0) + 1);
-  return CATEGORIES.filter((c) => counts.has(c.bn)).sort(
-    (a, b) => (counts.get(b.bn) ?? 0) - (counts.get(a.bn) ?? 0),
-  );
+  return CATEGORIES.filter((c) => (counts.get(c.bn) ?? 0) > 0);
 }
 
 /**
