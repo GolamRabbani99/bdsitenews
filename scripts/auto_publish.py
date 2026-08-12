@@ -199,6 +199,13 @@ you were given genuinely support it:
 Never stretch a thin story into a structured one. Empty fields are expected and
 correct on most routine items.
 
+- category: the desk this story belongs on, judged from the story itself — not
+  from where it was collected. A Chattogram arrest is অপরাধ, not বাংলাদেশ or
+  জেলা. A cricket result is খেলা. A university expulsion is শিক্ষা. A remittance
+  figure is অর্থনীতি. Use জেলা only when the story's substance is local district
+  affairs rather than a crime or a national matter, and বাংলাদেশ only for
+  national news that fits no sharper desk.
+
 Hard rules:
 - State the facts; do NOT render the source's sentences into Bangla one by one.
 - Use ONLY what is in the snippet. Never invent numbers, quotes, names, dates,
@@ -242,9 +249,22 @@ ARTICLE_SCHEMA = {
             "enum": ["", "সত্য", "মিথ্যা", "আংশিক সত্য", "যাচাই করা যায়নি"],
         },
         "claim": {"type": "string"},
+        # The desk this story belongs on, judged from its content
+        "category": {
+            "type": "string",
+            "enum": [
+                "বাংলাদেশ", "রাজনীতি", "অপরাধ", "খেলা", "বিনোদন", "অর্থনীতি",
+                "বিশ্ব", "প্রযুক্তি", "শিক্ষা", "প্রবাস", "জেলা", "ফ্যাক্ট চেক",
+            ],
+        },
     },
-    "required": ["title", "lead", "body", "impact", "context", "verdict", "claim"],
+    "required": [
+        "title", "lead", "body", "impact", "context", "verdict", "claim",
+        "category",
+    ],
 }
+
+VALID_CATEGORIES = set(ARTICLE_SCHEMA["properties"]["category"]["enum"])
 
 _WS = re.compile(r"\s+")
 
@@ -261,6 +281,46 @@ def clean_text(raw: str | None) -> str:
     text = html.unescape(text)
     text = _WS.sub(" ", text).strip()
     return "" if text.lower() in {"null", "none"} else text
+
+
+# ── Desk classification ─────────────────────────────────────────────────
+# A general national feed can't tell us whether an item is crime, politics or
+# education, so we read the text. Order matters: the first desk that matches
+# wins, and the distinctive desks are checked before the broad ones.
+CATEGORY_RULES: list[tuple[str, tuple[str, ...]]] = [
+    ("খেলা", ("ক্রিকেট", "ফুটবল", "উইকেট", "টি-টোয়েন্টি", "টেস্ট ম্যাচ", "ওয়ানডে",
+              "বিশ্বকাপ", "খেলোয়াড়", "টাইগার", "গোল করে", "ম্যাচে", "সিরিজ",
+              "টুর্নামেন্ট", "লিগ", "ব্যাটিং", "বোলিং")),
+    ("বিনোদন", ("সিনেমা", "চলচ্চিত্র", "নাটক", "অভিনেতা", "অভিনেত্রী", "নায়িকা",
+                "নায়ক", "গানের", "শিল্পী", "সংগীত", "বলিউড", "ঢালিউড", "শোবিজ")),
+    ("অপরাধ", ("গ্রেপ্তার", "গ্রেফতার", "রিমান্ড", "হত্যা", "খুন", "ধর্ষণ",
+               "ছিনতাই", "সন্ত্রাসী", "মামলা", "আদালত", "তদন্ত", "অভিযোগে",
+               "অভিযুক্ত", "কারাদণ্ড", "জামিন", "লুট", "মাদক", "সংঘর্ষ")),
+    ("শিক্ষা", ("শিক্ষার্থী", "বিশ্ববিদ্যালয়", "পরীক্ষা", "ভর্তি", "এসএসসি",
+                "এইচএসসি", "রেজাল্ট", "ফলাফল প্রকাশ", "শিক্ষক", "মাদ্রাসা",
+                "কলেজের", "শিক্ষাপ্রতিষ্ঠান", "এমপিও")),
+    ("অর্থনীতি", ("ব্যাংক", "রেমিট্যান্স", "রপ্তানি", "আমদানি", "বিনিয়োগ",
+                  "শেয়ারবাজার", "ডলার", "মূল্যস্ফীতি", "অর্থনীতি", "রাজস্ব",
+                  "বাজেট", "জিডিপি", "ব্যবসা", "বাণিজ্য")),
+    ("প্রবাস", ("প্রবাসী", "ভিসা", "অভিবাসন", "মালয়েশিয়া", "সৌদি", "দুবাই",
+                "কর্মী পাঠানো", "বিদেশগামী")),
+    ("প্রযুক্তি", ("প্রযুক্তি", "কৃত্রিম বুদ্ধিমত্তা", "এআই", "সফটওয়্যার",
+                   "স্মার্টফোন", "অ্যাপ", "ইন্টারনেট", "সাইবার", "গুগল",
+                   "ওপেনএআই", "চ্যাটজিপিটি")),
+    ("রাজনীতি", ("নির্বাচন", "ভোট", "বিএনপি", "আওয়ামী", "জামায়াত", "রাজনৈতিক",
+                 "সংসদ", "রাষ্ট্রপতি", "প্রধান উপদেষ্টা", "মন্ত্রী", "দলীয়")),
+    ("জেলা", ("চট্টগ্রাম", "সিলেট", "রাজশাহী", "খুলনা", "বরিশাল", "রংপুর",
+              "ময়মনসিংহ", "কুমিল্লা", "নোয়াখালী", "উপজেলা")),
+]
+
+
+def classify(title: str, summary: str, fallback: str) -> str:
+    """Pick the desk from the text. Falls back to the feed's own category."""
+    text = f"{title} {summary}"
+    for category, keywords in CATEGORY_RULES:
+        if any(k in text for k in keywords):
+            return category
+    return fallback
 
 
 def useful_summary(summary: str, title: str) -> str:
@@ -351,16 +411,24 @@ def collect() -> list[dict]:
                 else:
                     source = "Google News"
 
+            summary = clean_text(getattr(entry, "summary", ""))[:400]
+            # Fact-check feeds are already a desk; everything else is read.
+            category = (
+                feed["cat"]
+                if feed["cat"] == "ফ্যাক্ট চেক"
+                else classify(title, summary, feed["cat"])
+            )
+
             seen_titles.add(key)
             kept += 1
             items.append(
                 {
                     "title": title,
                     "url": url,
-                    "summary": clean_text(getattr(entry, "summary", ""))[:400],
+                    "summary": summary,
                     "source": source,
                     "person": person,
-                    "category": feed["cat"],
+                    "category": category,
                     "weight": feed["weight"],
                     "publishedAt": (published or datetime.now(timezone.utc)).isoformat(),
                 }
@@ -511,10 +579,15 @@ def write_article(client, item: dict) -> dict | None:
         f"({usage.input_tokens}+{usage.output_tokens} tok, ~${cost:.4f})"
     )
 
+    # Trust the writer's read of the story over the feed it arrived on.
+    category = draft.get("category", "")
+    if category not in VALID_CATEGORIES:
+        category = item["category"]
+
     article = {
-        "slug": slugify(draft["title"], item["url"], item["category"]),
+        "slug": slugify(draft["title"], item["url"], category),
         "title": draft["title"],
-        "category": item["category"],
+        "category": category,
         "lead": draft["lead"],
         "body": [p for p in draft["body"] if p.strip()],
         "sources": [{"name": item["source"], "url": item["url"]}],
