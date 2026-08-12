@@ -1,5 +1,101 @@
 [
  {
+  "title": "A look at the challenges facing incoming Google DeepMind head Koray Kavukcuoglu, who joined DeepMind in 2012 and will oversee Gemini and frontier AI research (Kai Nicol-Schwarz/CNBC)",
+  "url": "https://www.techmeme.com/260812/p12#a260812p12",
+  "summary": "Kai Nicol-Schwarz / CNBC : A look at the challenges facing incoming Google DeepMind head Koray Kavukcuoglu, who joined DeepMind in 2012 and will overs",
+  "category": "Technology",
+  "source": "Techmeme",
+  "publishedAt": "2026-08-12T10:30:00+00:00"
+ },
+ {
+  "title": "Former Alibaba star researcher Junyang Lin launches Shanghai-based Pragmatik Labs to build digital and physical AI agents; Pragmatik hit a $2B valuation in June (Juro Osawa/The Information)",
+  "url": "https://www.techmeme.com/260812/p11#a260812p11",
+  "summary": "Juro Osawa / The Information : Former Alibaba star researcher Junyang Lin launches Shanghai-based Pragmatik Labs to build digital and physical AI agen",
+  "category": "Technology",
+  "source": "Techmeme",
+  "publishedAt": "2026-08-12T10:15:14+00:00"
+ },
+ {
+  "title": "Show HN: Woxi - Open-source Mathematica / Wolfram Language reimplementation",
+  "url": "https://woxi.ad-si.com",
+  "summary": "Woxi is an interpreter for the Wolfram Language written in Rust. It comes with Woxi Studio, a Mathematica-like GUI built with iced, but you can also u",
+  "category": "Technology",
+  "source": "Hacker News",
+  "publishedAt": "2026-08-12T10:06:29+00:00"
+ },
+ {
+  "title": "Foxconn reports Q2 revenue up 41% YoY to ~$78.4B, with cloud and networking products contributing 50%+ for the first time, and net profit up 35% to ~$1.86B (Sherry Qin/Wall Street Journal)",
+  "url": "https://www.techmeme.com/260812/p10#a260812p10",
+  "summary": "Sherry Qin / Wall Street Journal : Foxconn reports Q2 revenue up 41% YoY to ~$78.4B, with cloud and networking products contributing 50%+ for the firs",
+  "category": "Technology",
+  "source": "Techmeme",
+  "publishedAt": "2026-08-12T10:05:02+00:00"
+ },
+ {
+  "title": "Tim Gowers: What sort of maths are LLMs good at?",
+  "url": "https://gowers.wordpress.com/2026/08/12/what-sort-of-maths-are-llms-good-at/",
+  "summary": "Article URL: https://gowers.wordpress.com/2026/08/12/what-sort-of-maths-are-llms-good-at/ Comments URL: https://news.ycombinator.com/item?id=49270022 ",
+  "category": "Technology",
+  "source": "Hacker News",
+  "publishedAt": "2026-08-12T10:04:25+00:00"
+ },
+ {
+  "title": "Anthropic’s Watermarking, How It (Probably) Works, Worse Than It Seems",
+  "url": "https://stratechery.com/2026/anthropics-watermarking-how-it-probably-works-worse-than-it-seems/",
+  "summary": "Anthropic is adding watermarking in response to the E.U.'s AI law. It's a terrible idea, first and foremost for philosophical reasons.",
+  "category": "Technology",
+  "source": "Stratechery",
+  "publishedAt": "2026-08-12T10:00:00+00:00"
+ },
+ {
+  "title": "Reservoir raises $8M to make water heaters that people — and the grid — will actually want",
+  "url": "https://techcrunch.com/2026/08/12/reservoir-raises-8m-to-make-water-heaters-that-people-and-the-grid-will-actually-want/",
+  "summary": "Reservoir has built an ultra-efficient water heater that can predict hot water demand, store energy, and detect plumbing leaks throughout a home.",
+  "category": "Technology",
+  "source": "TechCrunch",
+  "publishedAt": "2026-08-12T10:00:00+00:00"
+ },
+ {
+  "title": "Tencent reports Q2 revenue up 11% YoY to ~$30.4B, above ~$30B est., and net income of ~$8.3B, driven by surging WeChat advertising and resilient game spending (Bloomberg)",
+  "url": "https://www.techmeme.com/260812/p9#a260812p9",
+  "summary": "Bloomberg : Tencent reports Q2 revenue up 11% YoY to ~$30.4B, above ~$30B est., and net income of ~$8.3B, driven by surging WeChat advertising and res",
+  "category": "Technology",
+  "source": "Techmeme",
+  "publishedAt": "2026-08-12T09:50:02+00:00"
+ },
+ {
+  "title": "Stockholm-based AI coding startup Lovable raised $400M at a $13.3B valuation, up from $6.6B in December 2025, becoming one of Europe's most valuable startups (Ben Dummett/Wall Street Journal)",
+  "url": "https://www.techmeme.com/260812/p8#a260812p8",
+  "summary": "Ben Dummett / Wall Street Journal : Stockholm-based AI coding startup Lovable raised $400M at a $13.3B valuation, up from $6.6B in December 2025, beco",
+  "category": "Technology",
+  "source": "Techmeme",
+  "publishedAt": "2026-08-12T09:37:37+00:00"
+ },
+ {
+  "title": "Facebook is paying controversial creators to produce rage-bait content",
+  "url": "https://www.abc.net.au/news/2026-08-06/ragebait-how-facebook-is-paying-controversial-creators/106940696",
+  "summary": "Article URL: https://www.abc.net.au/news/2026-08-06/ragebait-how-facebook-is-paying-controversial-creators/106940696 Comments URL: https://news.ycombi",
+  "category": "Technology",
+  "source": "Hacker News",
+  "publishedAt": "2026-08-12T09:35:30+00:00"
+ },
+ {
+  "title": "Beef and dairy drive 41% of biodiversity damage linked to global farmland",
+  "url": "https://www.oxfordmartin.ox.ac.uk/news/beef-and-dairy-drive-41-of-biodiversity-damage-linked-to-global-farmland",
+  "summary": "Article URL: https://www.oxfordmartin.ox.ac.uk/news/beef-and-dairy-drive-41-of-biodiversity-damage-linked-to-global-farmland Comments URL: https://new",
+  "category": "Technology",
+  "source": "Hacker News",
+  "publishedAt": "2026-08-12T09:30:47+00:00"
+ },
+ {
+  "title": "Dutch Train Map Simulator",
+  "url": "https://spoorkaart.zaza.dev",
+  "summary": "Article URL: https://spoorkaart.zaza.dev Comments URL: https://news.ycombinator.com/item?id=49269641 Points: 22 # Comments: 4",
+  "category": "Technology",
+  "source": "Hacker News",
+  "publishedAt": "2026-08-12T09:09:21+00:00"
+ },
+ {
   "title": "Analyzing My Lobsters Submissions",
   "url": "https://abhinavsarkar.net/notes/2026-lobsters-submissions/",
   "summary": "Comments",
@@ -14,6 +110,30 @@
   "category": "Technology",
   "source": "Techmeme",
   "publishedAt": "2026-08-12T08:30:03+00:00"
+ },
+ {
+  "title": "OpenAI COO Brad Lightcap Leaves After 8 Years to Start New Venture",
+  "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxNYkp3M0gxM0NPenNFQ0R0QWd3S29SRm9rRTVJclVSRUpLLTlDcnBBZHJ2elVoMkQ1MGVQZ0FCdi1hZVlOSzVHY3pQUS1IaGNpcUNrZi1leUxhQmg1U3pnNjB3aEJpT0l2dkhReWxnclM1bTBzS0l1TElZSFdDZTJJWWhjQlA3SzY0bkhtbURHY0N2N0hVM01EME0xM3doeW5vdS13eE1QbVYwYVBQ?oc=5",
+  "summary": "OpenAI COO Brad Lightcap Leaves After 8 Years to Start New Venture &nbsp;&nbsp; analyticsindiamag.com",
+  "category": "Technology",
+  "source": "analyticsindiamag.com",
+  "publishedAt": "2026-08-12T08:18:15+00:00"
+ },
+ {
+  "title": "OpenAI employees have an SOS email ID to reach Sam Altman and tell him 'all is not well'",
+  "url": "https://news.google.com/rss/articles/CBMi_gFBVV95cUxQS2k5T29lQVQ0bnNJUnZNT3pYQmVzNThqVVNtUkpIZi1xeGNKWXYyMmdKZ2Q0eV9nUFpIVjlBN3VxWmtybjFPeXZtMllxTU1kRmVSS1VyWDJyU3NyNDBJQ05MeWY5UjlxVS1NTXU0Nl9nd1BZa0M0UFRENk9NRXRPRlRwWDBRZ2J1SlZoZ3RXTVh0enhKT19DeURjczkyVllSdmItcHVwbk1pcjRmUDRXWU1GNlE3dGVseUdaODBMWTZOdlFqMXlQLXd0RHFnLW1IbVlDUzZMWnNiVXNaR1BteWdoOGU2SElQUTFNaUdscUFBeVJYSHNXZG9haWRYQdIBgwJBVV95cUxPbVFtZkFyQW5COWF5WVZGcEk2NkFMMmw5QlZwRGpVaWl2TU5GM01LbmRNSmxORXU1QXp2TUVkXzlfUEN2YjRBamFSTjBiNGFyZXFVZWZRV2FlczlSVnRpaktBNW9Qd2d3NTUzQ0ZDQVd5Z2R2TEJjNHlGMTlqblBOWkwtV0RkV3FaakxjUkxVVF9EVmtJTmxTa2xlVnFwdW03NUdhYXBUS1gybWpPcU0xb2lXTnRiaE1jZ25tYWFKeFh5WFBUNkE0dHFzdEExbzF5MnZ2cnVMcHJ0UDE4UVoyS01CMFRON0c2MjhIZmpzMVV2cl9fX1pERGE5azk2Nk0tcHlB?oc=5",
+  "summary": "OpenAI employees have an SOS email ID to reach Sam Altman and tell him 'all is not well' &nbsp;&nbsp; The Times of India",
+  "category": "Technology",
+  "source": "The Times of India",
+  "publishedAt": "2026-08-12T07:53:00+00:00"
+ },
+ {
+  "title": "Launch HN: Discovered Materials (YC P26) – AI agents to discover new materials",
+  "url": "https://discoveredmaterials.com/research/",
+  "summary": "Hey HN, we're Advaith and Akash from Discovered Materials ( https://discoveredmaterials.com/ ). We build AI agents that discover new materials for the",
+  "category": "Technology",
+  "source": "Hacker News",
+  "publishedAt": "2026-08-12T07:51:20+00:00"
  },
  {
   "title": "Introducing Automatic Key Verification",
@@ -34,7 +154,7 @@
  {
   "title": "LinkedIn CringeBot 3000",
   "url": "https://www.cringebot3000.com/",
-  "summary": "Article URL: https://www.cringebot3000.com/ Comments URL: https://news.ycombinator.com/item?id=49268564 Points: 112 # Comments: 33",
+  "summary": "Article URL: https://www.cringebot3000.com/ Comments URL: https://news.ycombinator.com/item?id=49268564 Points: 189 # Comments: 70",
   "category": "Technology",
   "source": "Hacker News",
   "publishedAt": "2026-08-12T06:30:49+00:00"
@@ -46,6 +166,14 @@
   "category": "Technology",
   "source": "Techmeme",
   "publishedAt": "2026-08-12T06:30:02+00:00"
+ },
+ {
+  "title": "OpenAI executive and Sam Altman’s close aide Brad Lightcap leaves to ‘start something new’",
+  "url": "https://news.google.com/rss/articles/CBMi1wFBVV95cUxQTGphWWFIaFdDdnROM1NUNC0zOEFFNkFFUmFBSHNnR2kwZXhncVU3bVFoLTdMeWJvRXdlWGY0ZXBlVTNZUTVWMnlSaDh0dG5RQ3owSUZmWWlKczM3ZjZqZXZOdUloa1lMWnRXWVBxWkFiUlNwZ0FUMHhYdmhGVzNRRmhveVI2UG4yRXVRemJ1WnhyOUh0MDVvbk5ndlFGdFFOWHA5RlJJVWtWcUVkcFp5WVVUY2lFMGdyZFh2YlhXZEpJOU0zc2drUy1aV2k4SnBmOG1iemxjTdIB3AFBVV95cUxNaGtiZVVhOXhoNFlBb1F2QzFwa21td0NrdmJJbWtVNUhPRVp6YnU5azNubHZqVjFTdXczajJMczN5TDhUanI1S3FVM2p2Yi1HcUNUUWR0U29FaHVZTEVrc2tIZ3ByT3JtYTBRTFlMTWk2N1FUOXVld3poM29vRU9JaElPbzRDVGJPa1pSYVVUNE5xdDVZa2w4dHZQZDlLU1BKODc3M2NRWE5JcjlpVWRQVWtjSktPVllZNXVnME9QWlpvbkduVWdoTjVBb04tQnBNY2ZfMWRkeVl1amZR?oc=5",
+  "summary": "OpenAI executive and Sam Altman’s close aide Brad Lightcap leaves to ‘start something new’ &nbsp;&nbsp; Storyboard18",
+  "category": "Technology",
+  "source": "Storyboard18",
+  "publishedAt": "2026-08-12T06:03:49+00:00"
  },
  {
   "title": "Briter: Africa-focused startups raised $3.3B in H1 2026, up 73% YoY, driven by Zipline's $950M raise; US- and UAE-incorporated entities raised half the capital (Nduka Orjinmo/Bloomberg)",
@@ -70,6 +198,14 @@
   "category": "Technology",
   "source": "Lobsters",
   "publishedAt": "2026-08-12T05:20:40+00:00"
+ },
+ {
+  "title": "Brad Lightcap OpenAI Departure Marks Executive Shift",
+  "url": "https://news.google.com/rss/articles/CBMieEFVX3lxTFBwU0FGSFFYNjc2cUIyNHVzOWZTcnR2dVltOFRzUWhnS0N2akZNSElMSkw2ZkE1TTFiUkw3SXFQQmJPVG5VRl9UNXJJcElHWlE4bkZnNE8wVDdweEdPTHlwc1lCRjhhNGhuOVNMYmV0VDU2RU5ZMzNuMg?oc=5",
+  "summary": "Brad Lightcap OpenAI Departure Marks Executive Shift &nbsp;&nbsp; The Cryptonomist",
+  "category": "Technology",
+  "source": "The Cryptonomist",
+  "publishedAt": "2026-08-12T05:15:26+00:00"
  },
  {
   "title": "Sources: Singapore-based data center operator DayOne confidentially files for a US IPO, aims to list as soon as next quarter, and is considering raising ~$5B (Bloomberg)",
@@ -98,18 +234,10 @@
  {
   "title": "llama.cpp",
   "url": "https://llama.app",
-  "summary": "Article URL: https://llama.app Comments URL: https://news.ycombinator.com/item?id=49267928 Points: 191 # Comments: 79",
+  "summary": "Article URL: https://llama.app Comments URL: https://news.ycombinator.com/item?id=49267928 Points: 229 # Comments: 95",
   "category": "Technology",
   "source": "Hacker News",
   "publishedAt": "2026-08-12T04:51:59+00:00"
- },
- {
-  "title": "Dropbox is an obvious PE Target?",
-  "url": "https://s-1.vercel.app/posts/why-dropbox-is-a-obvious-pe-target/",
-  "summary": "Article URL: https://s-1.vercel.app/posts/why-dropbox-is-a-obvious-pe-target/ Comments URL: https://news.ycombinator.com/item?id=49267818 Points: 53 #",
-  "category": "Technology",
-  "source": "Hacker News",
-  "publishedAt": "2026-08-12T04:30:34+00:00"
  },
  {
   "title": "India’s Yulu raises $93M as quick-commerce boom fuels e-bike demand",
@@ -118,6 +246,30 @@
   "category": "Technology",
   "source": "TechCrunch",
   "publishedAt": "2026-08-12T04:30:00+00:00"
+ },
+ {
+  "title": "Discovered Materials Raises $9 Mn to Solve Silicon’s Overheating Problem",
+  "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxONWl5NW4tNWVOM0F4dHc3cmUzZlUyU3lOcmJ4cV9RbFo4TWFFZHZUNEVYQnJyWUJxTWZwRWtQQm9hUXZNNjJGQ2tFbDlCXzI1OTF2N2lMRUp4cG1XM0QwcFNHem1yUmVnOUl1Q3lFVGhmQ2JMTmRiOTB5NlhVY09Uak1mcVlneU1IaE5ZRGp3eW9lMS1oLU15c3NrR25hVE5yd2ppSlhSeUF3SmU1?oc=5",
+  "summary": "Discovered Materials Raises $9 Mn to Solve Silicon’s Overheating Problem &nbsp;&nbsp; analyticsindiamag.com",
+  "category": "Technology",
+  "source": "analyticsindiamag.com",
+  "publishedAt": "2026-08-12T04:23:15+00:00"
+ },
+ {
+  "title": "OpenAI Faces Another Exit: Sam Altman's Close Aide Quits Amid IPO Buzz",
+  "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxNdjVlRDRoVVNmVm50NHJJa1F3dGFoRTlGbXhsV1RobHZNWWRZeExFdnFGdEFiYkltRFh4N3FsLUltYjVna1pBdHlZVnNoQjJ2QlcwQ2kxaDQzR0ZPeVk4SEF3cmJzYk1vcjkxQXVSTVNYQ3FtdXpPdWpqOGRSR3RUanRRZ3JnS0kteUh2bWhXbFdUVm4xSW9TWEJPS3M4RXhiWDZpNVBLcnVLeGFaX3dlZFVvU01xdm94Y3l30gHDAUFVX3lxTE95SDc1YnZJWG5xNGM4WlNYOEdOSy1hb1RmSkoyWG9iNGhGUUJaMVFFRlY4eUM5Q19QdUl6aXN0OGNLR05pRU1ad2g1VnJ0V3FSS3dOWXZiV19wb2hyZHNsS0hOQ05NV3NlcFFuY3E5NnBrNkFkcW1sN3pNdWxrckE4NnQtcU01QXJHRV8yaUFLU1o3LWVMTEZGY2ZmclJCaFByMTFFQ1BRa0ctRjBaYzdkNHB6eW9HS1FlMGhqZkJqZXZMVQ?oc=5",
+  "summary": "OpenAI Faces Another Exit: Sam Altman's Close Aide Quits Amid IPO Buzz &nbsp;&nbsp; NDTV",
+  "category": "Technology",
+  "source": "NDTV",
+  "publishedAt": "2026-08-12T04:14:08+00:00"
+ },
+ {
+  "title": "Breaking: OpenAI’s \"No. 1 Business Employee\" Departs, Set to Launch Independent Startup",
+  "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE5CeHZyM19idG9keW5BcE9jNko3YzdVTk9PeGlZbFFaaWR0T2ZnbEdFWjl0d0NUUTk0VGRpSnNsdnUtYjBlLXpaeTNILUFld09IU2VR?oc=5",
+  "summary": "Breaking: OpenAI’s \"No. 1 Business Employee\" Departs, Set to Launch Independent Startup &nbsp;&nbsp; 36 Kr",
+  "category": "Technology",
+  "source": "36 Kr",
+  "publishedAt": "2026-08-12T04:04:14+00:00"
  },
  {
   "title": "Closed-Loop LLM Co-Pilots for Digital Agriculture",
@@ -280,12 +432,28 @@
   "publishedAt": "2026-08-12T04:00:00+00:00"
  },
  {
+  "title": "Meet Brad Lightcap: The Man Who Helped Build OpenAI",
+  "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxOXzg4aDZJVUVZQkZPZFluVzVxc3FKV2x2MU1MSzdqSXFBaFNxNU5objBJaVJuT1B2T092eWZvdWUwcG9veUdIRlNBYUVrZ05nTGk2MjJQUHBsOThtRldSenNsRjdCYnVaQzVQeVBCVXQ4amxOdTZjVHRELXpZdHZzTkFSRHpFbVdJVG04Yg?oc=5",
+  "summary": "Meet Brad Lightcap: The Man Who Helped Build OpenAI &nbsp;&nbsp; Open Magazine",
+  "category": "Technology",
+  "source": "Open Magazine",
+  "publishedAt": "2026-08-12T03:56:07+00:00"
+ },
+ {
   "title": "DARPA heavy lift challenge ends with winner at a 3.84:1 payload to weight ratio",
   "url": "https://dronexl.co/2026/08/10/darpa-lift-challenge-results-avidrone/",
   "summary": "Article URL: https://dronexl.co/2026/08/10/darpa-lift-challenge-results-avidrone/ Comments URL: https://news.ycombinator.com/item?id=49267527 Points: ",
   "category": "Technology",
   "source": "Hacker News",
   "publishedAt": "2026-08-12T03:27:31+00:00"
+ },
+ {
+  "title": "Sam Altman’s right-hand man Brad Lightcap leaves OpenAI after 8 years",
+  "url": "https://news.google.com/rss/articles/CBMi0AFBVV95cUxQdF9aYU1JY0daRF9GYlNiTVIzcFh3eEljWGtOczF2WTBFeTFpeUJkbkdmanpLTm1LRzdVZ0owdWo4NGhaUzJEeGZ2WHBNWjQ5cjFmbEJIUXA4S0xMTUpWT1pveHNDWG9tTVFFUWl4bnQ5Z1ZoOGcta1FmYVd0bmxVZExfNnBDNFdidDloVnptUlRhd2Z6NlNkMktBME5KUnQtcXl4YTBJQWtyZGtpcFhmNngwRkpDSUoxVjIwZk05bjJLQWppaEc2RlkxVDZMRERR?oc=5",
+  "summary": "Sam Altman’s right-hand man Brad Lightcap leaves OpenAI after 8 years &nbsp;&nbsp; indiatoday.in",
+  "category": "Technology",
+  "source": "indiatoday.in",
+  "publishedAt": "2026-08-12T03:16:42+00:00"
  },
  {
   "title": "Making a game on a custom bytecode VM in 7 days and 3kB",
@@ -306,177 +474,9 @@
  {
   "title": "The Human Is the Loop",
   "url": "https://brentfitzgerald.com/posts/the-human-is-the-loop/",
-  "summary": "Article URL: https://brentfitzgerald.com/posts/the-human-is-the-loop/ Comments URL: https://news.ycombinator.com/item?id=49267108 Points: 95 # Comment",
+  "summary": "Article URL: https://brentfitzgerald.com/posts/the-human-is-the-loop/ Comments URL: https://news.ycombinator.com/item?id=49267108 Points: 110 # Commen",
   "category": "Technology",
   "source": "Hacker News",
   "publishedAt": "2026-08-12T02:15:01+00:00"
- },
- {
-  "title": "The lifesaving secret hidden inside a horseshoe crab's blue blood",
-  "url": "https://whdh.com/news/the-lifesaving-secret-hidden-inside-a-horseshoe-crabs-blue-blood-and-the-race-to-protect-the-species/",
-  "summary": "Article URL: https://whdh.com/news/the-lifesaving-secret-hidden-inside-a-horseshoe-crabs-blue-blood-and-the-race-to-protect-the-species/ Comments URL:",
-  "category": "Technology",
-  "source": "Hacker News",
-  "publishedAt": "2026-08-12T01:45:51+00:00"
- },
- {
-  "title": "A look at Candy Crush's continued popularity 15 years after its launch, with an estimated 81.5M MAUs and in-app revenue of $876.5M in FY 2025 (Alanna Okun/Bloomberg)",
-  "url": "https://www.techmeme.com/260811/p43#a260811p43",
-  "summary": "Alanna Okun / Bloomberg : A look at Candy Crush's continued popularity 15 years after its launch, with an estimated 81.5M MAUs and in-app revenue of $",
-  "category": "Technology",
-  "source": "Techmeme",
-  "publishedAt": "2026-08-12T01:00:13+00:00"
- },
- {
-  "title": "Saber denies replacing Rideshare Stimulator&#8217;s writers with ChatGPT",
-  "url": "https://www.theverge.com/games/978558/rideshare-stimulator-writer-ai-saber-interactive",
-  "summary": "After a former lead writer claimed Saber \"replaced me with ChatGPT,\" CEO Matthew Karch now claims, \"Neither Saber nor Unigine have replaced any writer",
-  "category": "Technology",
-  "source": "The Verge",
-  "publishedAt": "2026-08-12T00:39:26+00:00"
- },
- {
-  "title": "DEF CON crowd suspected in fake-hotspot attack on Delta flight",
-  "url": "https://arstechnica.com/information-technology/2026/08/def-con-crowd-suspected-in-fake-hotspot-attack-on-delta-flight/",
-  "summary": "FBI Atlanta confirms it's looking into the incident, no arrests made.",
-  "category": "Technology",
-  "source": "Ars Technica",
-  "publishedAt": "2026-08-12T00:08:40+00:00"
- },
- {
-  "title": "A profile of Suno, which has been used by more than 100M people since 2023 and has 2M+ paid subscribers, as it faces copyright lawsuits from UMG and Sony Music (Bloomberg)",
-  "url": "https://www.techmeme.com/260811/p42#a260811p42",
-  "summary": "Bloomberg : A profile of Suno, which has been used by more than 100M people since 2023 and has 2M+ paid subscribers, as it faces copyright lawsuits fr",
-  "category": "Technology",
-  "source": "Techmeme",
-  "publishedAt": "2026-08-11T23:55:01+00:00"
- },
- {
-  "title": "Who's Hiring? - Not-A-Coder Edition - Aug 2026",
-  "url": "https://lobste.rs/s/cnoaqr/who_s_hiring_not_coder_edition_aug_2026",
-  "summary": "Welcome to the first official post of \"Who's Hiring? - Not-A-Coder Edition!\" This is a version of the original \"Who's Hiring?\" posts that targets role",
-  "category": "Technology",
-  "source": "Lobsters",
-  "publishedAt": "2026-08-11T23:46:21+00:00"
- },
- {
-  "title": "OpenAI launches a ChatGPT desktop app for Linux in preview, supporting ChatGPT Work, Codex, and more; Computer Use outside the in-app browser is not available (Frederic Lardinois/The New Stack)",
-  "url": "https://www.techmeme.com/260811/p41#a260811p41",
-  "summary": "Frederic Lardinois / The New Stack : OpenAI launches a ChatGPT desktop app for Linux in preview, supporting ChatGPT Work, Codex, and more; Computer Us",
-  "category": "Technology",
-  "source": "Techmeme",
-  "publishedAt": "2026-08-11T22:55:01+00:00"
- },
- {
-  "title": "The US CFTC uses its \"emergency authority\" to order Kalshi to continue operating in New York after the state filed a lawsuit in July seeking to shutter Kalshi (Nikhilesh De/CoinDesk)",
-  "url": "https://www.techmeme.com/260811/p40#a260811p40",
-  "summary": "Nikhilesh De / CoinDesk : The US CFTC uses its &ldquo;emergency authority&rdquo; to order Kalshi to continue operating in New York after the state fil",
-  "category": "Technology",
-  "source": "Techmeme",
-  "publishedAt": "2026-08-11T22:40:01+00:00"
- },
- {
-  "title": "Xbox Elite 3 prototype pad leaks with tiny built-in screen",
-  "url": "https://www.theverge.com/games/978374/xbox-elite-3-prototype-pad-leaks-with-tiny-built-in-screen",
-  "summary": "Did a prototype Microsoft gamepad fall off the back of a truck? We can't say, but a Redditor has legit-looking photos of a prototype Xbox controller t",
-  "category": "Technology",
-  "source": "The Verge",
-  "publishedAt": "2026-08-11T22:36:35+00:00"
- },
- {
-  "title": "Trump wants Big Pharma to split MMR vaccine; Big Pharma thinks it's idiotic",
-  "url": "https://arstechnica.com/health/2026/08/trump-wants-big-pharma-to-split-mmr-vaccine-big-pharma-thinks-its-idiotic/",
-  "summary": "It took just hours for the leading pharma group to reject the recommendations.",
-  "category": "Technology",
-  "source": "Ars Technica",
-  "publishedAt": "2026-08-11T22:31:45+00:00"
- },
- {
-  "title": "WorldClaw Agentic 3D open-world generation at scale",
-  "url": "https://tencent-hunyuan.github.io/Hunyuan3D-WorldClaw/",
-  "summary": "Article URL: https://tencent-hunyuan.github.io/Hunyuan3D-WorldClaw/ Comments URL: https://news.ycombinator.com/item?id=49265051 Points: 219 # Comments",
-  "category": "Technology",
-  "source": "Hacker News",
-  "publishedAt": "2026-08-11T21:56:18+00:00"
- },
- {
-  "title": "Source: Kalshi's annualized revenue topped $4B in July, up from $2B+ two months earlier, and its operating expenses totaled $300M in June (Yueqi Yang/The Information)",
-  "url": "https://www.techmeme.com/260811/p39#a260811p39",
-  "summary": "Yueqi Yang / The Information : Source: Kalshi's annualized revenue topped $4B in July, up from $2B+ two months earlier, and its operating expenses tot",
-  "category": "Technology",
-  "source": "Techmeme",
-  "publishedAt": "2026-08-11T21:55:00+00:00"
- },
- {
-  "title": "Accel raised $3.5B in funds for early-stage investments, including a $1.35B global expansion fund for larger early-stage rounds and rapid follow-on investments (Natasha Mascarenhas/Bloomberg)",
-  "url": "https://www.techmeme.com/260811/p38#a260811p38",
-  "summary": "Natasha Mascarenhas / Bloomberg : Accel raised $3.5B in funds for early-stage investments, including a $1.35B global expansion fund for larger early-s",
-  "category": "Technology",
-  "source": "Techmeme",
-  "publishedAt": "2026-08-11T21:45:01+00:00"
- },
- {
-  "title": "Phoebe Gates and Sophia Kianni reportedly knew Phia was ‘cookie stuffing’ for months",
-  "url": "https://techcrunch.com/2026/08/11/phoebe-gates-and-sophia-kianni-reportedly-knew-phia-was-cookie-stuffing-for-months/",
-  "summary": "Phia, the shopping startup co-founded by Phoebe Gates and Sophia Kianni, is once again under fire for its alleged business practices.",
-  "category": "Technology",
-  "source": "TechCrunch",
-  "publishedAt": "2026-08-11T21:39:58+00:00"
- },
- {
-  "title": "Accel closes oversubscribed $550M India fund within weeks, 19 months after its last",
-  "url": "https://techcrunch.com/2026/08/11/accel-closes-oversubscribed-550m-india-fund-within-weeks-19-months-after-its-last/",
-  "summary": "The U.S. VC firm still has more than 55% of its previous $650 million India fund available for deployment.",
-  "category": "Technology",
-  "source": "TechCrunch",
-  "publishedAt": "2026-08-11T21:39:11+00:00"
- },
- {
-  "title": "An FCC filing points to new Sonos headphones coming soon",
-  "url": "https://www.theverge.com/tech/978355/sonos-headphones-fcc-filing",
-  "summary": "It looks like we'll be getting a successor to the Sonos Ace headphones sometime this fall, which was hinted at by CEO Tom Conrad during a third quarte",
-  "category": "Technology",
-  "source": "The Verge",
-  "publishedAt": "2026-08-11T21:23:30+00:00"
- },
- {
-  "title": "Russian drones found near vital European offshore gas site, get blown up",
-  "url": "https://arstechnica.com/gadgets/2026/08/romania-destroys-russian-drones-drifting-near-vital-european-offshore-gas-site/",
-  "summary": "This follows many drone incursions into Romania and a failed attack in Germany.",
-  "category": "Technology",
-  "source": "Ars Technica",
-  "publishedAt": "2026-08-11T21:20:11+00:00"
- },
- {
-  "title": "Researchers find that feeding a frontier model's encrypted reasoning traces to a weaker model from the same provider can make it output the traces in plaintext (Will Knight/Wired)",
-  "url": "https://www.techmeme.com/260811/p37#a260811p37",
-  "summary": "Will Knight / Wired : Researchers find that feeding a frontier model's encrypted reasoning traces to a weaker model from the same provider can make it",
-  "category": "Technology",
-  "source": "Techmeme",
-  "publishedAt": "2026-08-11T21:10:02+00:00"
- },
- {
-  "title": "Chrome adopts what may be the best protection yet against account takeovers",
-  "url": "https://arstechnica.com/security/2026/08/chrome-adopts-what-may-be-the-best-protection-yet-against-account-takeovers/",
-  "summary": "Device-bound session credentials thwart an increasingly common form of account takeover.",
-  "category": "Technology",
-  "source": "Ars Technica",
-  "publishedAt": "2026-08-11T20:59:52+00:00"
- },
- {
-  "title": "Sources: former OpenAI Chief Product Officer Kevin Weil is aiming to raise $150M for a new AI science startup, seeking a valuation of at least $750M (Business Insider)",
-  "url": "https://www.techmeme.com/260811/p36#a260811p36",
-  "summary": "Business Insider : Sources: former OpenAI Chief Product Officer Kevin Weil is aiming to raise $150M for a new AI science startup, seeking a valuation ",
-  "category": "Technology",
-  "source": "Techmeme",
-  "publishedAt": "2026-08-11T20:55:02+00:00"
- },
- {
-  "title": "Meta can't stop states' $1.4 trillion lawsuit from going to trial",
-  "url": "https://arstechnica.com/tech-policy/2026/08/meta-cant-stop-states-1-4-trillion-lawsuit-from-going-to-trial/",
-  "summary": "Judges tell Meta that Section 230 provides a defense, not immunity from lawsuits.",
-  "category": "Technology",
-  "source": "Ars Technica",
-  "publishedAt": "2026-08-11T20:27:16+00:00"
  }
 ]
