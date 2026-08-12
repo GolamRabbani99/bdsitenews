@@ -19,6 +19,7 @@ Editorial rules enforced here (same as the newsroom pipeline):
 from __future__ import annotations
 
 import hashlib
+import html
 import json
 import os
 import re
@@ -253,9 +254,28 @@ def log(msg: str) -> None:
 
 
 def clean_text(raw: str | None) -> str:
-    text = re.sub(r"<[^>]+>", " ", raw or "")
+    # Decode entities first (&nbsp;, &amp;, &#x27;) so they don't survive into
+    # the page, then drop markup, then collapse whitespace.
+    text = html.unescape(raw or "")
+    text = re.sub(r"<[^>]+>", " ", text)
+    text = html.unescape(text)
     text = _WS.sub(" ", text).strip()
     return "" if text.lower() in {"null", "none"} else text
+
+
+def useful_summary(summary: str, title: str) -> str:
+    """Feed summaries are often just the headline repeated, sometimes with the
+    publisher's domain tacked on. Those add nothing on the page."""
+    if not summary:
+        return ""
+    stripped = summary.strip()
+    # Drop a trailing bare domain ("… citizensvoicebd.com")
+    stripped = re.sub(r"\s*[\w.-]+\.(com|net|org|bd|tv|news)\s*$", "", stripped)
+    normal = re.sub(r"\W+", "", stripped.lower())
+    title_normal = re.sub(r"\W+", "", title.lower())
+    if not normal or normal == title_normal or normal.startswith(title_normal):
+        return ""
+    return stripped
 
 
 def slugify(title: str, url: str, category: str = "") -> str:
@@ -357,8 +377,10 @@ def update_wire(items: list[dict]) -> int:
         {
             "title": i["title"],
             "url": i["url"],
-            "summary": i["summary"][:150],
-            "category": "Technology",
+            # Use the desk the item actually came from — labelling a crime
+            # story "Technology" is worse than showing no label at all.
+            "category": i["category"],
+            "summary": useful_summary(i["summary"], i["title"])[:150],
             "source": i["source"],
             "publishedAt": i["publishedAt"],
         }

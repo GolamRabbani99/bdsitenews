@@ -122,9 +122,11 @@ export default function Home() {
       {/* External headline wire */}
       <section className="pt-9">
         <h2 className="border-b-2 border-ink pb-2 font-[family-name:var(--font-serif-news)] text-xl font-semibold">
-          World Wire
+          <span className="font-[family-name:var(--font-bengali)]">
+            সংবাদ সংক্ষেপ
+          </span>
           <span className="ml-2 font-[family-name:var(--font-bengali)] text-sm font-normal text-ink-soft">
-            · আন্তর্জাতিক শিরোনাম
+            · অন্যান্য সূত্রে প্রকাশিত শিরোনাম
           </span>
         </h2>
         <StoryGrid stories={wire} />
