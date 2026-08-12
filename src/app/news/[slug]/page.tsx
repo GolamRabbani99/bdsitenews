@@ -7,6 +7,11 @@ import { ShareBar } from "@/components/ShareBar";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import {
+  ContextBox,
+  FactCheckBox,
+  ImpactBox,
+} from "@/components/StructuredBlocks";
+import {
   allArticles,
   formatBnDate,
   getArticle,
@@ -128,6 +133,8 @@ export default async function ArticlePage({
           {article.lead}
         </p>
 
+        {article.factcheck && <FactCheckBox factcheck={article.factcheck} />}
+
         {opening.map((paragraph, i) => (
           <p key={i} className="mt-5 text-[17px] leading-loose">
             {paragraph}
@@ -141,6 +148,11 @@ export default async function ArticlePage({
             {paragraph}
           </p>
         ))}
+
+        {article.impact?.length ? <ImpactBox impact={article.impact} /> : null}
+        {article.context?.length ? (
+          <ContextBox context={article.context} />
+        ) : null}
 
         {article.stats && (
           <div className="mt-8 overflow-x-auto">

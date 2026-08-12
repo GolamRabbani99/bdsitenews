@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Cover } from "@/components/Cover";
+import { StructureBadges } from "@/components/StructuredBlocks";
 import { type Article, formatBnDate } from "@/lib/articles";
 
 /** Compact card used in grids and recirculation lists. */
@@ -26,6 +27,7 @@ export function ArticleCard({
       )}
       <p className="text-[11px] font-bold tracking-[0.18em] text-crimson">
         {article.category}
+        <StructureBadges article={article} />
       </p>
       <h3
         lang="bn"

@@ -130,9 +130,22 @@ for _cat, _query, _weight in BD_DESKS:
 
 # Direct feeds from established Bangladeshi outlets
 FEEDS += [
-    {"name": "প্রথম আলো", "url": "https://www.prothomalo.com/feed", "cat": "বাংলাদেশ", "weight": 4},
-    {"name": "ঢাকা পোস্ট", "url": "https://www.dhakapost.com/rss/rss.xml", "cat": "বাংলাদেশ", "weight": 3},
-    {"name": "রাইজিংবিডি", "url": "https://www.risingbd.com/rss/rss.xml", "cat": "বাংলাদেশ", "weight": 3},
+    {"name": "প্রথম আলো", "url": "https://www.prothomalo.com/feed", "cat": "বাংলাদেশ", "weight": 5},
+    {"name": "ঢাকা পোস্ট", "url": "https://www.dhakapost.com/rss/rss.xml", "cat": "বাংলাদেশ", "weight": 4},
+    {"name": "রাইজিংবিডি", "url": "https://www.risingbd.com/rss/rss.xml", "cat": "বাংলাদেশ", "weight": 4},
+    # Fact-checking desk — Bangladesh's established rumour-verification outfit.
+    # Verification is only credible when it comes from real fact-checkers.
+    {"name": "রিউমর স্ক্যানার", "url": "https://rumorscanner.com/feed", "cat": "ফ্যাক্ট চেক", "weight": 5},
+    {
+        "name": "ফ্যাক্ট চেক ডেস্ক",
+        "url": (
+            "https://news.google.com/rss/search?q="
+            + "ফ্যাক্ট+চেক+ভুয়া+গুজব+বাংলাদেশ+when:5d&hl=bn&gl=BD&ceid=BD:bn"
+        ),
+        "cat": "ফ্যাক্ট চেক",
+        "weight": 5,
+        "kind": "gnews",
+    },
 ]
 
 BANGLA_WRITER_PROMPT = """You are a Bangla news-desk editor producing short news briefs
@@ -165,6 +178,26 @@ compact. This is a news brief, not an essay.
   attribution: "টেকক্রাঞ্চের প্রতিবেদন অনুযায়ী", "হ্যাকার নিউজে প্রকাশিত তথ্য অনুযায়ী",
   "গুগলের ব্লগ পোস্টে বলা হয়েছে" — whatever fits the outlet.
 
+STRUCTURE THAT SETS THIS PAPER APART. Readers do not just want the event; they
+want to know what it means for them. Fill these when — and ONLY when — the facts
+you were given genuinely support it:
+
+- impact (এতে কী বদলাবে): 1-2 short paragraphs on the concrete, direct
+  consequence for ordinary Bangladeshi readers — a price they pay, a rule they
+  must follow, a deadline, a service that changes. Derive it strictly from the
+  stated facts. If the item is a routine statement, a foreign story with no
+  local bearing, or too thin to reason from, return an EMPTY array. An empty
+  impact is always better than a guessed one.
+- context (প্রেক্ষাপট): 1 short paragraph of background — but ONLY if the
+  snippet itself supplies it. Do NOT supply history from your own knowledge,
+  because you cannot verify it here. Otherwise return an EMPTY array.
+- verdict / claim: leave BOTH as "" unless this item is itself a fact-check
+  from a fact-checking organisation. When it is, put the viral claim being
+  checked in `claim` and choose the verdict the fact-checkers reached.
+
+Never stretch a thin story into a structured one. Empty fields are expected and
+correct on most routine items.
+
 Hard rules:
 - State the facts; do NOT render the source's sentences into Bangla one by one.
 - Use ONLY what is in the snippet. Never invent numbers, quotes, names, dates,
@@ -196,9 +229,20 @@ ARTICLE_SCHEMA = {
     "properties": {
         "title": {"type": "string"},
         "lead": {"type": "string"},
+        # কী ঘটেছে
         "body": {"type": "array", "items": {"type": "string"}},
+        # এতে সাধারণ মানুষের কী বদলাবে — empty when the facts don't support it
+        "impact": {"type": "array", "items": {"type": "string"}},
+        # প্রেক্ষাপট — empty unless the source itself supplies background
+        "context": {"type": "array", "items": {"type": "string"}},
+        # Only for fact-check items; "" otherwise
+        "verdict": {
+            "type": "string",
+            "enum": ["", "সত্য", "মিথ্যা", "আংশিক সত্য", "যাচাই করা যায়নি"],
+        },
+        "claim": {"type": "string"},
     },
-    "required": ["title", "lead", "body"],
+    "required": ["title", "lead", "body", "impact", "context", "verdict", "claim"],
 }
 
 _WS = re.compile(r"\s+")
@@ -438,7 +482,7 @@ def write_article(client, item: dict) -> dict | None:
         f"({usage.input_tokens}+{usage.output_tokens} tok, ~${cost:.4f})"
     )
 
-    return {
+    article = {
         "slug": slugify(item["title"], item["url"]),
         "title": draft["title"],
         "category": item["category"],
@@ -449,6 +493,19 @@ def write_article(client, item: dict) -> dict | None:
             timespec="seconds"
         ),
     }
+    # Only attach the structured blocks the model actually filled.
+    impact = [p for p in draft.get("impact", []) if p.strip()]
+    context = [p for p in draft.get("context", []) if p.strip()]
+    if impact:
+        article["impact"] = impact
+    if context:
+        article["context"] = context
+    if draft.get("verdict") and draft.get("claim"):
+        article["factcheck"] = {
+            "claim": draft["claim"].strip(),
+            "verdict": draft["verdict"],
+        }
+    return article
 
 
 def main() -> int:

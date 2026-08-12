@@ -5,7 +5,14 @@ export type Article = {
   title: string;
   category: string;
   lead: string;
+  /** কী ঘটেছে — the event itself */
   body: string[];
+  /** এতে কী বদলাবে — concrete consequence for readers (omitted when unknown) */
+  impact?: string[];
+  /** প্রেক্ষাপট — background, only when the source supplied it */
+  context?: string[];
+  /** Verification of a viral claim, from a fact-checking source */
+  factcheck?: { claim: string; verdict: string };
   sources: { name: string; url: string }[];
   publishedAt: string;
   image?: { url: string; alt: string; credit?: string };
