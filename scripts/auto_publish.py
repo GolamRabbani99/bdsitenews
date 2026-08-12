@@ -64,6 +64,38 @@ FEEDS = [
     {"name": "Two Minute Papers", "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCbfYPyITQ-7l4upoX8nvctg", "cat": "প্রযুক্তি", "weight": 1},
 ]
 
+# ── AI voices ───────────────────────────────────────────────────────────
+# X/Twitter has no free feed and its API is paywalled, so instead of
+# scraping we track *coverage* of what these people say. When one of them
+# posts something that matters, tech media reports it within hours — and
+# that gives us a verified second source, which a tweet alone never does.
+AI_VOICES = [
+    ("অ্যান্ড্রেই কারপাথি", '"Andrej Karpathy"'),
+    ("স্যাম অল্টম্যান", '"Sam Altman"'),
+    ("গ্রেগ ব্রকম্যান", '"Greg Brockman" OpenAI'),
+    ("জিম ফ্যান", '"Jim Fan" NVIDIA'),
+    ("পল গ্রাহাম", '"Paul Graham" startup'),
+    ("ফ্রঁসোয়া শোলে", '"Francois Chollet"'),
+    ("ইথান মলিক", '"Ethan Mollick"'),
+    ("বিন্দু রেড্ডি", '"Bindu Reddy" AI'),
+]
+
+for _person, _query in AI_VOICES:
+    FEEDS.append(
+        {
+            "name": f"AI Voices · {_person}",
+            "url": (
+                "https://news.google.com/rss/search?q="
+                + _query.replace('"', "%22").replace(" ", "+")
+                + "+when:3d&hl=en-US&gl=US&ceid=US:en"
+            ),
+            "cat": "প্রযুক্তি",
+            "weight": 4,  # highest priority — this is the differentiating beat
+            "kind": "person",
+            "person": _person,
+        }
+    )
+
 BANGLA_WRITER_PROMPT = """You are a Bangla news-desk editor producing short news briefs
 (সংক্ষিপ্ত সংবাদ) for a Bangladeshi technology news portal.
 
@@ -74,10 +106,16 @@ full article, so never assume anything beyond it.
 Your job: deliver the same news to a Bangladeshi reader in Bangla — fast, accurate,
 compact. This is a news brief, not an essay.
 
-- title: the headline in natural Bangla. Keep the meaning exact — do not
-  exaggerate, do not add drama. Technical terms: plain Bangla with the English in
+- title: a compelling Bangla headline that makes a reader want to click — while
+  staying strictly true to the facts. Lead with the most surprising concrete
+  detail (the number, the name, the reversal). Prefer the specific over the
+  vague: "ওপেনএআই ছেড়ে অ্যানথ্রপিকে যোগ দিলেন কারপাথি" beats "এআই জগতে বড় পরিবর্তন".
+  Questions and "যে কারণে…" framings are fine when the brief genuinely answers
+  them. Never promise something the brief does not deliver, never sensationalise,
+  no ALL CAPS, no "!!". Technical terms: plain Bangla with the English in
   brackets on first use, e.g. কৃত্রিম বুদ্ধিমত্তা (এআই), ওপেন সোর্স (open source).
   Well-known product and company names stay in English (ChatGPT, Google, Linux).
+  Keep people's names in Bangla transliteration.
 - lead: ONE sentence — what happened.
 - body: 2-3 SHORT paragraphs (2-3 sentences each) stating the facts from the
   snippet in your own plain Bangla phrasing. Open the first body paragraph with
@@ -90,6 +128,12 @@ Hard rules:
   features or context. No speculation about what the full article might say.
 - If the snippet is thin, write just two short paragraphs. Short and correct beats
   long and padded.
+- SOMETIMES YOU GET ONLY A HEADLINE AND AN OUTLET NAME, no real snippet. In that
+  case write exactly two short paragraphs: the first reporting what the outlet
+  has reported (attributed by name), the second noting that details are awaited
+  — e.g. "বিস্তারিত জানতে মূল প্রতিবেদনটি দেখুন।" Do NOT reconstruct quotes,
+  numbers, reasons or background you were not given. An honest two-line brief is
+  correct; an invented paragraph is not.
 - Standard modern Bangla (চলিত), clean newsroom tone.
 
 Return JSON matching the schema."""
@@ -173,6 +217,17 @@ def collect() -> list[dict]:
                 if published < cutoff:
                     continue
 
+            source = feed["name"]
+            person = feed.get("person")
+            if feed.get("kind") == "person":
+                # Google News titles read "Headline - Publisher"; split so we
+                # attribute the real outlet rather than "Google News".
+                if " - " in title:
+                    title, _, publisher = title.rpartition(" - ")
+                    source = publisher.strip() or source
+                else:
+                    source = "Google News"
+
             seen_titles.add(key)
             kept += 1
             items.append(
@@ -180,7 +235,8 @@ def collect() -> list[dict]:
                     "title": title,
                     "url": url,
                     "summary": clean_text(getattr(entry, "summary", ""))[:400],
-                    "source": feed["name"],
+                    "source": source,
+                    "person": person,
                     "category": feed["cat"],
                     "weight": feed["weight"],
                     "publishedAt": (published or datetime.now(timezone.utc)).isoformat(),
@@ -217,15 +273,76 @@ def published_urls(articles: list[dict]) -> set[str]:
     return used
 
 
+# Aggregators and low-credibility republishers we don't cite as a source.
+BLOCKED_SOURCES = {
+    "36 kr", "36kr", "the cryptonomist", "cryptonomist", "medium",
+    "msn", "yahoo entertainment", "opera news",
+}
+
+# Headline patterns typical of engagement-farming republishers.
+CLICKBAIT = re.compile(
+    r"\b(shocking|you won'?t believe|completely take|this one trick|"
+    r"mind[- ]blowing|will change everything|goes viral)\b",
+    re.I,
+)
+
+_STOPWORDS = {
+    "the", "a", "an", "of", "to", "in", "for", "on", "and", "is", "with",
+    "after", "as", "its", "by", "at", "from", "new", "says", "his", "her",
+    "that", "this", "will", "has", "have", "are", "was", "how", "why",
+}
+
+
+def _keywords(title: str) -> set[str]:
+    words = re.findall(r"[a-z0-9]+", title.lower())
+    return {w for w in words if len(w) > 2 and w not in _STOPWORDS}
+
+
+def _same_story(a: str, b: str) -> bool:
+    """Two headlines from different outlets about one event."""
+    ka, kb = _keywords(a), _keywords(b)
+    if not ka or not kb:
+        return False
+    shared = ka & kb
+    ratio = len(shared) / min(len(ka), len(kb))
+    # Sharing two distinctive long words (usually proper nouns) is a strong
+    # signal even when the phrasing differs completely.
+    distinctive = sum(1 for w in shared if len(w) >= 6)
+    return ratio >= 0.45 or distinctive >= 2
+
+
 def pick_candidates(items: list[dict], used: set[str]) -> list[dict]:
-    """Highest-signal unpublished items: substantive, from weighted sources."""
+    """Highest-signal unpublished items — de-duplicated at the STORY level,
+    filtered for source credibility, and spread across topics."""
     fresh = [
         i
         for i in items
-        if i["url"] not in used and len(i["summary"]) >= 90 and len(i["title"]) >= 20
+        if i["url"] not in used
+        and len(i["title"]) >= 20
+        # AI-voices items are headline-driven (Google News gives a thin
+        # snippet), so they qualify on a strong headline alone.
+        and (len(i["summary"]) >= 90 or i.get("person"))
+        and i["source"].strip().lower() not in BLOCKED_SOURCES
+        and not CLICKBAIT.search(i["title"])
     ]
     fresh.sort(key=lambda i: (i["weight"], i["publishedAt"]), reverse=True)
-    return fresh[:MAX_NEW_ARTICLES]
+
+    picked: list[dict] = []
+    per_person: dict[str, int] = {}
+    for item in fresh:
+        # One brief per real-world story, however many outlets covered it.
+        if any(_same_story(item["title"], p["title"]) for p in picked):
+            continue
+        # Don't let one person's news day fill the whole run.
+        person = item.get("person")
+        if person:
+            if per_person.get(person, 0) >= 1:
+                continue
+            per_person[person] = per_person.get(person, 0) + 1
+        picked.append(item)
+        if len(picked) >= MAX_NEW_ARTICLES:
+            break
+    return picked
 
 
 def write_article(client, item: dict) -> dict | None:
