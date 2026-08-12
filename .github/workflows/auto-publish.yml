@@ -1,0 +1,50 @@
+name: Auto-publish news
+
+# Runs in GitHub's cloud — your computer does not need to be on.
+on:
+  schedule:
+    # Bangladesh time (UTC+6): 07:00, 14:00 and 21:00 daily
+    - cron: "0 1 * * *"
+    - cron: "0 8 * * *"
+    - cron: "0 15 * * *"
+  workflow_dispatch: # lets you (or Claude) trigger a run manually
+
+permissions:
+  contents: write
+
+concurrency:
+  group: auto-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install --quiet feedparser anthropic
+
+      - name: Collect, write and publish
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          MAX_NEW_ARTICLES: "3"
+          CLAUDE_MODEL: claude-sonnet-5
+        run: python scripts/auto_publish.py
+
+      - name: Commit and push if anything changed
+        run: |
+          git config user.name  "BD Site News Bot"
+          git config user.email "bot@bdsitenews.com"
+          git add src/data/articles.json src/data/stories.json
+          if git diff --staged --quiet; then
+            echo "No changes to publish."
+          else
+            git commit -m "Auto-publish: $(date -u '+%Y-%m-%d %H:%M UTC')"
+            git push
+            echo "Published — Vercel will deploy automatically."
+          fi

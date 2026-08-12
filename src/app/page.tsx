@@ -9,11 +9,12 @@ import { StoryGrid, type Story } from "@/components/StoryGrid";
 
 type WithImage = { image?: { url: string; alt: string; credit?: string } };
 
-/** Sports-first: the newest খেলাধুলা story leads the page. */
+/** Newest first — the latest report always leads the page. */
 function orderForHome() {
-  const sports = articles.filter((a) => a.category === "খেলাধুলা");
-  const rest = articles.filter((a) => a.category !== "খেলাধুলা");
-  return [...sports, ...rest];
+  return [...articles].sort(
+    (a, b) =>
+      new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
+  );
 }
 
 const wire = stories as Story[];
