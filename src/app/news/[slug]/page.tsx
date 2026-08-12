@@ -1,19 +1,22 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import articles from "@/data/articles.json";
 import { AdSlot } from "@/components/AdSlot";
 import { Cover } from "@/components/Cover";
+import { RelatedArticles } from "@/components/RelatedArticles";
 import { ShareBar } from "@/components/ShareBar";
 import { SiteFooter } from "@/components/SiteFooter";
+import { SiteHeader } from "@/components/SiteHeader";
+import {
+  allArticles,
+  formatBnDate,
+  getArticle,
+  readingMinutes,
+  relatedArticles,
+} from "@/lib/articles";
 import { site } from "@/lib/site";
 
-type Article = (typeof articles)[number];
-type WithImage = { image?: { url: string; alt: string; credit?: string } };
-type WithStats = { stats?: { title: string; headers: string[]; rows: string[][] } };
-
 export function generateStaticParams() {
-  return articles.map((a) => ({ slug: a.slug }));
+  return allArticles().map((a) => ({ slug: a.slug }));
 }
 
 export async function generateMetadata({
@@ -22,11 +25,13 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const article = articles.find((a) => a.slug === slug);
+  const article = getArticle(slug);
   if (!article) return {};
 
   const url = `${site.baseUrl}/news/${article.slug}`;
-  const image = (article as WithImage).image;
+  const image = article.image
+    ? { url: `${site.baseUrl}${article.image.url}`, alt: article.image.alt }
+    : { url: `${site.baseUrl}/opengraph-image`, alt: site.name };
 
   return {
     title: `${article.title} — ${site.name}`,
@@ -40,13 +45,7 @@ export async function generateMetadata({
       title: article.title,
       description: article.lead,
       publishedTime: article.publishedAt,
-      // Photo articles share with their photo; others get the branded
-      // default card generated at /opengraph-image.
-      images: [
-        image
-          ? { url: `${site.baseUrl}${image.url}`, alt: image.alt }
-          : { url: `${site.baseUrl}/opengraph-image`, alt: site.name },
-      ],
+      images: [image],
     },
     twitter: {
       card: "summary_large_image",
@@ -62,77 +61,110 @@ export default async function ArticlePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const article: Article | undefined = articles.find((a) => a.slug === slug);
+  const article = getArticle(slug);
   if (!article) notFound();
 
-  return (
-    <main className="mx-auto max-w-3xl px-4 pb-16 font-[family-name:var(--font-bengali)]">
-      <header className="py-6 text-center">
-        <Link
-          href="/"
-          className="font-[family-name:var(--font-serif-news)] text-2xl font-semibold tracking-tight"
-        >
-          {site.name}{" "}
-          <span className="text-crimson">{site.nameBn}</span>
-        </Link>
-      </header>
-      <div className="rule-double" />
+  const url = `${site.baseUrl}/news/${article.slug}`;
+  const related = relatedArticles(article, 5);
+  const minutes = readingMinutes(article);
 
-      <article lang="bn" className="pt-8">
-        <p className="text-xs font-bold uppercase tracking-[0.25em] text-crimson">
+  // Google News / Discover eligibility — a major traffic source for
+  // Bangladeshi news sites, and free.
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    headline: article.title,
+    description: article.lead,
+    inLanguage: "bn-BD",
+    datePublished: article.publishedAt,
+    dateModified: article.publishedAt,
+    articleSection: article.category,
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
+    author: { "@type": "Organization", name: site.name, url: site.baseUrl },
+    publisher: { "@type": "Organization", name: site.name, url: site.baseUrl },
+    ...(article.image
+      ? { image: [`${site.baseUrl}${article.image.url}`] }
+      : {}),
+  };
+
+  // Split the body so an in-content ad sits after the opening paragraphs,
+  // where engagement is highest.
+  const splitAt = Math.min(2, article.body.length);
+  const opening = article.body.slice(0, splitAt);
+  const remainder = article.body.slice(splitAt);
+
+  return (
+    <main className="mx-auto max-w-3xl px-4 pb-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <SiteHeader compact />
+
+      <article lang="bn" className="pt-7 font-[family-name:var(--font-bengali)]">
+        <p className="text-xs font-bold tracking-[0.25em] text-crimson">
           {article.category}
         </p>
-        <h1 className="mt-3 text-3xl font-semibold leading-snug sm:text-4xl">
+        <h1 className="mt-3 text-[27px] font-bold leading-snug sm:text-4xl">
           {article.title}
         </h1>
-        <p className="mt-3 text-sm text-ink-soft">
-          বিডি সাইট নিউজ ডেস্ক ·{" "}
-          {new Date(article.publishedAt).toLocaleDateString("bn-BD", {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-            timeZone: "Asia/Dhaka",
-          })}
+        <p className="mt-3 flex flex-wrap items-center gap-x-2 text-sm text-ink-soft">
+          <span className="font-semibold">বিডি সাইট নিউজ ডেস্ক</span>
+          <span>·</span>
+          <span>{formatBnDate(article.publishedAt)}</span>
+          <span>·</span>
+          <span>{minutes} মিনিটের পড়া</span>
         </p>
 
         <Cover
           slug={article.slug}
           category={article.category}
           title={article.title}
-          image={(article as WithImage).image}
-          className="mt-6"
+          image={article.image}
+          className="mt-5"
         />
 
         <p className="mt-6 border-l-4 border-crimson pl-4 text-lg font-semibold leading-relaxed">
           {article.lead}
         </p>
 
-        <AdSlot slot="in-article" />
-
-        {article.body.map((paragraph, i) => (
-          <p key={i} className="mt-5 text-base leading-loose">
+        {opening.map((paragraph, i) => (
+          <p key={i} className="mt-5 text-[17px] leading-loose">
             {paragraph}
           </p>
         ))}
 
-        {(article as WithStats).stats && (
+        <AdSlot placement="in-article" />
+
+        {remainder.map((paragraph, i) => (
+          <p key={i} className="mt-5 text-[17px] leading-loose">
+            {paragraph}
+          </p>
+        ))}
+
+        {article.stats && (
           <div className="mt-8 overflow-x-auto">
             <p className="border-l-4 border-crimson pl-3 text-sm font-bold">
-              {(article as WithStats).stats!.title}
+              {article.stats.title}
             </p>
             <table className="mt-3 w-full border-collapse text-sm">
               <thead>
                 <tr className="bg-ink text-paper">
-                  {(article as WithStats).stats!.headers.map((h, i) => (
-                    <th key={i} className="px-3 py-2 text-left font-semibold">{h}</th>
+                  {article.stats.headers.map((h, i) => (
+                    <th key={i} className="px-3 py-2 text-left font-semibold">
+                      {h}
+                    </th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {(article as WithStats).stats!.rows.map((row, i) => (
+                {article.stats.rows.map((row, i) => (
                   <tr key={i} className={i % 2 ? "bg-paper" : "bg-rule/30"}>
                     {row.map((cell, j) => (
-                      <td key={j} className={`px-3 py-2 ${j === 0 ? "font-semibold" : ""}`}>
+                      <td
+                        key={j}
+                        className={`px-3 py-2 ${j === 0 ? "font-semibold" : ""}`}
+                      >
                         {cell}
                       </td>
                     ))}
@@ -143,12 +175,9 @@ export default async function ArticlePage({
           </div>
         )}
 
-        <ShareBar
-          url={`${site.baseUrl}/news/${article.slug}`}
-          title={article.title}
-        />
+        <ShareBar url={url} title={article.title} />
 
-        <footer className="mt-10 border-t border-rule pt-5">
+        <footer className="mt-8 border-t border-rule pt-5">
           <p className="text-sm font-semibold">তথ্যসূত্র</p>
           <ul className="mt-2 space-y-1 text-sm text-ink-soft">
             {article.sources.map((s) => (
@@ -164,18 +193,16 @@ export default async function ArticlePage({
               </li>
             ))}
           </ul>
-          <p className="mt-4 text-xs text-ink-soft">
-            এই প্রতিবেদনটি একাধিক আন্তর্জাতিক সংবাদমাধ্যমের যাচাইকৃত তথ্যের
-            ভিত্তিতে বিডি সাইট নিউজের নিজস্ব ভাষায় লেখা।
+          <p className="mt-3 text-xs text-ink-soft">
+            এই প্রতিবেদনটি আন্তর্জাতিক সংবাদমাধ্যমের যাচাইকৃত তথ্যের ভিত্তিতে
+            বিডি সাইট নিউজের নিজস্ব ভাষায় লেখা।
           </p>
         </footer>
       </article>
 
-      <p className="mt-10 text-center">
-        <Link href="/" className="text-sm text-crimson hover:underline">
-          ← প্রচ্ছদে ফিরুন
-        </Link>
-      </p>
+      <AdSlot placement="end-article" />
+
+      <RelatedArticles articles={related} category={article.category} />
 
       <SiteFooter />
     </main>
