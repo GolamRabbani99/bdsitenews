@@ -258,9 +258,16 @@ def clean_text(raw: str | None) -> str:
     return "" if text.lower() in {"null", "none"} else text
 
 
-def slugify(title: str, url: str) -> str:
-    base = re.sub(r"[^a-z0-9]+", "-", title.lower()).strip("-")
-    base = "-".join(base.split("-")[:8]) or "tech-news"
+def slugify(title: str, url: str, category: str = "") -> str:
+    """Keep Bangla words in the URL — Bangladeshi outlets do this and it is
+    what Google matches Bangla queries against. Falls back to the category
+    rather than a misleading generic label."""
+    # Keep Bangla (U+0980–U+09FF), ASCII letters and digits.
+    base = re.sub(r"[^ঀ-৿ a-z0-9]+", " ", title.lower())
+    base = "-".join(base.split()[:8]).strip("-")
+    if not base:
+        cat = re.sub(r"[^ঀ-৿ a-z0-9]+", "", category).replace(" ", "-")
+        base = cat or "news"
     digest = hashlib.sha1(url.encode()).hexdigest()[:6]
     return f"{base}-{digest}"
 
@@ -483,7 +490,7 @@ def write_article(client, item: dict) -> dict | None:
     )
 
     article = {
-        "slug": slugify(item["title"], item["url"]),
+        "slug": slugify(draft["title"], item["url"], item["category"]),
         "title": draft["title"],
         "category": item["category"],
         "lead": draft["lead"],
