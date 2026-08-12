@@ -1,5 +1,13 @@
 [
  {
+  "title": "DEF CON crowd suspected in fake-hotspot attack on Delta flight",
+  "url": "https://arstechnica.com/information-technology/2026/08/def-con-crowd-suspected-in-fake-hotspot-attack-on-delta-flight/",
+  "summary": "FBI Atlanta confirms it's looking into the incident, no arrests made.",
+  "category": "Technology",
+  "source": "Ars Technica",
+  "publishedAt": "2026-08-12T00:08:40+00:00"
+ },
+ {
   "title": "A profile of Suno, which has been used by more than 100M people since 2023 and has 2M+ paid subscribers, as it faces copyright lawsuits from UMG and Sony Music (Bloomberg)",
   "url": "https://www.techmeme.com/260811/p42#a260811p42",
   "summary": "Bloomberg : A profile of Suno, which has been used by more than 100M people since 2023 and has 2M+ paid subscribers, as it faces copyright lawsuits fr",
@@ -38,6 +46,14 @@
   "category": "Technology",
   "source": "The Verge",
   "publishedAt": "2026-08-11T22:36:35+00:00"
+ },
+ {
+  "title": "Trump wants Big Pharma to split MMR vaccine; Big Pharma thinks it's idiotic",
+  "url": "https://arstechnica.com/health/2026/08/trump-wants-big-pharma-to-split-mmr-vaccine-big-pharma-thinks-its-idiotic/",
+  "summary": "It took just hours for the leading pharma group to reject the recommendations.",
+  "category": "Technology",
+  "source": "Ars Technica",
+  "publishedAt": "2026-08-11T22:31:45+00:00"
  },
  {
   "title": "WorldClaw Agentic 3D open-world generation at scale",
@@ -462,21 +478,5 @@
   "category": "Technology",
   "source": "Hacker News",
   "publishedAt": "2026-08-11T16:57:09+00:00"
- },
- {
-  "title": "Mojo 1.0",
-  "url": "https://www.modular.com/blog/modular-26-5-mojo-1-0-is-here",
-  "summary": "Article URL: https://www.modular.com/blog/modular-26-5-mojo-1-0-is-here Comments URL: https://news.ycombinator.com/item?id=49261128 Points: 260 # Comm",
-  "category": "Technology",
-  "source": "Hacker News",
-  "publishedAt": "2026-08-11T16:56:46+00:00"
- },
- {
-  "title": "The fastest double-to-string algorithm you’ve never heard of",
-  "url": "https://vitaut.net/posts/2026/yy-dtoa/",
-  "summary": "Comments",
-  "category": "Technology",
-  "source": "Lobsters",
-  "publishedAt": "2026-08-11T16:42:55+00:00"
  }
 ]
