@@ -1,15 +1,25 @@
 /** Editorial cover: a real photo when the article has one, otherwise a
- * branded SVG graphic keyed to the category — zero copyright risk. */
+ * designed headline card — category-coloured, with the headline set on it,
+ * so a story without photography still looks intentional in a feed. */
 
 type CoverImage = { url: string; alt: string; credit?: string };
 
 const PALETTES: Record<string, { from: string; to: string; accent: string }> = {
-  "আন্তর্জাতিক": { from: "#0f2a52", to: "#1d4e89", accent: "#7fb3ff" },
-  "খেলাধুলা": { from: "#0b3d2e", to: "#14691f", accent: "#8be28b" },
-  "প্রযুক্তি": { from: "#2d1b52", to: "#5b2d89", accent: "#c9a6ff" },
-  "অর্থনীতি": { from: "#5c3a08", to: "#976810", accent: "#ffd479" },
-  "রাজনীতি": { from: "#521b1b", to: "#8f2626", accent: "#ff9d9d" },
-  "বাংলাদেশ": { from: "#0b4d3d", to: "#0f7a49", accent: "#ff6b6b" },
+  আন্তর্জাতিক: { from: "#0f2a52", to: "#1d4e89", accent: "#7fb3ff" },
+  বিশ্ব: { from: "#0f2a52", to: "#1d4e89", accent: "#7fb3ff" },
+  খেলা: { from: "#0b3d2e", to: "#14691f", accent: "#8be28b" },
+  খেলাধুলা: { from: "#0b3d2e", to: "#14691f", accent: "#8be28b" },
+  প্রযুক্তি: { from: "#2d1b52", to: "#5b2d89", accent: "#c9a6ff" },
+  অর্থনীতি: { from: "#5c3a08", to: "#976810", accent: "#ffd479" },
+  রাজনীতি: { from: "#521b1b", to: "#8f2626", accent: "#ff9d9d" },
+  বাংলাদেশ: { from: "#0b4d3d", to: "#0f7a49", accent: "#ffd479" },
+  অপরাধ: { from: "#3a1414", to: "#6d1f1f", accent: "#ff9d9d" },
+  বিনোদন: { from: "#4a1340", to: "#8a2472", accent: "#ffb3ec" },
+  শিক্ষা: { from: "#123a52", to: "#1b6585", accent: "#9fd8f2" },
+  প্রবাস: { from: "#1e3357", to: "#39558c", accent: "#a8bde8" },
+  জেলা: { from: "#2f3d1a", to: "#55702c", accent: "#cbe89a" },
+  "ফ্যাক্ট চেক": { from: "#4a2a06", to: "#8a4c0a", accent: "#ffc880" },
+  ব্যাখ্যা: { from: "#1c2b3a", to: "#33506b", accent: "#a9cbe8" },
 };
 
 const DEFAULT_PALETTE = { from: "#1c1815", to: "#4a4038", accent: "#d8d1c5" };
@@ -18,6 +28,29 @@ function seedFrom(text: string): number {
   let h = 0;
   for (let i = 0; i < text.length; i++) h = (h * 31 + text.charCodeAt(i)) % 997;
   return h;
+}
+
+/** Wrap a Bangla headline into SVG lines — SVG has no automatic wrapping. */
+function wrapHeadline(title: string, perLine = 24, maxLines = 4): string[] {
+  const words = title.split(/\s+/);
+  const lines: string[] = [];
+  let current = "";
+  for (const word of words) {
+    const candidate = current ? `${current} ${word}` : word;
+    if (candidate.length > perLine && current) {
+      lines.push(current);
+      current = word;
+      if (lines.length === maxLines - 1) break;
+    } else {
+      current = candidate;
+    }
+  }
+  if (current && lines.length < maxLines) lines.push(current);
+  const used = lines.join(" ");
+  if (used.length < title.length && lines.length) {
+    lines[lines.length - 1] = lines[lines.length - 1].replace(/[।,;:]?$/, "…");
+  }
+  return lines;
 }
 
 export function Cover({
@@ -36,7 +69,6 @@ export function Cover({
   const seed = seedFrom(slug);
 
   if (image?.url) {
-    // Per-article variation so a page of covers doesn't move in lockstep.
     const duration = 14 + (seed % 8);
     const direction = seed % 2 === 0 ? "alternate" : "alternate-reverse";
     return (
@@ -61,9 +93,12 @@ export function Cover({
   }
 
   const palette = PALETTES[category] ?? DEFAULT_PALETTE;
-  const angle = 15 + (seed % 30);          // subtle per-article variation
-  const offset = 60 + (seed % 120);
+  const angle = 15 + (seed % 30);
   const gid = `g-${slug}`;
+  const lines = wrapHeadline(title);
+  // Bottom-anchor the headline block so 1-line and 4-line cards both sit well.
+  const lineHeight = 54;
+  const firstBaseline = 384 - (lines.length - 1) * lineHeight;
 
   return (
     <svg
@@ -79,38 +114,58 @@ export function Cover({
         </linearGradient>
       </defs>
       <rect width="800" height="450" fill={`url(#${gid})`} />
-      {/* halftone-style dots, a nod to print */}
-      {Array.from({ length: 6 }).map((_, row) =>
+
+      {/* halftone texture — a nod to newsprint */}
+      {Array.from({ length: 5 }).map((_, row) =>
         Array.from({ length: 10 }).map((_, col) => (
           <circle
             key={`${row}-${col}`}
             cx={40 + col * 80 + (row % 2) * 40}
-            cy={40 + row * 75}
+            cy={30 + row * 46}
             r={2 + ((seed + row * col) % 3)}
             fill="#ffffff"
-            opacity="0.08"
+            opacity="0.07"
           />
         )),
       )}
-      <rect x="0" y="0" width="800" height="6" fill={palette.accent} />
-      <line x1="48" y1={180 + (offset % 40)} x2="220" y2={180 + (offset % 40)}
-            stroke={palette.accent} strokeWidth="3" />
+
+      <rect x="0" y="0" width="800" height="7" fill={palette.accent} />
+
+      {/* category kicker */}
       <text
         x="48"
-        y={250 + (offset % 40)}
-        fontSize="64"
+        y="72"
+        fontSize="24"
         fontWeight="700"
-        fill="#ffffff"
-        fontFamily="'Noto Sans Bengali', sans-serif"
+        fill={palette.accent}
+        style={{ fontFamily: "var(--font-bengali), sans-serif" }}
       >
         {category}
       </text>
+
+      {/* the headline itself */}
+      {lines.map((line, i) => (
+        <text
+          key={i}
+          x="48"
+          y={firstBaseline + i * lineHeight}
+          fontSize="42"
+          fontWeight="700"
+          fill="#ffffff"
+          style={{ fontFamily: "var(--font-bengali), sans-serif" }}
+        >
+          {line}
+        </text>
+      ))}
+
       <text
-        x="48"
-        y="410"
-        fontSize="20"
-        fill={palette.accent}
-        fontFamily="'Noto Sans Bengali', sans-serif"
+        x="752"
+        y="72"
+        textAnchor="end"
+        fontSize="19"
+        fill="#ffffff"
+        opacity="0.75"
+        style={{ fontFamily: "var(--font-bengali), sans-serif" }}
       >
         বিডি সাইট নিউজ
       </text>

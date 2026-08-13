@@ -68,9 +68,43 @@ export function ContextBox({ context }: { context: string[] }) {
   );
 }
 
+/** The ব্যাখ্যা format: the questions a reader actually has, answered. */
+export function ExplainerQA({
+  questions,
+}: {
+  questions: NonNullable<Article["questions"]>;
+}) {
+  return (
+    <div className="mt-7 font-[family-name:var(--font-bengali)]">
+      {questions.map((q, i) => (
+        <section
+          key={i}
+          className="mt-6 border-t border-rule pt-5 first:mt-0 first:border-0 first:pt-0"
+        >
+          <h2
+            lang="bn"
+            className="flex gap-2.5 text-[19px] font-bold leading-snug"
+          >
+            <span className="mt-0.5 shrink-0 bg-crimson px-2 py-0.5 text-xs font-bold text-paper">
+              {i + 1}
+            </span>
+            <span>{q.question}</span>
+          </h2>
+          {q.answer.map((p, j) => (
+            <p key={j} lang="bn" className="mt-3 text-[17px] leading-loose">
+              {p}
+            </p>
+          ))}
+        </section>
+      ))}
+    </div>
+  );
+}
+
 /** Small badge shown on cards so readers can spot explained stories in a list. */
 export function StructureBadges({ article }: { article: Article }) {
   const badges: string[] = [];
+  if (article.questions?.length) badges.push("🧠 ব্যাখ্যা");
   if (article.factcheck) badges.push("🔍 যাচাই");
   if (article.impact?.length) badges.push("💡 কী বদলাবে");
   if (badges.length === 0) return null;

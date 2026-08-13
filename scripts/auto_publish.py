@@ -268,6 +268,70 @@ VALID_CATEGORIES = set(ARTICLE_SCHEMA["properties"]["category"]["enum"])
 
 _WS = re.compile(r"\s+")
 
+EXPLAINER_PROMPT = """You are the explainer desk of a Bangladeshi news site. Your
+readers already saw the headline elsewhere. What they don't have is: what does
+this actually MEAN for me?
+
+You will receive SEVERAL reports from DIFFERENT outlets about ONE story —
+headlines and short snippets. Together they are all the information you have.
+
+Write a Bangla explainer in question-and-answer form. Ask the questions a normal
+reader genuinely has, in plain language, and answer each one directly.
+
+- title: a Bangla headline framed as the explainer it is — e.g.
+  "যা জানা দরকার: <বিষয়>" or "<বিষয়> নিয়ে যা ঘটছে, ব্যাখ্যা". Concrete, no hype.
+- lead: two sentences setting up why this story matters right now.
+- questions: 4 to 6 items. Each has a `question` a reader would actually ask and
+  an `answer` of 1-3 short paragraphs. Use this arc, adapted to the story:
+    1. ঘটনাটি আসলে কী? / কী সিদ্ধান্ত নেওয়া হয়েছে?
+    2. কেন এখন এটি গুরুত্বপূর্ণ?
+    3. সাধারণ মানুষের কী বদলাবে?  ← the most important question; be concrete
+    4. এর পেছনে কী ঘটেছিল?        ← only if the reports supply background
+    5. এরপর কী হতে পারে?          ← only what the reports themselves indicate
+- category: the desk this belongs on.
+
+Hard rules — an explainer that invents is worse than no explainer:
+- Use ONLY facts present in the supplied reports. Never add history, numbers,
+  quotes or predictions from your own knowledge.
+- Where the reports disagree, say so plainly: "একাধিক সংবাদমাধ্যমে ভিন্ন তথ্য
+  এসেছে". Where something is unknown, say "এখনো জানা যায়নি" — do not fill it in.
+- For "এরপর কী", only describe next steps the reports actually mention (a
+  scheduled hearing, an announced deadline). Never speculate about outcomes.
+- Attribute contested or single-source claims to the outlet that reported them.
+- Crime and court matters: অভিযোগ / অভিযুক্ত framing, never assert guilt.
+- Standard modern Bangla (চলিত), warm and clear. Short sentences.
+
+Return JSON matching the schema."""
+
+EXPLAINER_SCHEMA = {
+    "type": "object",
+    "additionalProperties": False,
+    "properties": {
+        "title": {"type": "string"},
+        "lead": {"type": "string"},
+        "questions": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "properties": {
+                    "question": {"type": "string"},
+                    "answer": {"type": "array", "items": {"type": "string"}},
+                },
+                "required": ["question", "answer"],
+            },
+        },
+        "category": {
+            "type": "string",
+            "enum": [
+                "বাংলাদেশ", "রাজনীতি", "অপরাধ", "খেলা", "বিনোদন", "অর্থনীতি",
+                "বিশ্ব", "প্রযুক্তি", "শিক্ষা", "প্রবাস", "জেলা",
+            ],
+        },
+    },
+    "required": ["title", "lead", "questions", "category"],
+}
+
 
 def log(msg: str) -> None:
     print(msg, flush=True)
@@ -610,6 +674,98 @@ def write_article(client, item: dict) -> dict | None:
     return article
 
 
+def biggest_story(items: list[dict], min_sources: int = 3) -> list[dict]:
+    """Cluster the day's items and return the one covered by the most
+    independent outlets. Breadth of coverage is the honest signal for
+    'biggest story' — and it also gives the explainer enough facts to work
+    from, which a single snippet never does."""
+    clusters: list[list[dict]] = []
+    for item in items:
+        for cluster in clusters:
+            if _same_story(item["title"], cluster[0]["title"]):
+                cluster.append(item)
+                break
+        else:
+            clusters.append([item])
+
+    def distinct_sources(cluster: list[dict]) -> int:
+        return len({c["source"] for c in cluster})
+
+    clusters.sort(key=distinct_sources, reverse=True)
+    if not clusters or distinct_sources(clusters[0]) < min_sources:
+        return []
+    return clusters[0]
+
+
+def already_explained_today(articles: list[dict]) -> bool:
+    today = datetime.now(timezone(timedelta(hours=6))).date().isoformat()
+    return any(
+        a.get("category") == "ব্যাখ্যা" and a.get("publishedAt", "").startswith(today)
+        for a in articles
+    )
+
+
+def write_explainer(client, cluster: list[dict]) -> dict | None:
+    """One explainer built from every outlet covering the same story."""
+    reports = [
+        {"outlet": c["source"], "headline": c["title"], "summary": c["summary"][:400]}
+        for c in cluster[:8]
+    ]
+    try:
+        message = client.messages.create(
+            model=MODEL,
+            max_tokens=4000,
+            system=EXPLAINER_PROMPT,
+            messages=[
+                {"role": "user", "content": json.dumps({"reports": reports},
+                                                       ensure_ascii=False)}
+            ],
+            output_config={"format": {"type": "json_schema",
+                                      "schema": EXPLAINER_SCHEMA}},
+        )
+    except Exception as exc:
+        log(f"  ! explainer failed: {str(exc)[:140]}")
+        return None
+
+    text = next((b.text for b in message.content if b.type == "text"), None)
+    if not text:
+        return None
+    draft = json.loads(text)
+
+    usage = message.usage
+    cost = (usage.input_tokens * 3 + usage.output_tokens * 15) / 1_000_000
+    log(
+        f"  ★ ব্যাখ্যা: {draft['title'][:44]}… "
+        f"({len(cluster)} sources, ~${cost:.4f})"
+    )
+
+    seen_urls: set[str] = set()
+    sources = []
+    for c in cluster[:6]:
+        if c["url"] in seen_urls:
+            continue
+        seen_urls.add(c["url"])
+        sources.append({"name": c["source"], "url": c["url"]})
+
+    return {
+        "slug": slugify("ব্যাখ্যা " + draft["title"], cluster[0]["url"], "ব্যাখ্যা"),
+        "title": draft["title"],
+        "category": "ব্যাখ্যা",
+        "topic": draft.get("category", ""),
+        "lead": draft["lead"],
+        "body": [],
+        "questions": [
+            {"question": q["question"], "answer": [p for p in q["answer"] if p.strip()]}
+            for q in draft["questions"]
+            if q.get("question")
+        ],
+        "sources": sources,
+        "publishedAt": datetime.now(timezone(timedelta(hours=6))).isoformat(
+            timespec="seconds"
+        ),
+    }
+
+
 def main() -> int:
     log("BD Site News — automatic publish run")
     log(f"  model={MODEL}  max_new={MAX_NEW_ARTICLES}")
@@ -646,6 +802,17 @@ def main() -> int:
 
     client = anthropic.Anthropic(api_key=api_key)
     written = [a for a in (write_article(client, c) for c in candidates) if a]
+
+    # One explainer a day, on whichever story the most outlets are covering.
+    if not already_explained_today(articles):
+        cluster = biggest_story(items)
+        if cluster:
+            explainer = write_explainer(client, cluster)
+            if explainer:
+                written.insert(0, explainer)
+        else:
+            log("  no story has broad enough coverage for an explainer today")
+
     if not written:
         log("  no articles produced")
         return 0

@@ -13,6 +13,10 @@ export type Article = {
   context?: string[];
   /** Verification of a viral claim, from a fact-checking source */
   factcheck?: { claim: string; verdict: string };
+  /** ব্যাখ্যা format: the questions a reader actually has */
+  questions?: { question: string; answer: string[] }[];
+  /** For explainers — the desk the underlying story belongs to */
+  topic?: string;
   sources: { name: string; url: string }[];
   publishedAt: string;
   image?: { url: string; alt: string; credit?: string };
@@ -103,7 +107,14 @@ export function relatedArticles(current: Article, limit = 6): Article[] {
 }
 
 export function readingMinutes(article: Article): number {
-  const words = (article.lead + " " + article.body.join(" ")).split(/\s+/).length;
+  const parts = [
+    article.lead,
+    ...article.body,
+    ...(article.impact ?? []),
+    ...(article.context ?? []),
+    ...(article.questions ?? []).flatMap((q) => [q.question, ...q.answer]),
+  ];
+  const words = parts.join(" ").trim().split(/\s+/).length;
   return Math.max(1, Math.round(words / 180));
 }
 

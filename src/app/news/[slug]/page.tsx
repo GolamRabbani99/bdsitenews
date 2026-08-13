@@ -8,6 +8,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import {
   ContextBox,
+  ExplainerQA,
   FactCheckBox,
   ImpactBox,
 } from "@/components/StructuredBlocks";
@@ -34,9 +35,13 @@ export async function generateMetadata({
   if (!article) return {};
 
   const url = `${site.baseUrl}/news/${article.slug}`;
-  const image = article.image
-    ? { url: `${site.baseUrl}${article.image.url}`, alt: article.image.alt }
-    : { url: `${site.baseUrl}/opengraph-image`, alt: site.name };
+  // With a photo we share the photo; otherwise the branded site card.
+  // (A per-article PNG carrying the Bangla headline was tried and removed:
+  // Satori has no complex-script shaping, so it mis-places Bangla vowel
+  // signs — নিয়ে renders as "নয়িে". Broken Bangla is worse than generic.)
+  const images = article.image
+    ? [{ url: `${site.baseUrl}${article.image.url}`, alt: article.image.alt }]
+    : [{ url: `${site.baseUrl}/opengraph-image`, alt: site.name }];
 
   return {
     title: `${article.title} — ${site.name}`,
@@ -50,7 +55,7 @@ export async function generateMetadata({
       title: article.title,
       description: article.lead,
       publishedTime: article.publishedAt,
-      images: [image],
+      images,
     },
     twitter: {
       card: "summary_large_image",
@@ -135,19 +140,31 @@ export default async function ArticlePage({
 
         {article.factcheck && <FactCheckBox factcheck={article.factcheck} />}
 
-        {opening.map((paragraph, i) => (
-          <p key={i} className="mt-5 text-[17px] leading-loose">
-            {paragraph}
-          </p>
-        ))}
+        {article.questions?.length ? (
+          <>
+            <ExplainerQA questions={article.questions.slice(0, 2)} />
+            <AdSlot placement="in-article" />
+            {article.questions.length > 2 && (
+              <ExplainerQA questions={article.questions.slice(2)} />
+            )}
+          </>
+        ) : (
+          <>
+            {opening.map((paragraph, i) => (
+              <p key={i} className="mt-5 text-[17px] leading-loose">
+                {paragraph}
+              </p>
+            ))}
 
-        <AdSlot placement="in-article" />
+            <AdSlot placement="in-article" />
 
-        {remainder.map((paragraph, i) => (
-          <p key={i} className="mt-5 text-[17px] leading-loose">
-            {paragraph}
-          </p>
-        ))}
+            {remainder.map((paragraph, i) => (
+              <p key={i} className="mt-5 text-[17px] leading-loose">
+                {paragraph}
+              </p>
+            ))}
+          </>
+        )}
 
         {article.impact?.length ? <ImpactBox impact={article.impact} /> : null}
         {article.context?.length ? (
