@@ -422,15 +422,37 @@ def useful_summary(summary: str, title: str) -> str:
     return stripped
 
 
+# Bangla → Latin, for URLs only. Raw Bangla slugs were tried and reverted:
+# Next.js could not serve the non-ASCII dynamic routes (308 → 404), which
+# silently made every Bangla-titled article unreachable.
+_BN_TRANSLIT = {
+    "অ": "o", "আ": "a", "ই": "i", "ঈ": "i", "উ": "u", "ঊ": "u", "ঋ": "ri",
+    "এ": "e", "ঐ": "oi", "ও": "o", "ঔ": "ou",
+    "ক": "k", "খ": "kh", "গ": "g", "ঘ": "gh", "ঙ": "ng",
+    "চ": "ch", "ছ": "chh", "জ": "j", "ঝ": "jh", "ঞ": "n",
+    "ট": "t", "ঠ": "th", "ড": "d", "ঢ": "dh", "ণ": "n",
+    "ত": "t", "থ": "th", "দ": "d", "ধ": "dh", "ন": "n",
+    "প": "p", "ফ": "ph", "ব": "b", "ভ": "bh", "ম": "m",
+    "য": "j", "র": "r", "ল": "l", "শ": "sh", "ষ": "sh", "স": "s", "হ": "h",
+    "ড়": "r", "ঢ়": "rh", "য়": "y", "ৎ": "t", "ং": "ng", "ঃ": "h", "ঁ": "n",
+    "া": "a", "ি": "i", "ী": "i", "ু": "u", "ূ": "u", "ৃ": "ri",
+    "ে": "e", "ৈ": "oi", "ো": "o", "ৌ": "ou", "্": "",
+    "০": "0", "১": "1", "২": "2", "৩": "3", "৪": "4",
+    "৫": "5", "৬": "6", "৭": "7", "৮": "8", "৯": "9",
+}
+
+
+def transliterate_bn(text: str) -> str:
+    return "".join(_BN_TRANSLIT.get(ch, ch) for ch in text)
+
+
 def slugify(title: str, url: str, category: str = "") -> str:
-    """Keep Bangla words in the URL — Bangladeshi outlets do this and it is
-    what Google matches Bangla queries against. Falls back to the category
-    rather than a misleading generic label."""
-    # Keep Bangla (U+0980–U+09FF), ASCII letters and digits.
-    base = re.sub(r"[^ঀ-৿ a-z0-9]+", " ", title.lower())
+    """ASCII slug carrying the headline's words, transliterated from Bangla."""
+    base = transliterate_bn(title.lower())
+    base = re.sub(r"[^a-z0-9]+", " ", base)
     base = "-".join(base.split()[:8]).strip("-")
     if not base:
-        cat = re.sub(r"[^ঀ-৿ a-z0-9]+", "", category).replace(" ", "-")
+        cat = re.sub(r"[^a-z0-9]+", "-", transliterate_bn(category.lower())).strip("-")
         base = cat or "news"
     digest = hashlib.sha1(url.encode()).hexdigest()[:6]
     return f"{base}-{digest}"
