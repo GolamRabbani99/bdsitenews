@@ -210,13 +210,21 @@ correct on most routine items.
     • an institution or setting → the place ("Bangladesh Bank building",
       "Bangladesh Supreme Court", "school classroom Bangladesh")
     • a subject with an obvious visual ("cricket stadium", "solar eclipse")
+  For FACT CHECKS and stories about a viral claim, picture the SUBJECT MATTER of
+  the claim, never the person it concerns: a claim about power cuts →
+  "electricity transmission tower Bangladesh"; about exam results →
+  "school examination hall"; about floods → "flood Bangladesh". These stories
+  should almost always have an image — just not of anyone accused.
+
   Rules that matter more than having an image:
     • For crime, court, accident or allegation stories, NEVER request a person.
       Ask only for a neutral setting ("courthouse building", "police vehicle").
       A photo of the wrong face beside a crime story is defamatory.
     • Never request photos of victims, children, or private individuals.
-    • Return "" when any photo would mislead the reader about what happened —
-      an empty query is always acceptable.
+    • Return "" ONLY when no honest picture exists for the subject — for
+      example a story that is purely about one named individual's conduct.
+      Prefer a truthful subject-matter photo over an empty query: it is
+      labelled প্রতীকী ছবি on the page, so readers know it is illustrative.
 - category: the desk this story belongs on, judged from the story itself — not
   from where it was collected. A Chattogram arrest is অপরাধ, not বাংলাদেশ or
   জেলা. A cricket result is খেলা. A university expulsion is শিক্ষা. A remittance
@@ -769,8 +777,19 @@ def find_commons_image(query: str) -> dict | None:
 def attach_image(article: dict, query: str) -> None:
     """Download a representative photo and attach it, labelled প্রতীকী ছবি —
     it illustrates the subject, it is not a photo of the event itself."""
+    query = query.strip()
+    if not query:
+        return
     found = find_commons_image(query)
+    # A narrow query ("Bangladesh Bank headquarters Motijheel") can miss where a
+    # broader one hits, so fall back to the first two words before giving up.
+    if not found:
+        words = query.split()
+        if len(words) > 2:
+            time.sleep(1.0)
+            found = find_commons_image(" ".join(words[:2]))
     if not found or not found["thumb"]:
+        log(f"    no usable image for: {query[:44]}")
         return
     COVERS_DIR.mkdir(parents=True, exist_ok=True)
     dest = COVERS_DIR / f"{article['slug']}.jpg"
