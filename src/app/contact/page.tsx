@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { site } from "@/lib/site";
 import { SiteFooter } from "@/components/SiteFooter";
+import { SiteHeader } from "@/components/SiteHeader";
 
 export const metadata: Metadata = {
   title: `Contact — ${site.name}`,
@@ -11,12 +12,7 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <main className="mx-auto max-w-3xl px-4">
-      <header className="py-6 text-center">
-        <Link href="/" className="font-[family-name:var(--font-serif-news)] text-2xl font-semibold">
-          {site.name} <span className="text-crimson font-[family-name:var(--font-bengali)]">{site.nameBn}</span>
-        </Link>
-      </header>
-      <div className="rule-double" />
+      <SiteHeader compact />
 
       <article className="pt-8 leading-relaxed">
         <h1 className="font-[family-name:var(--font-serif-news)] text-3xl font-semibold">Contact</h1>

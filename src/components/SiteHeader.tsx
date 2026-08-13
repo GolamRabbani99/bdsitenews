@@ -10,13 +10,20 @@ export function SiteHeader({ compact = false }: { compact?: boolean }) {
   return (
     <header className="sticky top-0 z-30 -mx-4 border-b border-rule bg-paper/95 px-4 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-baseline justify-between gap-3 py-3">
-        <Link href="/" className="shrink-0">
-          <span className="font-[family-name:var(--font-serif-news)] text-2xl font-semibold tracking-tight sm:text-3xl">
-            {site.name}
-          </span>
-          <span className="ml-2 font-[family-name:var(--font-bengali)] text-base font-semibold text-crimson sm:text-lg">
-            {site.nameBn}
-          </span>
+        <Link href="/" className="shrink-0" aria-label={site.name}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo.png"
+            alt={`${site.name} — ${site.taglineBn}`}
+            width={587}
+            height={200}
+            // The logo carries its own tagline, so it needs real size to stay
+            // legible — full masthead on the front page, trimmer elsewhere.
+            className={
+              compact ? "h-10 w-auto sm:h-12" : "h-12 w-auto sm:h-16"
+            }
+            fetchPriority="high"
+          />
         </Link>
         {!compact && (
           <span className="hidden font-[family-name:var(--font-bengali)] text-xs text-ink-soft sm:block">
