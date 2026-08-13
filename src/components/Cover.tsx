@@ -2,7 +2,12 @@
  * designed headline card — category-coloured, with the headline set on it,
  * so a story without photography still looks intentional in a feed. */
 
-type CoverImage = { url: string; alt: string; credit?: string };
+type CoverImage = {
+  url: string;
+  alt: string;
+  credit?: string;
+  illustrative?: boolean;
+};
 
 const PALETTES: Record<string, { from: string; to: string; accent: string }> = {
   আন্তর্জাতিক: { from: "#0f2a52", to: "#1d4e89", accent: "#7fb3ff" },
@@ -83,9 +88,14 @@ export function Cover({
             loading="lazy"
           />
         </div>
-        {image.credit && (
-          <figcaption className="mt-1 text-right text-[10px] text-ink-soft">
-            ছবি: {image.credit}
+        {(image.credit || image.illustrative) && (
+          <figcaption className="mt-1 flex flex-wrap items-center justify-between gap-2 text-[10px] text-ink-soft">
+            {image.illustrative && (
+              <span className="bg-ink/85 px-1.5 py-0.5 font-[family-name:var(--font-bengali)] font-semibold text-paper">
+                প্রতীকী ছবি
+              </span>
+            )}
+            {image.credit && <span className="ml-auto">ছবি: {image.credit}</span>}
           </figcaption>
         )}
       </figure>

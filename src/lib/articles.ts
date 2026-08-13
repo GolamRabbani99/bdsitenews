@@ -19,7 +19,13 @@ export type Article = {
   topic?: string;
   sources: { name: string; url: string }[];
   publishedAt: string;
-  image?: { url: string; alt: string; credit?: string };
+  image?: {
+    url: string;
+    alt: string;
+    credit?: string;
+    /** True when the photo illustrates the subject rather than the event */
+    illustrative?: boolean;
+  };
   stats?: { title: string; headers: string[]; rows: string[][] };
 };
 

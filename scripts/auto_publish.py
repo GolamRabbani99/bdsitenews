@@ -23,6 +23,9 @@ import html
 import json
 import os
 import re
+import time
+import urllib.parse
+import urllib.request
 import sys
 from calendar import timegm
 from datetime import datetime, timedelta, timezone
@@ -199,6 +202,21 @@ you were given genuinely support it:
 Never stretch a thin story into a structured one. Empty fields are expected and
 correct on most routine items.
 
+- image_query: 2-4 ENGLISH keywords for a representative photograph to run with
+  the story, searched against Wikimedia Commons. Think about what a picture desk
+  would pull:
+    • a named public figure, company, product, team or landmark → name it
+      ("Sam Altman", "Dhaka University campus", "Bangladesh cricket team")
+    • an institution or setting → the place ("Bangladesh Bank building",
+      "Bangladesh Supreme Court", "school classroom Bangladesh")
+    • a subject with an obvious visual ("cricket stadium", "solar eclipse")
+  Rules that matter more than having an image:
+    • For crime, court, accident or allegation stories, NEVER request a person.
+      Ask only for a neutral setting ("courthouse building", "police vehicle").
+      A photo of the wrong face beside a crime story is defamatory.
+    • Never request photos of victims, children, or private individuals.
+    • Return "" when any photo would mislead the reader about what happened —
+      an empty query is always acceptable.
 - category: the desk this story belongs on, judged from the story itself — not
   from where it was collected. A Chattogram arrest is অপরাধ, not বাংলাদেশ or
   জেলা. A cricket result is খেলা. A university expulsion is শিক্ষা. A remittance
@@ -249,6 +267,8 @@ ARTICLE_SCHEMA = {
             "enum": ["", "সত্য", "মিথ্যা", "আংশিক সত্য", "যাচাই করা যায়নি"],
         },
         "claim": {"type": "string"},
+        # English keywords for a representative photo, or "" if none is safe
+        "image_query": {"type": "string"},
         # The desk this story belongs on, judged from its content
         "category": {
             "type": "string",
@@ -260,7 +280,7 @@ ARTICLE_SCHEMA = {
     },
     "required": [
         "title", "lead", "body", "impact", "context", "verdict", "claim",
-        "category",
+        "category", "image_query",
     ],
 }
 
@@ -671,7 +691,85 @@ def write_article(client, item: dict) -> dict | None:
             "claim": draft["claim"].strip(),
             "verdict": draft["verdict"],
         }
+    # A picture where one genuinely helps; the designed headline card otherwise.
+    attach_image(article, draft.get("image_query", ""))
+    time.sleep(1.5)  # be polite to the Commons API between lookups
     return article
+
+
+# ── Pictures ────────────────────────────────────────────────────────────
+COMMONS_API = "https://commons.wikimedia.org/w/api.php"
+COMMONS_UA = {"User-Agent": "BDSiteNews/1.0 (editorial illustration; bdsitenews.com)"}
+COVERS_DIR = ROOT / "public" / "covers"
+
+# Licences that permit reuse with attribution.
+ALLOWED_LICENCE = re.compile(r"(public domain|cc[ -]?(by|0)|cc[ -]?by[ -]?sa)", re.I)
+
+
+def find_commons_image(query: str) -> dict | None:
+    """Search Wikimedia Commons for a reusable photo matching the query."""
+    if not query.strip():
+        return None
+    params = {
+        "action": "query", "format": "json", "generator": "search",
+        "gsrsearch": f"filetype:bitmap {query}", "gsrnamespace": "6",
+        "gsrlimit": "8", "prop": "imageinfo",
+        "iiprop": "url|size|extmetadata|mime", "iiurlwidth": "1200",
+    }
+    url = COMMONS_API + "?" + urllib.parse.urlencode(params)
+    try:
+        req = urllib.request.Request(url, headers=COMMONS_UA)
+        with urllib.request.urlopen(req, timeout=25) as resp:
+            data = json.load(resp)
+    except Exception as exc:
+        log(f"    image search failed: {str(exc)[:70]}")
+        return None
+
+    pages = data.get("query", {}).get("pages", {})
+    for page in sorted(pages.values(), key=lambda p: p.get("index", 99)):
+        info = (page.get("imageinfo") or [{}])[0]
+        if info.get("mime") != "image/jpeg" or info.get("width", 0) < 800:
+            continue
+        meta = info.get("extmetadata", {})
+        licence = re.sub(r"<[^>]+>", "", meta.get("LicenseShortName", {}).get("value", ""))
+        if not ALLOWED_LICENCE.search(licence):
+            continue
+        artist = re.sub(r"<[^>]+>", "", meta.get("Artist", {}).get("value", "")).strip()
+        return {
+            "thumb": info.get("thumburl"),
+            "credit": f"{artist[:60]}, {licence} — Wikimedia Commons"
+            if artist
+            else f"{licence} — Wikimedia Commons",
+        }
+    return None
+
+
+def attach_image(article: dict, query: str) -> None:
+    """Download a representative photo and attach it, labelled প্রতীকী ছবি —
+    it illustrates the subject, it is not a photo of the event itself."""
+    found = find_commons_image(query)
+    if not found or not found["thumb"]:
+        return
+    COVERS_DIR.mkdir(parents=True, exist_ok=True)
+    dest = COVERS_DIR / f"{article['slug']}.jpg"
+    try:
+        req = urllib.request.Request(found["thumb"], headers=COMMONS_UA)
+        with urllib.request.urlopen(req, timeout=40) as img:
+            payload = img.read()
+        if len(payload) < 15_000:  # too small to be a usable cover
+            return
+        dest.write_bytes(payload)
+    except Exception as exc:
+        log(f"    image download failed: {str(exc)[:70]}")
+        return
+
+    article["image"] = {
+        "url": f"/covers/{article['slug']}.jpg",
+        "alt": f"{query} — প্রতীকী ছবি",
+        "credit": found["credit"],
+        "illustrative": True,
+    }
+    log(f"    ✽ image: {query} ({len(payload) // 1024} KB)")
 
 
 def biggest_story(items: list[dict], min_sources: int = 3) -> list[dict]:

@@ -40,7 +40,7 @@ jobs:
         run: |
           git config user.name  "BD Site News Bot"
           git config user.email "bot@bdsitenews.com"
-          git add src/data/articles.json src/data/stories.json
+          git add src/data/articles.json src/data/stories.json public/covers
           if git diff --staged --quiet; then
             echo "No changes to publish."
           else
