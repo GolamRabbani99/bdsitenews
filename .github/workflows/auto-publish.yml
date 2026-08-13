@@ -32,7 +32,11 @@ jobs:
       - name: Collect, write and publish
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          # Optional — posting is skipped entirely when these are absent.
+          FACEBOOK_PAGE_ID: ${{ secrets.FACEBOOK_PAGE_ID }}
+          FACEBOOK_PAGE_TOKEN: ${{ secrets.FACEBOOK_PAGE_TOKEN }}
           MAX_NEW_ARTICLES: "6"
+          MAX_FB_POSTS: "3"
           CLAUDE_MODEL: claude-sonnet-5
         run: python scripts/auto_publish.py
 

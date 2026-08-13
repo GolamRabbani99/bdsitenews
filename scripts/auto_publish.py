@@ -24,6 +24,7 @@ import json
 import os
 import re
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 import sys
@@ -813,6 +814,83 @@ def attach_image(article: dict, query: str) -> None:
     log(f"    ✽ image: {query} ({len(payload) // 1024} KB)")
 
 
+# ── Facebook ────────────────────────────────────────────────────────────
+FB_PAGE_ID = os.environ.get("FACEBOOK_PAGE_ID", "").strip()
+FB_TOKEN = os.environ.get("FACEBOOK_PAGE_TOKEN", "").strip().lstrip("﻿").strip()
+FB_API = "https://graph.facebook.com/v21.0"
+MAX_FB_POSTS = int(os.environ.get("MAX_FB_POSTS", "3"))
+SITE_URL = "https://www.bdsitenews.com"
+
+CATEGORY_TAGS = {
+    "বাংলাদেশ": "#বাংলাদেশ", "রাজনীতি": "#রাজনীতি", "অপরাধ": "#অপরাধ",
+    "খেলা": "#খেলা", "বিনোদন": "#বিনোদন", "অর্থনীতি": "#অর্থনীতি",
+    "বিশ্ব": "#আন্তর্জাতিক", "প্রযুক্তি": "#প্রযুক্তি", "শিক্ষা": "#শিক্ষা",
+    "প্রবাস": "#প্রবাস", "জেলা": "#জেলা", "ফ্যাক্ট চেক": "#ফ্যাক্টচেক",
+    "ব্যাখ্যা": "#ব্যাখ্যা",
+}
+
+
+def facebook_caption(article: dict) -> str:
+    """Headline, the lead, then the link — the shape that actually gets read
+    in a Bangladeshi feed."""
+    url = f"{SITE_URL}/news/{article['slug']}"
+    tags = " ".join(
+        t for t in ["#বিডিসাইটনিউজ", CATEGORY_TAGS.get(article["category"], "")] if t
+    )
+    lead = article["lead"].strip()
+    if len(lead) > 280:
+        lead = lead[:277].rsplit(" ", 1)[0] + "…"
+    prefix = "🔍 ফ্যাক্ট চেক\n\n" if article.get("factcheck") else (
+        "🧠 ব্যাখ্যা\n\n" if article.get("questions") else ""
+    )
+    return f"{prefix}{article['title']}\n\n{lead}\n\n👉 বিস্তারিত: {url}\n\n{tags}"
+
+
+def post_to_facebook(article: dict) -> bool:
+    """Publish one article to the Page as a link post (link posts are what
+    drive readers back to the site; photo posts keep them on Facebook)."""
+    payload = urllib.parse.urlencode(
+        {
+            "message": facebook_caption(article),
+            "link": f"{SITE_URL}/news/{article['slug']}",
+            "access_token": FB_TOKEN,
+        }
+    ).encode()
+    req = urllib.request.Request(
+        f"{FB_API}/{FB_PAGE_ID}/feed", data=payload, method="POST"
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            body = json.load(resp)
+        log(f"    📘 posted: {body.get('id', 'ok')}")
+        return True
+    except urllib.error.HTTPError as exc:
+        detail = exc.read().decode("utf-8", "ignore")[:180]
+        log(f"    ! facebook rejected the post: {detail}")
+    except Exception as exc:
+        log(f"    ! facebook post failed: {str(exc)[:120]}")
+    return False
+
+
+def share_new_articles(written: list[dict]) -> None:
+    """Share this run's articles, newest-first, capped so the page never
+    gets flooded. Marks each one so it is never posted twice."""
+    if not (FB_PAGE_ID and FB_TOKEN):
+        log("  facebook not configured — skipping (set FACEBOOK_PAGE_ID/TOKEN)")
+        return
+    posted = 0
+    for article in written:
+        if posted >= MAX_FB_POSTS:
+            break
+        if article.get("sharedToFacebook"):
+            continue
+        if post_to_facebook(article):
+            article["sharedToFacebook"] = True
+            posted += 1
+            time.sleep(4)  # space the posts out
+    log(f"  facebook: {posted} post(s) published")
+
+
 def biggest_story(items: list[dict], min_sources: int = 3) -> list[dict]:
     """Cluster the day's items and return the one covered by the most
     independent outlets. Breadth of coverage is the honest signal for
@@ -955,6 +1033,9 @@ def main() -> int:
     if not written:
         log("  no articles produced")
         return 0
+
+    log("\n[4/4] sharing to Facebook…")
+    share_new_articles(written)
 
     articles = written + articles
     save_json(ARTICLES_PATH, articles[:MAX_ARTICLES_KEPT])
