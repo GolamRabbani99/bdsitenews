@@ -1,0 +1,64 @@
+name: Live Test match updates
+
+# Darwin play runs roughly 09:30-16:30 ACST, which is 00:00-07:00 UTC, so the
+# cron only fires while there is cricket to report. Outside the Test dates the
+# script finds no live status and exits without doing anything.
+on:
+  schedule:
+    - cron: "*/20 0-8 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: auto-publish # never write or post while another run is doing so
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install --quiet feedparser anthropic playwright
+
+      - name: Install Chromium for the scoreboard card
+        run: python -m playwright install --with-deps chromium
+
+      - name: Check the score
+        env:
+          FACEBOOK_PAGE_ID: ${{ secrets.FACEBOOK_PAGE_ID }}
+          FACEBOOK_PAGE_TOKEN: ${{ secrets.FACEBOOK_PAGE_TOKEN }}
+          CRICBUZZ_MATCH_ID: ${{ vars.CRICBUZZ_MATCH_ID }}
+          CRICBUZZ_MATCH_SLUG: ${{ vars.CRICBUZZ_MATCH_SLUG }}
+        run: python scripts/match_update.py
+
+      - name: Validate before publishing
+        run: python scripts/validate_data.py
+
+      - name: Commit if the score moved
+        run: |
+          git config user.name  "BD Site News Bot"
+          git config user.email "bot@bdsitenews.com"
+          git add src/data/articles.json src/data/match_state.json public/cards
+          if git diff --staged --quiet; then
+            echo "Score unchanged — nothing to commit."
+            exit 0
+          fi
+          git commit -m "Live score: $(date -u '+%Y-%m-%d %H:%M UTC')"
+          for attempt in 1 2 3; do
+            if git push; then exit 0; fi
+            echo "Push rejected (attempt $attempt) — rebasing."
+            if ! git pull --rebase origin main; then
+              git rebase --abort || true
+              echo "::error::Rebase conflict — resolve by hand."
+              exit 1
+            fi
+          done
+          exit 1
