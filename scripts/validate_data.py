@@ -18,6 +18,12 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
+# This script prints Bangla category names and box characters. A Windows
+# console defaults to cp1252 and would crash on them, so the gate must be
+# readable where it is run by hand as well as on the Linux CI runner.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
 ROOT = Path(__file__).resolve().parent.parent
 ARTICLES = ROOT / "src" / "data" / "articles.json"
 STORIES = ROOT / "src" / "data" / "stories.json"
