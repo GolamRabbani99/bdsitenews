@@ -105,9 +105,17 @@ export default async function ArticlePage({
 
   return (
     <main className="mx-auto max-w-3xl px-4 pb-12">
+      {/* JSON.stringify does not escape "<", so a headline arriving from an
+          external feed containing "</script>" would break out of this block
+          and execute. Escape the three characters that can. */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd)
+            .replace(/</g, "\\u003c")
+            .replace(/>/g, "\\u003e")
+            .replace(/&/g, "\\u0026"),
+        }}
       />
       <SiteHeader compact />
 

@@ -35,7 +35,9 @@ export default async function CategoryPage({
   const bn = categoryBn(cat);
   if (!bn) notFound();
 
-  const articles = byCategory(bn);
+  // The archive is permanent now, so cap what one page renders.
+  const all = byCategory(bn);
+  const articles = all.slice(0, 30);
 
   return (
     <main className="mx-auto max-w-6xl px-4 pb-12">
@@ -44,7 +46,7 @@ export default async function CategoryPage({
       <h1 className="mt-7 border-b-[3px] border-double border-ink pb-3 font-[family-name:var(--font-bengali)] text-2xl font-bold">
         {bn}
         <span className="ml-3 text-sm font-normal text-ink-soft">
-          {articles.length}টি প্রতিবেদন
+          {all.length}টি প্রতিবেদন
         </span>
       </h1>
 

@@ -42,7 +42,10 @@ STORIES_PATH = DATA / "stories.json"
 # ── Cost & volume guardrails ────────────────────────────────────────────
 MAX_NEW_ARTICLES = int(os.environ.get("MAX_NEW_ARTICLES", "8"))
 MAX_PER_CATEGORY = int(os.environ.get("MAX_PER_CATEGORY", "2"))
-MAX_ARTICLES_KEPT = int(os.environ.get("MAX_ARTICLES_KEPT", "40"))
+# Articles must NOT rotate out: at ~24/day a 40-item cap meant every article
+# 404'd about 36 hours after Google indexed it, which destroys the search
+# traffic the whole plan depends on. Keep the archive; paginate instead.
+MAX_ARTICLES_KEPT = int(os.environ.get("MAX_ARTICLES_KEPT", "2000"))
 MAX_WIRE_ITEMS = 60
 MODEL = os.environ.get("CLAUDE_MODEL", "claude-sonnet-5")
 MAX_ITEM_AGE_HOURS = 48
