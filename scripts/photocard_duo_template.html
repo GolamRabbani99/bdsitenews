@@ -1,0 +1,117 @@
+<meta charset="utf-8" />
+<title>Two-portrait card</title>
+<link href="fonts/bengali.css" rel="stylesheet" />
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { width: 1080px; height: 1350px; background: #0d0d0f; overflow: hidden; }
+
+  .card {
+    position: relative;
+    width: 1080px; height: 1350px;
+    font-family: "Noto Sans Bengali", sans-serif;
+    display: flex; flex-direction: column;
+    background: #0d0d0f;
+  }
+
+  .top {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 36px 48px 24px;
+  }
+  .chip {
+    font-size: 30px; font-weight: 700; color: #fff;
+    background: #c8102e; padding: 9px 26px; border-radius: 999px;
+  }
+  .date { font-size: 27px; color: #9aa0a6; font-weight: 500; }
+
+  /* ---- the two faces ---- */
+  .pair { display: flex; gap: 6px; height: 620px; }
+  .side { position: relative; flex: 1; overflow: hidden; }
+  .side img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: 50% 20%; /* faces sit high in most portraits */
+    display: block;
+  }
+  .who {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    padding: 44px 22px 18px;
+    background: linear-gradient(to bottom, rgba(13,13,15,0), rgba(13,13,15,.95));
+    color: #fff; font-size: 32px; font-weight: 700;
+    text-align: center;
+  }
+  .credit {
+    position: absolute; top: 14px; left: 14px;
+    font-size: 17px; color: rgba(255,255,255,.8);
+    background: rgba(0,0,0,.45); padding: 5px 12px; border-radius: 5px;
+    font-weight: 500;
+  }
+
+  /* ---- headline band ---- */
+  .band {
+    flex: 1;
+    padding: 46px 56px 0;
+    display: flex; flex-direction: column; justify-content: center;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(200,16,46,.30) 0%, transparent 62%),
+      #111116;
+  }
+  .rule { width: 92px; height: 7px; background: #c8102e; border-radius: 4px;
+          margin: 0 auto 26px; }
+  h1 {
+    color: #fff; font-weight: 800; text-align: center;
+    font-size: 62px; line-height: 1.36;
+  }
+  h1.long  { font-size: 54px; }
+  h1.xlong { font-size: 46px; }
+
+  .bottom {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 24px 48px 32px;
+    border-top: 1px solid rgba(255,255,255,.1);
+  }
+  .site { font-size: 31px; font-weight: 700; color: #fff; letter-spacing: .4px; }
+  .tag  { font-size: 25px; color: #9aa0a6; font-weight: 500; }
+</style>
+
+<div class="card">
+  <div class="top">
+    <span class="chip" id="category">__CATEGORY__</span>
+    <div class="date" id="date">__DATE__</div>
+  </div>
+
+  <div class="pair">
+    <div class="side">
+      <img id="photo" src="__IMAGE__" alt="" />
+      <div class="credit" id="credit">__CREDIT__</div>
+      <div class="who" id="who1">__WHO1__</div>
+    </div>
+    <div class="side">
+      <img id="photo2" src="__IMAGE2__" alt="" />
+      <div class="credit" id="credit2">__CREDIT2__</div>
+      <div class="who" id="who2">__WHO2__</div>
+    </div>
+  </div>
+
+  <div class="band">
+    <div class="rule"></div>
+    <h1 id="headline">__HEADLINE__</h1>
+  </div>
+
+  <div class="bottom">
+    <div class="site">bdsitenews.com</div>
+    <div class="tag">দ্রুত সংবাদ, নির্ভরযোগ্য তথ্য</div>
+  </div>
+</div>
+
+<script>
+  const h = document.getElementById("headline");
+  const n = h.textContent.trim().length;
+  if (n > 92) h.className = "xlong";
+  else if (n > 58) h.className = "long";
+
+  // A name plate with no name is worse than none at all.
+  ["who1", "who2", "credit", "credit2"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el && !el.textContent.trim()) el.remove();
+  });
+</script>

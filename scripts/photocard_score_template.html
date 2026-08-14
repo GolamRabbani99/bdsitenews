@@ -1,0 +1,125 @@
+<meta charset="utf-8" />
+<title>Score card</title>
+<link href="fonts/bengali.css" rel="stylesheet" />
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { width: 1080px; height: 1350px; background: #0d0d0f; overflow: hidden; }
+
+  .card {
+    position: relative;
+    width: 1080px; height: 1350px;
+    font-family: "Noto Sans Bengali", sans-serif;
+    display: flex; flex-direction: column;
+    background:
+      radial-gradient(circle at 15% 8%, rgba(200,16,46,.26) 0%, transparent 55%),
+      radial-gradient(circle at 88% 92%, rgba(200,16,46,.14) 0%, transparent 50%),
+      #111116;
+  }
+
+  .top {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 40px 48px 0;
+  }
+  .chip {
+    font-size: 30px; font-weight: 700; color: #fff;
+    background: #c8102e; padding: 9px 26px; border-radius: 999px;
+  }
+  .date { font-size: 27px; color: #9aa0a6; font-weight: 500; }
+
+  .context {
+    padding: 30px 52px 0;
+    font-size: 30px; font-weight: 600; color: #9aa0a6;
+  }
+  .context:empty { display: none; }
+
+  /* ---- the scoreline ----
+     Centred rather than top-aligned: a scoreline with three notes and one
+     with none must both look composed, not stranded above dead space. */
+  .rows {
+    padding: 0 52px; flex: 1;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .row {
+    display: flex; align-items: baseline; justify-content: space-between;
+    padding: 30px 0;
+    border-bottom: 1px solid rgba(255,255,255,.1);
+  }
+  .team  { font-size: 52px; font-weight: 700; color: #fff; }
+  .score { font-size: 78px; font-weight: 800; color: #fff; line-height: 1; }
+  /* The side in front is the story; colour carries that at a glance. */
+  .row.lead .team, .row.lead .score { color: #ff5d76; }
+
+  .status {
+    margin-top: 34px;
+    font-size: 46px; font-weight: 800; color: #fff;
+    line-height: 1.36;
+  }
+  .status.long { font-size: 38px; }
+
+  .notes { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 14px; }
+  .note {
+    font-size: 28px; font-weight: 600; color: #e8e8ea;
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.1);
+    padding: 12px 24px; border-radius: 10px;
+  }
+
+  .bottom {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 26px 48px 34px;
+    border-top: 1px solid rgba(255,255,255,.1);
+  }
+  .site { font-size: 31px; font-weight: 700; color: #fff; letter-spacing: .4px; }
+  .tag  { font-size: 25px; color: #9aa0a6; font-weight: 500; }
+</style>
+
+<div class="card">
+  <div class="top">
+    <span class="chip" id="category">__CATEGORY__</span>
+    <div class="date" id="date">__DATE__</div>
+  </div>
+
+  <div class="context" id="context">__CONTEXT__</div>
+
+  <div class="rows" id="rows"></div>
+
+  <div class="bottom">
+    <div class="site">bdsitenews.com</div>
+    <div class="tag">দ্রুত সংবাদ, নির্ভরযোগ্য তথ্য</div>
+  </div>
+</div>
+
+<script id="data" type="application/json">__SCOREBOARD__</script>
+<script>
+  const d = JSON.parse(document.getElementById("data").textContent || "{}");
+  const rows = document.getElementById("rows");
+
+  (d.rows || []).forEach(r => {
+    const el = document.createElement("div");
+    el.className = "row" + (r.lead ? " lead" : "");
+    el.innerHTML =
+      '<span class="team"></span><span class="score"></span>';
+    el.querySelector(".team").textContent = r.team || "";
+    el.querySelector(".score").textContent = r.score || "";
+    rows.appendChild(el);
+  });
+
+  if (d.status) {
+    const s = document.createElement("div");
+    s.className = "status" + (d.status.length > 42 ? " long" : "");
+    s.textContent = d.status;
+    rows.appendChild(s);
+  }
+
+  if ((d.notes || []).length) {
+    const wrap = document.createElement("div");
+    wrap.className = "notes";
+    d.notes.forEach(n => {
+      const b = document.createElement("div");
+      b.className = "note";
+      b.textContent = n;
+      wrap.appendChild(b);
+    });
+    rows.appendChild(wrap);
+  }
+</script>

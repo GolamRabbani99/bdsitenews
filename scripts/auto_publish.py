@@ -248,6 +248,23 @@ correct on most routine items.
     • quote_by must be the person the photo will show — set image_query to
       that same person, or leave the quote fields empty.
 
+- person_name / second_person_query / second_person_name: when a story is
+  genuinely ABOUT TWO named people facing each other — two captains, two
+  candidates, an accuser and the accused — give both. person_name is the
+  Bangla name of whoever image_query returns; second_person_query is the
+  other one in English for Commons; second_person_name is their Bangla name.
+  This produces a two-portrait card. Leave all three empty unless the story
+  really is about both of them; a second face implies involvement, so never
+  add one to pad the card out, and never for crime or allegation stories.
+
+- scoreboard: for a match RESULT or an in-progress score, and only when the
+  source states the figures. Give context ("১ম টেস্ট · ডারউইন · ২য় দিন শেষে"),
+  a row per side with the team name and score in Bangla numerals, lead=true
+  on the side in front, a status line ("বাংলাদেশ এগিয়ে ১৫৩ রানে"), and up to
+  four notes for top performers ("তানজিদ হাসান ১০১"). This becomes a
+  scoreboard card, so every number must come from the source — never
+  estimate, never round, and leave rows empty if the score is unclear.
+
   Rules that matter more than having an image:
     • For crime, court, accident or allegation stories, NEVER request a person.
       Ask only for a neutral setting ("courthouse building", "police vehicle").
@@ -313,6 +330,32 @@ ARTICLE_SCHEMA = {
         "quote_text": {"type": "string"},
         "quote_by": {"type": "string"},
         "quote_role": {"type": "string"},
+        "person_name": {"type": "string"},
+        "second_person_query": {"type": "string"},
+        "second_person_name": {"type": "string"},
+        "scoreboard": {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+                "context": {"type": "string"},
+                "status": {"type": "string"},
+                "rows": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": False,
+                        "properties": {
+                            "team": {"type": "string"},
+                            "score": {"type": "string"},
+                            "lead": {"type": "boolean"},
+                        },
+                        "required": ["team", "score", "lead"],
+                    },
+                },
+                "notes": {"type": "array", "items": {"type": "string"}},
+            },
+            "required": ["context", "status", "rows", "notes"],
+        },
         # The desk this story belongs on, judged from its content
         "category": {
             "type": "string",
@@ -326,6 +369,8 @@ ARTICLE_SCHEMA = {
         "title", "lead", "body", "impact", "context", "verdict", "claim",
         "category", "image_query", "image_is_of_subject",
         "quote_text", "quote_by", "quote_role",
+        "person_name", "second_person_query", "second_person_name",
+        "scoreboard",
     ],
 }
 
@@ -813,6 +858,17 @@ def write_article(client, item: dict) -> dict | None:
             "by": quote_by,
             "role": (draft.get("quote_role") or "").strip(),
         }
+
+    board = draft.get("scoreboard") or {}
+    rows = [r for r in (board.get("rows") or [])
+            if (r.get("team") or "").strip() and (r.get("score") or "").strip()]
+    if len(rows) >= 2:
+        article["scoreboard"] = {
+            "context": (board.get("context") or "").strip(),
+            "status": (board.get("status") or "").strip(),
+            "rows": rows,
+            "notes": [n.strip() for n in (board.get("notes") or []) if n.strip()][:4],
+        }
     if draft.get("verdict") and draft.get("claim"):
         article["factcheck"] = {
             "claim": draft["claim"].strip(),
@@ -821,6 +877,16 @@ def write_article(client, item: dict) -> dict | None:
     # A picture where one genuinely helps; the designed headline card otherwise.
     attach_image(article, draft.get("image_query", ""),
                  of_subject=bool(draft.get("image_is_of_subject")))
+
+    # A second portrait, only when the first one is genuinely of a person —
+    # otherwise the duo card would pair a real face with a stock stand-in and
+    # imply both belong to the story.
+    second_query = (draft.get("second_person_query") or "").strip()
+    if second_query and not (article.get("image") or {}).get("illustrative", True):
+        article["image"]["person"] = (draft.get("person_name") or "").strip()
+        attach_second_portrait(
+            article, second_query, (draft.get("second_person_name") or "").strip()
+        )
     time.sleep(1.5)  # be polite to the Commons API between lookups
     return article
 
@@ -949,6 +1015,37 @@ def attach_image(article: dict, query: str, of_subject: bool = False) -> None:
         "illustrative": not of_subject,
     }
     log(f"    ✽ image: {query} ({len(payload) // 1024} KB)")
+
+
+def attach_second_portrait(article: dict, query: str, person: str) -> None:
+    """The other face on a two-portrait card.
+
+    Silent no-op on any failure: one portrait and a headline is a perfectly
+    good card, while half a duo card is a broken one.
+    """
+    found = find_commons_image(query)
+    if not found or not found["thumb"]:
+        log(f"    no second portrait for: {query[:36]}")
+        return
+    dest = COVERS_DIR / f"{article['slug']}-2.jpg"
+    try:
+        req = urllib.request.Request(found["thumb"], headers=COMMONS_UA)
+        with urllib.request.urlopen(req, timeout=40) as img:
+            payload = img.read()
+        if len(payload) < 15_000:
+            return
+        dest.write_bytes(payload)
+    except Exception as exc:
+        log(f"    second portrait failed: {str(exc)[:60]}")
+        return
+    article["image2"] = {
+        "url": f"/covers/{article['slug']}-2.jpg",
+        "alt": f"{query} — ফাইল ছবি",
+        "credit": found["credit"],
+        "illustrative": False,
+        "person": person,
+    }
+    log(f"    ✽✽ second portrait: {query} ({len(payload) // 1024} KB)")
 
 
 # ── Facebook ────────────────────────────────────────────────────────────

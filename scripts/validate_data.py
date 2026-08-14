@@ -141,6 +141,34 @@ def check_articles(articles) -> None:
         if fc and fc.get("verdict") not in VALID_VERDICTS:
             err(f"{label}: invalid fact-check verdict {fc.get('verdict')!r}")
 
+        # Second portrait: a duo card with a missing file renders half blank.
+        image2 = a.get("image2") or {}
+        if image2:
+            url2 = image2.get("url", "")
+            if not url2.startswith("/"):
+                err(f"{label}: image2 url must be site-absolute")
+            elif not (PUBLIC / url2.lstrip("/")).exists():
+                err(f"{label}: second portrait missing on disk: {url2}")
+            if not image.get("url"):
+                err(f"{label}: has a second portrait but no first one")
+
+        # A quote card puts these words in quotation marks beside a face.
+        quote = a.get("quote") or {}
+        if quote:
+            if not (quote.get("text") or "").strip():
+                err(f"{label}: quote has no text")
+            if not (quote.get("by") or "").strip():
+                err(f"{label}: quote has no speaker — it would be unattributed")
+
+        board = a.get("scoreboard") or {}
+        if board:
+            rows = board.get("rows") or []
+            if len(rows) < 2:
+                err(f"{label}: scoreboard needs at least two sides")
+            for r in rows:
+                if not (r.get("team") or "").strip() or not (r.get("score") or "").strip():
+                    err(f"{label}: scoreboard row is missing a team or a score")
+
 
 def check_stories(stories) -> None:
     if not isinstance(stories, list):

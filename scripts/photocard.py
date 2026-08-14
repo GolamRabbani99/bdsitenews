@@ -10,14 +10,18 @@ failure at render time would silently produce a card full of empty boxes.
 from __future__ import annotations
 
 import html
+import json
 import re
 import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-TEMPLATE = Path(__file__).resolve().parent / "photocard_template.html"
-QUOTE_TEMPLATE = Path(__file__).resolve().parent / "photocard_quote_template.html"
+_HERE = Path(__file__).resolve().parent
+TEMPLATE = _HERE / "photocard_template.html"
+QUOTE_TEMPLATE = _HERE / "photocard_quote_template.html"
+SCORE_TEMPLATE = _HERE / "photocard_score_template.html"
+DUO_TEMPLATE = _HERE / "photocard_duo_template.html"
 PUBLIC = ROOT / "public"
 CARDS = PUBLIC / "cards"
 
@@ -80,18 +84,67 @@ def usable_quote(article: dict) -> dict | None:
     return {"text": text, "by": who, "role": (quote.get("role") or "").strip()}
 
 
+def usable_scoreboard(article: dict) -> dict | None:
+    """A scoreline needs at least two sides and a number for each."""
+    board = article.get("scoreboard") or {}
+    rows = [r for r in (board.get("rows") or [])
+            if (r.get("team") or "").strip() and (r.get("score") or "").strip()]
+    if len(rows) < 2:
+        return None
+    return {
+        "context": (board.get("context") or "").strip(),
+        "rows": rows,
+        "status": (board.get("status") or "").strip(),
+        "notes": [n for n in (board.get("notes") or []) if n.strip()][:4],
+    }
+
+
+def usable_duo(article: dict) -> dict | None:
+    """Two portraits only when we genuinely have two, both of real people.
+
+    A duo card with one stand-in photo implies both faces belong to the story,
+    which is how the wrong person ends up beside an accusation.
+    """
+    second = article.get("image2") or {}
+    first = article.get("image") or {}
+    if not first.get("url") or not second.get("url"):
+        return None
+    if first.get("illustrative", True) or second.get("illustrative", True):
+        return None
+    if not (PUBLIC / second["url"].lstrip("/")).exists():
+        return None
+    return second
+
+
+def _file_uri(url: str) -> str:
+    # file:// so Chromium reads the cover straight off disk; cards are
+    # rendered before the site deploys, so no HTTP URL exists yet.
+    if not url:
+        return ""
+    path = PUBLIC / url.lstrip("/")
+    return path.resolve().as_uri() if path.exists() else ""
+
+
+def pick_template(article: dict):
+    """Order matters: the most specific format that the data can support."""
+    if usable_scoreboard(article):
+        return SCORE_TEMPLATE, "score"
+    if usable_quote(article):
+        return QUOTE_TEMPLATE, "quote"
+    if usable_duo(article):
+        return DUO_TEMPLATE, "duo"
+    return TEMPLATE, "standard"
+
+
 def build_html(article: dict) -> str:
-    quote = usable_quote(article)
-    src = (QUOTE_TEMPLATE if quote else TEMPLATE).read_text(encoding="utf-8")
+    template, kind = pick_template(article)
+    quote = usable_quote(article) if kind == "quote" else None
+    board = usable_scoreboard(article) if kind == "score" else None
+    second = usable_duo(article) if kind == "duo" else None
+    src = template.read_text(encoding="utf-8")
     image = article.get("image") or {}
     url = image.get("url", "")
-
-    if url:
-        # file:// so Chromium reads the cover straight off disk; the card is
-        # rendered before the site has deployed, so no HTTP URL exists yet.
-        photo = (PUBLIC / url.lstrip("/")).resolve().as_uri()
-    else:
-        photo = ""
+    photo = _file_uri(url)
 
     fields = {
         "__CATEGORY__": article.get("category", "সংবাদ"),
@@ -103,9 +156,23 @@ def build_html(article: dict) -> str:
         "__QUOTE__": quote["text"] if quote else "",
         "__WHO__": quote["by"] if quote else "",
         "__ROLE__": quote["role"] if quote else "",
+        "__IMAGE2__": _file_uri(second["url"]) if second else "",
+        "__CREDIT2__": (second.get("credit") or "").split(" — ")[0] if second else "",
+        "__WHO1__": (image.get("person") or "") if second else "",
+        "__WHO2__": (second.get("person") or "") if second else "",
+        "__CONTEXT__": board["context"] if board else "",
     }
     for token, value in fields.items():
         src = src.replace(token, html.escape(value, quote=True))
+
+    if board:
+        # Injected as JSON rather than markup so a team name containing a
+        # quote or angle bracket cannot break out into the page.
+        src = src.replace(
+            "__SCOREBOARD__",
+            json.dumps(board, ensure_ascii=False)
+            .replace("<", "\\u003c").replace(">", "\\u003e"),
+        )
     return src
 
 
