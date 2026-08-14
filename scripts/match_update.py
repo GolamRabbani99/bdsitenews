@@ -97,8 +97,12 @@ def parse(html: str) -> dict | None:
         return None
     window = text[max(0, anchor.start() - 220):anchor.start()]
 
+    # Wickets are written both "351/6" and "351 - 6" depending on which
+    # layout the page serves; accepting only the slash silently dropped the
+    # wicket count and published a total that looked like an all-out score.
     innings = re.findall(
-        r"\b([A-Z]{2,4})\s+(\d{1,3})(?:\s*/\s*(\d{1,2}))?\s*(?:\(\s*([\d.]+)\s*\))?",
+        r"\b([A-Z]{2,4})\s+(\d{1,3})(?:\s*[/-]\s*(\d{1,2}))?"
+        r"\s*(?:\(\s*([\d.]+)\s*\))?",
         window,
     )
     seen: dict[str, dict] = {}
