@@ -1,0 +1,84 @@
+name: CI
+
+# Runs on every push — including the publishing bot's own commits — so a bad
+# publish or a broken change is caught rather than discovered by readers.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Data integrity
+        run: python scripts/validate_data.py
+
+      - name: Type check
+        run: npx tsc --noEmit
+
+      - name: Build
+        run: npm run build
+
+      - name: Smoke test — every route must answer 200
+        run: |
+          npm start &
+          SERVER_PID=$!
+          # wait for the server to accept connections (max 60s)
+          for i in $(seq 1 60); do
+            curl -sf -o /dev/null http://localhost:3000 && break
+            sleep 1
+          done
+
+          FAILED=0
+          # Retry before failing: a cold first render can exceed a short
+          # timeout, and a gate that cries wolf is a gate people switch off.
+          check() {
+            for attempt in 1 2 3; do
+              CODE=$(curl -s -o /dev/null -w '%{http_code}' --max-time 30 "http://localhost:3000$1")
+              if [ "$CODE" = "200" ]; then
+                echo "  ✓ $1"
+                return
+              fi
+              sleep 2
+            done
+            echo "  ✗ $1 → HTTP $CODE (after 3 attempts)"
+            FAILED=1
+          }
+
+          echo "Static routes:"
+          for p in / /about /contact /privacy /sitemap.xml /robots.txt /logo.png; do
+            check "$p"
+          done
+
+          echo "Category routes:"
+          for c in bangladesh politics crime sports business tech; do
+            check "/category/$c"
+          done
+
+          echo "Article routes (first 5 published):"
+          for slug in $(python -c "
+import json,io
+a=json.load(io.open('src/data/articles.json',encoding='utf-8'))
+print('\n'.join(x['slug'] for x in a[:5]))
+"); do
+            check "/news/$slug"
+          done
+
+          kill $SERVER_PID 2>/dev/null || true
+          exit $FAILED

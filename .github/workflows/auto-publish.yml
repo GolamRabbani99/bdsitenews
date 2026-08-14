@@ -40,6 +40,12 @@ jobs:
           CLAUDE_MODEL: claude-sonnet-5
         run: python scripts/auto_publish.py
 
+      # The gate: if the run produced malformed data, fail here so nothing is
+      # committed. Catching it before the commit is far cheaper than reverting
+      # a bad publish that readers and Google have already seen.
+      - name: Validate before publishing
+        run: python scripts/validate_data.py
+
       - name: Commit and push if anything changed
         run: |
           git config user.name  "BD Site News Bot"
