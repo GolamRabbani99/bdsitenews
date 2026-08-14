@@ -1,4 +1,5 @@
 {
-  "fingerprint": "{\"day\": \"Day 2\", \"moment\": \"Stumps\", \"rows\": [{\"code\": \"AUS\", \"overs\": \"\", \"runs\": \"198\", \"wkts\": \"\"}, {\"code\": \"BAN\", \"overs\": \"110\", \"runs\": \"351\", \"wkts\": \"6\"}], \"status\": \"Bangladesh lead by 153 runs\"}",
-  "updatedAt": "2026-08-15T00:28:23+06:00"
+  "fingerprint": "{\"day\": \"Day 2\", \"moment\": \"Stumps\", \"rows\": [{\"code\": \"AUS\", \"overs\": \"\", \"runs\": \"198\", \"wkts\": \"\"}, {\"code\": \"BAN\", \"overs\": \"\", \"runs\": \"351\", \"wkts\": \"\"}], \"status\": \"Bangladesh lead by 153 runs\"}",
+  "updatedAt": "2026-08-15T00:30:38+06:00",
+  "posted_moment": "StumpsDay 2"
 }
