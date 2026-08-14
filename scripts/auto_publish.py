@@ -676,7 +676,7 @@ def write_article(client, item: dict) -> dict | None:
     try:
         message = client.messages.create(
             model=MODEL,
-            max_tokens=2000,
+            max_tokens=3000,
             system=BANGLA_WRITER_PROMPT,
             messages=[{"role": "user", "content": payload}],
             output_config={"format": {"type": "json_schema", "schema": ARTICLE_SCHEMA}},
@@ -685,10 +685,9 @@ def write_article(client, item: dict) -> dict | None:
         log(f"  ! write failed ({item['source']}): {str(exc)[:140]}")
         return None
 
-    text = next((b.text for b in message.content if b.type == "text"), None)
-    if not text:
+    draft = parse_draft(message, f"write ({item['source']})")
+    if not draft:
         return None
-    draft = json.loads(text)
 
     usage = message.usage
     cost = (usage.input_tokens * 3 + usage.output_tokens * 15) / 1_000_000
@@ -917,6 +916,26 @@ def biggest_story(items: list[dict], min_sources: int = 3) -> list[dict]:
     return clusters[0]
 
 
+def parse_draft(message, label: str) -> dict | None:
+    """Read a model reply as JSON, or skip this piece and let the run continue.
+
+    Bangla costs many tokens per character, so a long answer can hit the token
+    ceiling and come back as truncated JSON. One unusable draft must never
+    discard the articles already written earlier in the same run.
+    """
+    if getattr(message, "stop_reason", None) == "max_tokens":
+        log(f"  ! {label}: reply hit the token limit and was cut off — skipped")
+        return None
+    text = next((b.text for b in message.content if b.type == "text"), None)
+    if not text:
+        return None
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError as exc:
+        log(f"  ! {label}: malformed JSON reply — skipped ({exc})")
+        return None
+
+
 def already_explained_today(articles: list[dict]) -> bool:
     today = datetime.now(timezone(timedelta(hours=6))).date().isoformat()
     return any(
@@ -934,7 +953,7 @@ def write_explainer(client, cluster: list[dict]) -> dict | None:
     try:
         message = client.messages.create(
             model=MODEL,
-            max_tokens=4000,
+            max_tokens=8000,
             system=EXPLAINER_PROMPT,
             messages=[
                 {"role": "user", "content": json.dumps({"reports": reports},
@@ -947,10 +966,9 @@ def write_explainer(client, cluster: list[dict]) -> dict | None:
         log(f"  ! explainer failed: {str(exc)[:140]}")
         return None
 
-    text = next((b.text for b in message.content if b.type == "text"), None)
-    if not text:
+    draft = parse_draft(message, "explainer")
+    if not draft:
         return None
-    draft = json.loads(text)
 
     usage = message.usage
     cost = (usage.input_tokens * 3 + usage.output_tokens * 15) / 1_000_000
@@ -1037,12 +1055,14 @@ def main() -> int:
         log("  no articles produced")
         return 0
 
-    log("\n[4/4] sharing to Facebook…")
-    share_new_articles(written)
-
+    # Save before sharing: the articles are already paid for, so a failure in
+    # Facebook posting must not throw away the run's work.
     articles = written + articles
     save_json(ARTICLES_PATH, articles[:MAX_ARTICLES_KEPT])
     log(f"\n✓ published {len(written)} new Bangla article(s); {len(articles[:MAX_ARTICLES_KEPT])} total on site")
+
+    log("\n[4/4] sharing to Facebook…")
+    share_new_articles(written)
     return 0
 
 

@@ -72,11 +72,10 @@ jobs:
           done
 
           echo "Article routes (first 5 published):"
-          for slug in $(python -c "
-import json,io
-a=json.load(io.open('src/data/articles.json',encoding='utf-8'))
-print('\n'.join(x['slug'] for x in a[:5]))
-"); do
+          # Kept to a single line on purpose: an unindented multi-line script
+          # here would terminate this YAML block scalar.
+          SLUGS=$(python -c "import json,io;print(' '.join(x['slug'] for x in json.load(io.open('src/data/articles.json',encoding='utf-8'))[:5]))")
+          for slug in $SLUGS; do
             check "/news/$slug"
           done
 
