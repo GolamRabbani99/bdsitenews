@@ -27,7 +27,12 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: pip install --quiet feedparser anthropic
+        run: pip install --quiet feedparser anthropic playwright
+
+      # Chromium renders the Bangla photocards. Satori was tried and mangled
+      # every matra, so a real browser engine is doing the text shaping.
+      - name: Install Chromium for photocards
+        run: python -m playwright install --with-deps chromium
 
       - name: Collect, write and publish
         env:
@@ -50,7 +55,7 @@ jobs:
         run: |
           git config user.name  "BD Site News Bot"
           git config user.email "bot@bdsitenews.com"
-          git add src/data/articles.json src/data/stories.json public/covers
+          git add src/data/articles.json src/data/stories.json public/covers public/cards
           if git diff --staged --quiet; then
             echo "No changes to publish."
             exit 0

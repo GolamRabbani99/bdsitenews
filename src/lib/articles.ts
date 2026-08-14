@@ -47,6 +47,7 @@ export const CATEGORIES = [
   { slug: "district", bn: "জেলা", aliases: [] },
   { slug: "fact-check", bn: "ফ্যাক্ট চেক", aliases: [] },
   { slug: "explainer", bn: "ব্যাখ্যা", aliases: [] },
+  { slug: "debate", bn: "বিতর্ক", aliases: [] },
 ] as const;
 
 /** Canonical Bangla name for a category label (handles renamed categories). */

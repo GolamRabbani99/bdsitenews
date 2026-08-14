@@ -24,6 +24,7 @@ import json
 import os
 import re
 import time
+import uuid
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -33,6 +34,8 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import feedparser
+
+from photocard import render_cards
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "src" / "data"
@@ -362,6 +365,58 @@ EXPLAINER_SCHEMA = {
         },
     },
     "required": ["title", "lead", "questions", "category"],
+}
+
+
+DEBATE_PROMPT = """You are the বিতর্ক (debate) desk of a Bangladeshi news site.
+
+You are given several outlets' reports on the same story. Your job is to
+determine whether credible sources GENUINELY DISAGREE about something, and if
+so, to lay out both sides fairly in Bangla.
+
+This desk exists to cover real disagreement, not to manufacture it. Set
+"has_real_disagreement" to false whenever:
+  - the outlets simply report the same facts with different wording
+  - the only 'disagreement' is one side not having commented yet
+  - the dispute is trivial, or about a matter of taste
+  - you would have to invent, sharpen or guess a position to make it a debate
+
+When it IS a real dispute, write:
+  - title: a neutral question in Bangla. Never imply which side is correct.
+  - lead: one paragraph in Bangla stating what is actually contested.
+  - side_a / side_b: the two positions. Each needs a short Bangla label, and
+    2-3 Bangla sentences stating that side's argument AS ITS HOLDERS PUT IT.
+  - settled: what is NOT in dispute — the facts both sides accept.
+  - open_question: what would have to be established to resolve it.
+
+Rules that are not negotiable:
+  - Attribute every contested claim to who said it. Never state a contested
+    claim in the site's own voice.
+  - Do not accuse any named person of a crime or wrongdoing. Report only that
+    an allegation was made, and by whom.
+  - Give both sides comparable weight and length. Do not write one side as
+    obviously correct.
+  - If one side is a fringe position contradicted by strong evidence, say so
+    plainly in "settled" rather than presenting a false balance."""
+
+DEBATE_SCHEMA = {
+    "type": "object",
+    "additionalProperties": False,
+    "properties": {
+        "has_real_disagreement": {"type": "boolean"},
+        "title": {"type": "string"},
+        "lead": {"type": "string"},
+        "side_a_label": {"type": "string"},
+        "side_a": {"type": "array", "items": {"type": "string"}},
+        "side_b_label": {"type": "string"},
+        "side_b": {"type": "array", "items": {"type": "string"}},
+        "settled": {"type": "array", "items": {"type": "string"}},
+        "open_question": {"type": "string"},
+    },
+    "required": [
+        "has_real_disagreement", "title", "lead", "side_a_label", "side_a",
+        "side_b_label", "side_b", "settled", "open_question",
+    ],
 }
 
 
@@ -828,7 +883,7 @@ CATEGORY_TAGS = {
     "খেলা": "#খেলা", "বিনোদন": "#বিনোদন", "অর্থনীতি": "#অর্থনীতি",
     "বিশ্ব": "#আন্তর্জাতিক", "প্রযুক্তি": "#প্রযুক্তি", "শিক্ষা": "#শিক্ষা",
     "প্রবাস": "#প্রবাস", "জেলা": "#জেলা", "ফ্যাক্ট চেক": "#ফ্যাক্টচেক",
-    "ব্যাখ্যা": "#ব্যাখ্যা",
+    "ব্যাখ্যা": "#ব্যাখ্যা", "বিতর্ক": "#বিতর্ক",
 }
 
 
@@ -842,10 +897,68 @@ def facebook_caption(article: dict) -> str:
     lead = article["lead"].strip()
     if len(lead) > 280:
         lead = lead[:277].rsplit(" ", 1)[0] + "…"
-    prefix = "🔍 ফ্যাক্ট চেক\n\n" if article.get("factcheck") else (
-        "🧠 ব্যাখ্যা\n\n" if article.get("questions") else ""
-    )
+    if article.get("factcheck"):
+        prefix = "🔍 ফ্যাক্ট চেক\n\n"
+    elif article["category"] == "বিতর্ক":
+        prefix = "⚖ বিতর্ক\n\n"
+    elif article.get("questions"):
+        prefix = "🧠 ব্যাখ্যা\n\n"
+    else:
+        prefix = ""
     return f"{prefix}{article['title']}\n\n{lead}\n\n👉 বিস্তারিত: {url}\n\n{tags}"
+
+
+def post_photocard_to_facebook(article: dict, card: Path) -> bool:
+    """Publish the article as a photocard with the link in the caption.
+
+    Photocards are what Bangladeshi outlets actually post, and they take far
+    more feed space than a link preview. The link still rides in the caption
+    so readers can reach the site — a photo post alone keeps everyone on
+    Facebook, which grows the Page but earns nothing.
+    """
+    boundary = f"----bdsitenews{uuid.uuid4().hex}"
+    fields = {
+        "message": facebook_caption(article),
+        "access_token": FB_TOKEN,
+    }
+    parts: list[bytes] = []
+    for name, value in fields.items():
+        parts.append(
+            f"--{boundary}\r\n"
+            f'Content-Disposition: form-data; name="{name}"\r\n\r\n'
+            f"{value}\r\n".encode()
+        )
+    parts.append(
+        f"--{boundary}\r\n"
+        f'Content-Disposition: form-data; name="source"; filename="{card.name}"\r\n'
+        f"Content-Type: image/jpeg\r\n\r\n".encode()
+    )
+    parts.append(card.read_bytes())
+    parts.append(f"\r\n--{boundary}--\r\n".encode())
+    body = b"".join(parts)
+
+    req = urllib.request.Request(
+        f"{FB_API}/{FB_PAGE_ID}/photos",
+        data=body,
+        method="POST",
+        headers={"Content-Type": f"multipart/form-data; boundary={boundary}"},
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=90) as resp:
+            payload = json.load(resp)
+        log(f"    🖼 photocard posted: {payload.get('post_id', payload.get('id', 'ok'))}")
+        return True
+    except urllib.error.HTTPError as exc:
+        raw = exc.read().decode("utf-8", "ignore")
+        try:
+            error = json.loads(raw).get("error", {})
+            detail = " ".join(error.get("message", raw).split())
+            log(f"    ! photocard rejected (code {error.get('code','?')}): {detail[:300]}")
+        except json.JSONDecodeError:
+            log(f"    ! photocard rejected: {raw[:250]}")
+    except Exception as exc:
+        log(f"    ! photocard upload failed: {str(exc)[:140]}")
+    return False
 
 
 def post_to_facebook(article: dict) -> bool:
@@ -882,12 +995,13 @@ def post_to_facebook(article: dict) -> bool:
     return False
 
 
-def share_new_articles(written: list[dict]) -> None:
+def share_new_articles(written: list[dict], cards: dict | None = None) -> None:
     """Share this run's articles, newest-first, capped so the page never
     gets flooded. Marks each one so it is never posted twice."""
     if not (FB_PAGE_ID and FB_TOKEN):
         log("  facebook not configured — skipping (set FACEBOOK_PAGE_ID/TOKEN)")
         return
+    cards = cards or {}
     posted = 0
     failures = 0
     for article in written:
@@ -895,7 +1009,12 @@ def share_new_articles(written: list[dict]) -> None:
             break
         if article.get("sharedToFacebook"):
             continue
-        if post_to_facebook(article):
+        card = cards.get(article["slug"])
+        # Photocard when we managed to render one, link post otherwise — a
+        # failed card must never cost us the post entirely.
+        sent = (post_photocard_to_facebook(article, card) if card
+                else post_to_facebook(article))
+        if sent:
             article["sharedToFacebook"] = True
             posted += 1
             failures = 0
@@ -1023,6 +1142,92 @@ def write_explainer(client, cluster: list[dict]) -> dict | None:
     }
 
 
+def already_debated_today(articles: list[dict]) -> bool:
+    today = datetime.now(timezone(timedelta(hours=6))).date().isoformat()
+    return any(
+        a.get("category") == "বিতর্ক" and a.get("publishedAt", "").startswith(today)
+        for a in articles
+    )
+
+
+def write_debate(client, cluster: list[dict]) -> dict | None:
+    """A both-sides piece — but only when the sources actually disagree.
+
+    The model is asked to judge that first and may decline, which is the whole
+    point of the desk: manufactured controversy is what destroys a news site's
+    credibility, and it is also what gets a Page throttled.
+    """
+    reports = [
+        {"outlet": c["source"], "headline": c["title"], "summary": c["summary"][:400]}
+        for c in cluster[:8]
+    ]
+    try:
+        message = client.messages.create(
+            model=MODEL,
+            max_tokens=8000,
+            system=DEBATE_PROMPT,
+            messages=[
+                {"role": "user", "content": json.dumps({"reports": reports},
+                                                       ensure_ascii=False)}
+            ],
+            output_config={"format": {"type": "json_schema",
+                                      "schema": DEBATE_SCHEMA}},
+        )
+    except Exception as exc:
+        log(f"  ! debate failed: {str(exc)[:140]}")
+        return None
+
+    draft = parse_draft(message, "debate")
+    if not draft:
+        return None
+
+    if not draft.get("has_real_disagreement"):
+        log("  no genuine disagreement in today's coverage — no বিতর্ক piece")
+        return None
+
+    usage = message.usage
+    cost = (usage.input_tokens * 3 + usage.output_tokens * 15) / 1_000_000
+    log(f"  ⚖ বিতর্ক: {draft['title'][:44]}… ({len(cluster)} sources, ~${cost:.4f})")
+
+    seen_urls: set[str] = set()
+    sources = []
+    for c in cluster[:6]:
+        if c["url"] in seen_urls:
+            continue
+        seen_urls.add(c["url"])
+        sources.append({"name": c["source"], "url": c["url"]})
+
+    def clean(lines) -> list[str]:
+        return [p.strip() for p in (lines or []) if p and p.strip()]
+
+    # Rendered as Q&A blocks so the debate reuses the explainer layout that
+    # already exists on the article page.
+    questions = [
+        {"question": draft["side_a_label"], "answer": clean(draft["side_a"])},
+        {"question": draft["side_b_label"], "answer": clean(draft["side_b"])},
+        {"question": "যা নিয়ে বিতর্ক নেই", "answer": clean(draft["settled"])},
+        {"question": "যে প্রশ্নের উত্তর এখনো মেলেনি",
+         "answer": clean([draft["open_question"]])},
+    ]
+    questions = [q for q in questions if q["question"] and q["answer"]]
+    if len(questions) < 3:
+        log("  ! debate draft was too thin to publish")
+        return None
+
+    return {
+        "slug": slugify("বিতর্ক " + draft["title"], cluster[0]["url"], "বিতর্ক"),
+        "title": draft["title"],
+        "category": "বিতর্ক",
+        "lead": draft["lead"],
+        "body": [],
+        "questions": questions,
+        "sources": sources,
+        "publishedAt": datetime.now(timezone(timedelta(hours=6))).isoformat(
+            timespec="seconds"
+        ),
+    }
+
+
 def main() -> int:
     log("BD Site News — automatic publish run")
     log(f"  model={MODEL}  max_new={MAX_NEW_ARTICLES}")
@@ -1070,6 +1275,14 @@ def main() -> int:
         else:
             log("  no story has broad enough coverage for an explainer today")
 
+    # One বিতর্ক piece a day, and only where the sources genuinely conflict.
+    if not already_debated_today(articles):
+        cluster = biggest_story(items, min_sources=4)
+        if cluster:
+            debate = write_debate(client, cluster)
+            if debate:
+                written.insert(0, debate)
+
     if not written:
         log("  no articles produced")
         return 0
@@ -1081,7 +1294,8 @@ def main() -> int:
     log(f"\n✓ published {len(written)} new Bangla article(s); {len(articles[:MAX_ARTICLES_KEPT])} total on site")
 
     log("\n[4/4] sharing to Facebook…")
-    share_new_articles(written)
+    cards = render_cards(written[:MAX_FB_POSTS], log=log)
+    share_new_articles(written, cards)
 
     # Sharing stamps sharedToFacebook on the articles it posted, so the file
     # has to be written again for that mark to survive to the next run.

@@ -120,7 +120,9 @@ export default async function ArticlePage({
       <SiteHeader compact />
 
       <article lang="bn" className="pt-7 font-[family-name:var(--font-bengali)]">
-        <p className="text-xs font-bold tracking-[0.25em] text-crimson">
+        {/* No letter-spacing on Bangla: it separates conjunct clusters and
+            makes বিতর্ক read as বি ত র্ ক. */}
+        <p className="text-xs font-bold text-crimson">
           {article.category}
         </p>
         <h1 className="mt-3 text-[27px] font-bold leading-snug sm:text-4xl">

@@ -69,7 +69,7 @@ export function StoryGrid({
             rel="noopener noreferrer"
             className="group flex flex-col border-b border-rule pb-6"
           >
-            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-crimson">
+            <p className="text-[11px] font-bold text-crimson">
               {story.category}
             </p>
             <h3 className="mt-2 font-[family-name:var(--font-serif-news)] text-xl font-medium leading-snug group-hover:underline">

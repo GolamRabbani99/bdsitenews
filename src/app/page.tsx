@@ -51,7 +51,7 @@ export default function Home() {
             title={hero.title}
             image={hero.image}
           />
-          <p className="mt-4 text-xs font-bold tracking-[0.25em] text-crimson">
+          <p className="mt-4 text-xs font-bold text-crimson">
             {hero.category}
           </p>
           <h2

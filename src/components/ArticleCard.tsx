@@ -25,7 +25,7 @@ export function ArticleCard({
           className="mb-3"
         />
       )}
-      <p className="text-[11px] font-bold tracking-[0.18em] text-crimson">
+      <p className="text-[11px] font-bold text-crimson">
         {article.category}
         <StructureBadges article={article} />
       </p>
