@@ -43,15 +43,20 @@ def bangla_date(iso: str = "") -> str:
 
 
 def _credit_line(article: dict) -> str:
+    """Illustrative label plus the photographer.
+
+    Two separate obligations. The প্রতীকী ছবি label is editorial: an
+    unlabelled stock photo beside a news headline reads as documentary
+    evidence of something that did not happen. The photographer credit is
+    legal — these are CC BY images, and the licence requires attribution
+    everywhere the photo appears, which includes a card posted to Facebook.
+    """
     image = article.get("image") or {}
     if not image:
         return ""
-    # Wikimedia photos are illustrative, never of the actual event, and the
-    # card must say so — an unlabelled stock photo beside a news headline
-    # reads as documentary evidence of something that did not happen.
-    if image.get("illustrative", True):
-        return "প্রতীকী ছবি"
-    return "ছবি: সংগৃহীত"
+    label = "প্রতীকী ছবি" if image.get("illustrative", True) else "ছবি"
+    credit = (image.get("credit") or "").split(" — ")[0].strip()
+    return f"{label} · {credit}" if credit else label
 
 
 def build_html(article: dict) -> str:
