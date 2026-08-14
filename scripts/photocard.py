@@ -17,6 +17,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 TEMPLATE = Path(__file__).resolve().parent / "photocard_template.html"
+QUOTE_TEMPLATE = Path(__file__).resolve().parent / "photocard_quote_template.html"
 PUBLIC = ROOT / "public"
 CARDS = PUBLIC / "cards"
 
@@ -59,8 +60,29 @@ def _credit_line(article: dict) -> str:
     return f"{label} · {credit}" if credit else label
 
 
+def usable_quote(article: dict) -> dict | None:
+    """A quote card only works when the quote is genuinely a quote.
+
+    It needs a speaker and a line short enough to read at a glance, and the
+    portrait must be of that speaker — a quote over someone else's face
+    misattributes it, which is the one mistake this format must never make.
+    """
+    quote = article.get("quote") or {}
+    text = (quote.get("text") or "").strip()
+    who = (quote.get("by") or "").strip()
+    image = article.get("image") or {}
+    if not text or not who:
+        return None
+    if len(text) < 25 or len(text) > 210:
+        return None
+    if not image.get("url") or image.get("illustrative", True):
+        return None
+    return {"text": text, "by": who, "role": (quote.get("role") or "").strip()}
+
+
 def build_html(article: dict) -> str:
-    src = TEMPLATE.read_text(encoding="utf-8")
+    quote = usable_quote(article)
+    src = (QUOTE_TEMPLATE if quote else TEMPLATE).read_text(encoding="utf-8")
     image = article.get("image") or {}
     url = image.get("url", "")
 
@@ -78,6 +100,9 @@ def build_html(article: dict) -> str:
         "__CREDIT__": _credit_line(article) if photo else "",
         "__IMAGE__": photo,
         "__CARDCLASS__": "" if photo else "no-photo",
+        "__QUOTE__": quote["text"] if quote else "",
+        "__WHO__": quote["by"] if quote else "",
+        "__ROLE__": quote["role"] if quote else "",
     }
     for token, value in fields.items():
         src = src.replace(token, html.escape(value, quote=True))

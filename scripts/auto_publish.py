@@ -236,6 +236,18 @@ correct on most routine items.
   Getting this wrong claims we pictured something we did not. Always false for
   crime, court and allegation stories.
 
+- quote_text / quote_by / quote_role: if the source reports someone SAYING
+  something quotable, give the line in Bangla (under 200 characters), the
+  speaker's name in Bangla, and their position. This becomes a quote card for
+  social media, so it must be safe to put in quotation marks beside that
+  person's face:
+    • Only a statement the source actually attributes to them. Never a
+      paraphrase presented as a quote, never words they did not say.
+    • Leave all three empty when nobody is quoted, when you are unsure who
+      said it, or when the quote is an accusation against someone else.
+    • quote_by must be the person the photo will show — set image_query to
+      that same person, or leave the quote fields empty.
+
   Rules that matter more than having an image:
     • For crime, court, accident or allegation stories, NEVER request a person.
       Ask only for a neutral setting ("courthouse building", "police vehicle").
@@ -298,6 +310,9 @@ ARTICLE_SCHEMA = {
         # English keywords for a representative photo, or "" if none is safe
         "image_query": {"type": "string"},
         "image_is_of_subject": {"type": "boolean"},
+        "quote_text": {"type": "string"},
+        "quote_by": {"type": "string"},
+        "quote_role": {"type": "string"},
         # The desk this story belongs on, judged from its content
         "category": {
             "type": "string",
@@ -310,6 +325,7 @@ ARTICLE_SCHEMA = {
     "required": [
         "title", "lead", "body", "impact", "context", "verdict", "claim",
         "category", "image_query", "image_is_of_subject",
+        "quote_text", "quote_by", "quote_role",
     ],
 }
 
@@ -788,6 +804,15 @@ def write_article(client, item: dict) -> dict | None:
         article["impact"] = impact
     if context:
         article["context"] = context
+
+    quote_text = (draft.get("quote_text") or "").strip()
+    quote_by = (draft.get("quote_by") or "").strip()
+    if quote_text and quote_by:
+        article["quote"] = {
+            "text": quote_text,
+            "by": quote_by,
+            "role": (draft.get("quote_role") or "").strip(),
+        }
     if draft.get("verdict") and draft.get("claim"):
         article["factcheck"] = {
             "claim": draft["claim"].strip(),
@@ -841,6 +866,16 @@ def find_commons_image(query: str) -> dict | None:
     if data is None:
         return None
 
+    # Every distinctive word of the query must be answered by the file's own
+    # name. Commons search matches loosely, and a loose match is how a story
+    # about a Test match ends up illustrated with an empty sky: the photo was
+    # of the right ground, and told the reader nothing. A designed text card
+    # is better than a technically-correct irrelevant photograph.
+    stop = {"the", "of", "in", "at", "a", "and", "bangladesh", "cricketer",
+            "building", "photo", "team"}
+    wanted = [w for w in re.findall(r"[a-z]+", query.lower())
+              if len(w) > 2 and w not in stop]
+
     pages = data.get("query", {}).get("pages", {})
     for page in sorted(pages.values(), key=lambda p: p.get("index", 99)):
         info = (page.get("imageinfo") or [{}])[0]
@@ -849,6 +884,16 @@ def find_commons_image(query: str) -> dict | None:
         meta = info.get("extmetadata", {})
         licence = re.sub(r"<[^>]+>", "", meta.get("LicenseShortName", {}).get("value", ""))
         if not ALLOWED_LICENCE.search(licence):
+            continue
+
+        title = page.get("title", "").lower()
+        if wanted and not all(w in title for w in wanted):
+            continue
+
+        # Landscapes and skylines make poor cards: the subject is too small
+        # to read at feed size. Portrait or near-square crops far better.
+        w, h = info.get("width", 0), info.get("height", 1)
+        if w / max(h, 1) > 2.2:
             continue
         artist = re.sub(r"<[^>]+>", "", meta.get("Artist", {}).get("value", "")).strip()
         return {

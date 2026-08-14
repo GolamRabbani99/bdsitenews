@@ -1,0 +1,121 @@
+<meta charset="utf-8" />
+<title>Quote card</title>
+<link href="fonts/bengali.css" rel="stylesheet" />
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { width: 1080px; height: 1350px; background: #0d0d0f; overflow: hidden; }
+
+  .card {
+    position: relative;
+    width: 1080px; height: 1350px;
+    font-family: "Noto Sans Bengali", sans-serif;
+    display: flex; flex-direction: column;
+    background: #0d0d0f;
+  }
+
+  .top {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 40px 48px 26px;
+  }
+  .chip {
+    font-size: 30px; font-weight: 700; color: #fff;
+    background: #c8102e; padding: 9px 26px; border-radius: 999px;
+  }
+  .date { font-size: 27px; color: #9aa0a6; font-weight: 500; }
+
+  /* ---- portrait ---- */
+  .portrait { position: relative; height: 560px; overflow: hidden; }
+  .portrait img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    /* Faces sit in the upper third of most portraits; centring the crop
+       decapitates them at this aspect ratio. */
+    object-position: 50% 22%;
+    display: block;
+  }
+  .fade {
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom,
+      rgba(13,13,15,0) 62%, rgba(13,13,15,.92) 100%);
+  }
+  .credit {
+    position: absolute; top: 20px; right: 24px;
+    font-size: 20px; color: rgba(255,255,255,.82);
+    background: rgba(0,0,0,.45); padding: 7px 16px; border-radius: 6px;
+    font-weight: 500;
+  }
+
+  /* ---- quote ---- */
+  .quote {
+    flex: 1;
+    padding: 20px 60px 0;
+    display: flex; flex-direction: column; justify-content: center;
+    position: relative;
+  }
+  .mark {
+    font-family: Georgia, serif;
+    font-size: 190px; line-height: .7;
+    color: #c8102e; opacity: .85;
+    height: 92px;
+  }
+  blockquote {
+    color: #fff; font-weight: 700;
+    font-size: 62px; line-height: 1.42;
+  }
+  blockquote.long  { font-size: 54px; }
+  blockquote.xlong { font-size: 46px; }
+
+  .who { margin-top: 34px; display: flex; align-items: center; gap: 18px; }
+  .bar { width: 8px; height: 62px; background: #c8102e; border-radius: 4px; }
+  .name { font-size: 38px; font-weight: 800; color: #fff; line-height: 1.3; }
+  .role { font-size: 27px; color: #9aa0a6; font-weight: 500; }
+
+  .bottom {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 26px 48px 34px;
+    border-top: 1px solid rgba(255,255,255,.1);
+  }
+  .site { font-size: 31px; font-weight: 700; color: #fff; letter-spacing: .4px; }
+  .tag  { font-size: 25px; color: #9aa0a6; font-weight: 500; }
+</style>
+
+<div class="card">
+  <div class="top">
+    <span class="chip" id="category">__CATEGORY__</span>
+    <div class="date" id="date">__DATE__</div>
+  </div>
+
+  <div class="portrait">
+    <img id="photo" src="__IMAGE__" alt="" />
+    <div class="fade"></div>
+    <div class="credit" id="credit">__CREDIT__</div>
+  </div>
+
+  <div class="quote">
+    <div class="mark">&ldquo;</div>
+    <blockquote id="quote">__QUOTE__</blockquote>
+    <div class="who">
+      <div class="bar"></div>
+      <div>
+        <div class="name" id="who">__WHO__</div>
+        <div class="role" id="role">__ROLE__</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom">
+    <div class="site">bdsitenews.com</div>
+    <div class="tag">দ্রুত সংবাদ, নির্ভরযোগ্য তথ্য</div>
+  </div>
+</div>
+
+<script>
+  const q = document.getElementById("quote");
+  const n = q.textContent.trim().length;
+  if (n > 150) q.className = "xlong";
+  else if (n > 95) q.className = "long";
+
+  // Drop the role line entirely when empty, so no ghost gap is left.
+  const r = document.getElementById("role");
+  if (!r.textContent.trim()) r.remove();
+</script>
