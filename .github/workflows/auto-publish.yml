@@ -53,8 +53,26 @@ jobs:
           git add src/data/articles.json src/data/stories.json public/covers
           if git diff --staged --quiet; then
             echo "No changes to publish."
-          else
-            git commit -m "Auto-publish: $(date -u '+%Y-%m-%d %H:%M UTC')"
-            git push
-            echo "Published — Vercel will deploy automatically."
+            exit 0
           fi
+          git commit -m "Auto-publish: $(date -u '+%Y-%m-%d %H:%M UTC')"
+
+          # Anyone pushing while this run was writing makes the push bounce,
+          # and the articles are already written and paid for. Rebase onto
+          # whatever landed and try again instead of throwing the run away.
+          for attempt in 1 2 3; do
+            if git push; then
+              echo "Published — Vercel will deploy automatically."
+              exit 0
+            fi
+            echo "Push rejected (attempt $attempt) — rebasing onto the latest main."
+            if ! git pull --rebase origin main; then
+              # Never auto-resolve: picking a side here silently deletes
+              # somebody's articles. Stop and let a human merge both.
+              git rebase --abort || true
+              echo "::error::Rebase conflict — resolve by hand so no article is dropped."
+              exit 1
+            fi
+          done
+          echo "::error::Could not push after 3 attempts."
+          exit 1
