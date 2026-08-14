@@ -1,0 +1,61 @@
+name: Share one article to Facebook
+
+# For desk pieces added by hand: the scheduled run only posts what it wrote
+# itself, so a special report would otherwise never reach the Page.
+on:
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: "Article slug (the part after /news/ in the URL)"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: auto-publish # never post while a scheduled run is posting
+  cancel-in-progress: false
+
+jobs:
+  share:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install --quiet feedparser anthropic playwright
+
+      - name: Install Chromium for the photocard
+        run: python -m playwright install --with-deps chromium
+
+      - name: Post to the Page
+        env:
+          FACEBOOK_PAGE_ID: ${{ secrets.FACEBOOK_PAGE_ID }}
+          FACEBOOK_PAGE_TOKEN: ${{ secrets.FACEBOOK_PAGE_TOKEN }}
+        run: python scripts/share_one.py "${{ inputs.slug }}"
+
+      - name: Commit the shared mark and the card
+        run: |
+          git config user.name  "BD Site News Bot"
+          git config user.email "bot@bdsitenews.com"
+          git add src/data/articles.json public/cards
+          if git diff --staged --quiet; then
+            echo "Nothing to commit."
+            exit 0
+          fi
+          git commit -m "Shared to Facebook: ${{ inputs.slug }}"
+          for attempt in 1 2 3; do
+            if git push; then exit 0; fi
+            echo "Push rejected (attempt $attempt) — rebasing."
+            if ! git pull --rebase origin main; then
+              git rebase --abort || true
+              echo "::error::Rebase conflict — resolve by hand."
+              exit 1
+            fi
+          done
+          exit 1
