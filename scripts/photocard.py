@@ -54,7 +54,7 @@ def _credit_line(article: dict) -> str:
     image = article.get("image") or {}
     if not image:
         return ""
-    label = "প্রতীকী ছবি" if image.get("illustrative", True) else "ছবি"
+    label = "প্রতীকী ছবি" if image.get("illustrative", True) else "ফাইল ছবি"
     credit = (image.get("credit") or "").split(" — ")[0].strip()
     return f"{label} · {credit}" if credit else label
 

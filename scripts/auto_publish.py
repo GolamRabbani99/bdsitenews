@@ -212,6 +212,12 @@ correct on most routine items.
 - image_query: 2-4 ENGLISH keywords for a representative photograph to run with
   the story, searched against Wikimedia Commons. Think about what a picture desk
   would pull:
+    • PREFER THE NAMED PERSON the story is actually about. A reader scrolling
+      a feed stops for a face and ignores a generic building, so this is the
+      single biggest thing you can do for a story's reach. If the headline
+      names a player, minister, actor or executive, request that person by
+      name. Add a disambiguating word for common names ("Nathan Lyon
+      cricketer", "Steve Smith cricketer").
     • a named public figure, company, product, team or landmark → name it
       ("Sam Altman", "Dhaka University campus", "Bangladesh cricket team")
     • an institution or setting → the place ("Bangladesh Bank building",
@@ -222,6 +228,13 @@ correct on most routine items.
   "electricity transmission tower Bangladesh"; about exam results →
   "school examination hall"; about floods → "flood Bangladesh". These stories
   should almost always have an image — just not of anyone accused.
+
+- image_is_of_subject: true ONLY when the query names the actual person, team,
+  place or object the story is about. The photo is genuinely them, just not
+  taken at this event, so it is labelled ফাইল ছবি. Set false for a generic
+  stand-in that merely illustrates the topic, which is labelled প্রতীকী ছবি.
+  Getting this wrong claims we pictured something we did not. Always false for
+  crime, court and allegation stories.
 
   Rules that matter more than having an image:
     • For crime, court, accident or allegation stories, NEVER request a person.
@@ -284,6 +297,7 @@ ARTICLE_SCHEMA = {
         "claim": {"type": "string"},
         # English keywords for a representative photo, or "" if none is safe
         "image_query": {"type": "string"},
+        "image_is_of_subject": {"type": "boolean"},
         # The desk this story belongs on, judged from its content
         "category": {
             "type": "string",
@@ -295,7 +309,7 @@ ARTICLE_SCHEMA = {
     },
     "required": [
         "title", "lead", "body", "impact", "context", "verdict", "claim",
-        "category", "image_query",
+        "category", "image_query", "image_is_of_subject",
     ],
 }
 
@@ -780,7 +794,8 @@ def write_article(client, item: dict) -> dict | None:
             "verdict": draft["verdict"],
         }
     # A picture where one genuinely helps; the designed headline card otherwise.
-    attach_image(article, draft.get("image_query", ""))
+    attach_image(article, draft.get("image_query", ""),
+                 of_subject=bool(draft.get("image_is_of_subject")))
     time.sleep(1.5)  # be polite to the Commons API between lookups
     return article
 
@@ -805,12 +820,25 @@ def find_commons_image(query: str) -> dict | None:
         "iiprop": "url|size|extmetadata|mime", "iiurlwidth": "1200",
     }
     url = COMMONS_API + "?" + urllib.parse.urlencode(params)
-    try:
-        req = urllib.request.Request(url, headers=COMMONS_UA)
-        with urllib.request.urlopen(req, timeout=25) as resp:
-            data = json.load(resp)
-    except Exception as exc:
-        log(f"    image search failed: {str(exc)[:70]}")
+    data = None
+    # Commons rate-limits bursts with 429. Backing off costs a few seconds;
+    # not backing off costs the article its photo, silently.
+    for attempt in range(3):
+        try:
+            req = urllib.request.Request(url, headers=COMMONS_UA)
+            with urllib.request.urlopen(req, timeout=25) as resp:
+                data = json.load(resp)
+            break
+        except urllib.error.HTTPError as exc:
+            if exc.code == 429 and attempt < 2:
+                time.sleep(3 * (attempt + 1))
+                continue
+            log(f"    image search failed: HTTP {exc.code}")
+            return None
+        except Exception as exc:
+            log(f"    image search failed: {str(exc)[:70]}")
+            return None
+    if data is None:
         return None
 
     pages = data.get("query", {}).get("pages", {})
@@ -832,9 +860,15 @@ def find_commons_image(query: str) -> dict | None:
     return None
 
 
-def attach_image(article: dict, query: str) -> None:
-    """Download a representative photo and attach it, labelled প্রতীকী ছবি —
-    it illustrates the subject, it is not a photo of the event itself."""
+def attach_image(article: dict, query: str, of_subject: bool = False) -> None:
+    """Download a representative photo and attach it with an honest label.
+
+    Two different labels, because they are two different claims. A photo of
+    the person the story is about is a ফাইল ছবি — genuinely them, just not
+    from this event. A stand-in that merely illustrates the topic is a
+    প্রতীকী ছবি. Calling a stand-in a file photo would imply we photographed
+    something we did not.
+    """
     query = query.strip()
     if not query:
         return
@@ -862,11 +896,12 @@ def attach_image(article: dict, query: str) -> None:
         log(f"    image download failed: {str(exc)[:70]}")
         return
 
+    label = "ফাইল ছবি" if of_subject else "প্রতীকী ছবি"
     article["image"] = {
         "url": f"/covers/{article['slug']}.jpg",
-        "alt": f"{query} — প্রতীকী ছবি",
+        "alt": f"{query} — {label}",
         "credit": found["credit"],
-        "illustrative": True,
+        "illustrative": not of_subject,
     }
     log(f"    ✽ image: {query} ({len(payload) // 1024} KB)")
 
