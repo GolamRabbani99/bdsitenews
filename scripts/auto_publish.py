@@ -1082,6 +1082,10 @@ def main() -> int:
 
     log("\n[4/4] sharing to Facebook…")
     share_new_articles(written)
+
+    # Sharing stamps sharedToFacebook on the articles it posted, so the file
+    # has to be written again for that mark to survive to the next run.
+    save_json(ARTICLES_PATH, articles[:MAX_ARTICLES_KEPT])
     return 0
 
 
