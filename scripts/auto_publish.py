@@ -867,8 +867,16 @@ def post_to_facebook(article: dict) -> bool:
         log(f"    📘 posted: {body.get('id', 'ok')}")
         return True
     except urllib.error.HTTPError as exc:
-        detail = exc.read().decode("utf-8", "ignore")[:180]
-        log(f"    ! facebook rejected the post: {detail}")
+        raw = exc.read().decode("utf-8", "ignore")
+        # Facebook's message opens with boilerplate and names the missing
+        # permission at the very end, so a short truncation hides the cause.
+        try:
+            error = json.loads(raw).get("error", {})
+            detail = " ".join(error.get("message", raw).split())
+            code = error.get("code", "?")
+            log(f"    ! facebook rejected the post (code {code}): {detail[:400]}")
+        except json.JSONDecodeError:
+            log(f"    ! facebook rejected the post: {raw[:300]}")
     except Exception as exc:
         log(f"    ! facebook post failed: {str(exc)[:120]}")
     return False
@@ -881,6 +889,7 @@ def share_new_articles(written: list[dict]) -> None:
         log("  facebook not configured — skipping (set FACEBOOK_PAGE_ID/TOKEN)")
         return
     posted = 0
+    failures = 0
     for article in written:
         if posted >= MAX_FB_POSTS:
             break
@@ -889,7 +898,17 @@ def share_new_articles(written: list[dict]) -> None:
         if post_to_facebook(article):
             article["sharedToFacebook"] = True
             posted += 1
+            failures = 0
             time.sleep(4)  # space the posts out
+        else:
+            failures += 1
+            # A bad token fails identically every time. Retrying it once per
+            # article just repeats the same rejection at Meta, which reads as
+            # abuse; stop and let the log say why.
+            if failures >= 2:
+                log("  facebook: giving up after 2 consecutive rejections "
+                    "— check the page token's permissions")
+                break
     log(f"  facebook: {posted} post(s) published")
 
 
