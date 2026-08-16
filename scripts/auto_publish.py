@@ -993,6 +993,73 @@ def find_commons_image(query: str) -> dict | None:
     return None
 
 
+OPENVERSE_API = "https://api.openverse.org/v1/images/"
+
+
+def find_openverse_image(query: str) -> dict | None:
+    """Second source: Openverse, which aggregates Flickr CC and others.
+
+    Commons is thin on Bangladesh news photography. Openverse is queried only
+    for licences that allow commercial use and modification, so everything it
+    returns is genuinely reusable with attribution — which is the difference
+    between crediting a photographer and republishing an agency's copyright.
+    """
+    if not query.strip():
+        return None
+    params = {
+        "q": query, "license_type": "commercial,modification",
+        "page_size": "12", "mature": "false",
+    }
+    url = OPENVERSE_API + "?" + urllib.parse.urlencode(params)
+    try:
+        req = urllib.request.Request(url, headers=COMMONS_UA)
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            data = json.load(resp)
+    except Exception as exc:
+        log(f"    openverse search failed: {str(exc)[:70]}")
+        return None
+
+    stop = {"the", "of", "in", "at", "a", "and", "bangladesh", "building", "photo"}
+    role_topic = {
+        "cricketer": "cricket", "cricket": "cricket", "footballer": "football",
+        "politician": "politic", "minister": "politic", "actor": "actor",
+        "actress": "actress", "singer": "sing", "musician": "music",
+    }
+    words = re.findall(r"[a-z]+", query.lower())
+    roles = [w for w in words if w in role_topic]
+    topic = role_topic[roles[0]] if roles else ""
+    wanted = [w for w in words
+              if len(w) > 2 and w not in stop and w not in role_topic]
+
+    for r in data.get("results", []):
+        width, height = r.get("width") or 0, r.get("height") or 1
+        if width < 800 or width / max(height, 1) > 2.2:
+            continue
+        title = (r.get("title") or "").lower()
+        tags = " ".join(t.get("name", "") for t in (r.get("tags") or [])).lower()
+        if wanted and not all(w in title or w in tags for w in wanted):
+            continue
+        if topic and topic not in title and topic not in tags:
+            continue
+        thumb = r.get("url")
+        if not thumb:
+            continue
+        licence = (r.get("license") or "").upper()
+        # Openverse returns "by-sa"; the licence is named "CC BY-SA" and the
+        # attribution has to state it correctly to actually satisfy the terms.
+        if licence and not licence.startswith(("CC", "PDM")):
+            licence = f"CC {licence}"
+        licence = f"{licence} {r.get('license_version') or ''}".strip()
+        creator = (r.get("creator") or "").strip()[:60]
+        source = (r.get("source") or "openverse").title()
+        return {
+            "thumb": thumb,
+            "credit": f"{creator}, {licence} — {source}" if creator
+                      else f"{licence} — {source}",
+        }
+    return None
+
+
 def attach_image(article: dict, query: str, of_subject: bool = False) -> None:
     """Download a representative photo and attach it with an honest label.
 
@@ -1006,6 +1073,12 @@ def attach_image(article: dict, query: str, of_subject: bool = False) -> None:
     if not query:
         return
     found = find_commons_image(query)
+    # Commons first — its category data is what makes same-name people safe to
+    # tell apart. Openverse second, for the far larger pool of Flickr CC news
+    # and location photography that Commons simply does not hold.
+    if not found:
+        time.sleep(0.5)
+        found = find_openverse_image(query)
     # A narrow query ("Bangladesh Bank headquarters Motijheel") can miss where a
     # broader one hits, so fall back to the first two words before giving up.
     if not found:
