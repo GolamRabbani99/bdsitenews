@@ -113,6 +113,13 @@ def usable_duo(article: dict) -> dict | None:
         return None
     if not (PUBLIC / second["url"].lstrip("/")).exists():
         return None
+    # Both sides must be named, and named differently. Without this the card
+    # can show one person twice under two blank plates, which happened the
+    # moment a story's first portrait was corrected to the second person.
+    who1 = (first.get("person") or "").strip()
+    who2 = (second.get("person") or "").strip()
+    if not who1 or not who2 or who1 == who2:
+        return None
     return second
 
 

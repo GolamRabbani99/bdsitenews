@@ -907,7 +907,7 @@ def find_commons_image(query: str) -> dict | None:
     params = {
         "action": "query", "format": "json", "generator": "search",
         "gsrsearch": f"filetype:bitmap {query}", "gsrnamespace": "6",
-        "gsrlimit": "8", "prop": "imageinfo",
+        "gsrlimit": "8", "prop": "imageinfo|categories", "cllimit": "50",
         "iiprop": "url|size|extmetadata|mime", "iiurlwidth": "1200",
     }
     url = COMMONS_API + "?" + urllib.parse.urlencode(params)
@@ -934,13 +934,26 @@ def find_commons_image(query: str) -> dict | None:
 
     # Every distinctive word of the query must be answered by the file's own
     # name. Commons search matches loosely, and a loose match is how a story
-    # about a Test match ends up illustrated with an empty sky: the photo was
-    # of the right ground, and told the reader nothing. A designed text card
-    # is better than a technically-correct irrelevant photograph.
-    stop = {"the", "of", "in", "at", "a", "and", "bangladesh", "cricketer",
-            "building", "photo", "team"}
-    wanted = [w for w in re.findall(r"[a-z]+", query.lower())
-              if len(w) > 2 and w not in stop]
+    # about a Test match ends up illustrated with an empty sky.
+    stop = {"the", "of", "in", "at", "a", "and", "bangladesh",
+            "building", "photo"}
+
+    # The role word is the whole point of a query like "Hasan Mahmud
+    # cricketer": Bangladesh has a Test bowler and a former minister of that
+    # name. Treating it as a stopword once put the politician's face on a
+    # cricket report. It is checked against the file's Commons categories
+    # instead, which is where Wikimedia actually records who someone is.
+    role_topic = {
+        "cricketer": "cricket", "cricket": "cricket", "footballer": "football",
+        "politician": "politic", "minister": "politic", "mp": "politic",
+        "actor": "actor", "actress": "actress", "singer": "sing",
+        "musician": "music", "director": "director", "economist": "econom",
+    }
+    words = re.findall(r"[a-z]+", query.lower())
+    roles = [w for w in words if w in role_topic]
+    topic = role_topic[roles[0]] if roles else ""
+    wanted = [w for w in words
+              if len(w) > 2 and w not in stop and w not in role_topic]
 
     pages = data.get("query", {}).get("pages", {})
     for page in sorted(pages.values(), key=lambda p: p.get("index", 99)):
@@ -955,6 +968,15 @@ def find_commons_image(query: str) -> dict | None:
         title = page.get("title", "").lower()
         if wanted and not all(w in title for w in wanted):
             continue
+
+        # When the query named a role, the file must actually be filed under
+        # it. Two public figures sharing a name is common in Bangladesh, and
+        # the wrong face on a story is not a cosmetic error.
+        if topic:
+            cats = " ".join(c.get("title", "")
+                            for c in (page.get("categories") or [])).lower()
+            if topic not in title and topic not in cats:
+                continue
 
         # Landscapes and skylines make poor cards: the subject is too small
         # to read at feed size. Portrait or near-square crops far better.
