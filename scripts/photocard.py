@@ -81,6 +81,11 @@ def usable_quote(article: dict) -> dict | None:
         return None
     if not image.get("url") or image.get("illustrative", True):
         return None
+    # The portrait must be identified as this speaker. "A real photo of
+    # somebody" is not enough: a team celebration under one player's name
+    # attributes his words to ten other people standing beside him.
+    if (image.get("person") or "").strip() != who:
+        return None
     return {"text": text, "by": who, "role": (quote.get("role") or "").strip()}
 
 

@@ -858,6 +858,13 @@ def write_article(client, item: dict) -> dict | None:
             "by": quote_by,
             "role": (draft.get("quote_role") or "").strip(),
         }
+        # Name the face, so the quote card can check the portrait really is
+        # the speaker before putting words beside it.
+        image = article.get("image") or {}
+        if image and not image.get("illustrative", True) and not image.get("person"):
+            person = (draft.get("person_name") or "").strip()
+            if person == quote_by:
+                image["person"] = person
 
     board = draft.get("scoreboard") or {}
     rows = [r for r in (board.get("rows") or [])
