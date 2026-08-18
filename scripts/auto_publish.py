@@ -43,7 +43,10 @@ ARTICLES_PATH = DATA / "articles.json"
 STORIES_PATH = DATA / "stories.json"
 
 # ── Cost & volume guardrails ────────────────────────────────────────────
-MAX_NEW_ARTICLES = int(os.environ.get("MAX_NEW_ARTICLES", "8"))
+# Fewer, deeper. Six 45-word briefs a day is thin content that cannot be
+# monetised and risks Google's scaled-content-abuse policy; two proper
+# reports are worth more than thirty stubs.
+MAX_NEW_ARTICLES = int(os.environ.get("MAX_NEW_ARTICLES", "2"))
 MAX_PER_CATEGORY = int(os.environ.get("MAX_PER_CATEGORY", "2"))
 # Articles must NOT rotate out: at ~24/day a 40-item cap meant every article
 # 404'd about 36 hours after Google indexed it, which destroys the search
@@ -159,12 +162,33 @@ FEEDS += [
     },
 ]
 
-BANGLA_WRITER_PROMPT = """You are a Bangla news-desk editor producing short news briefs
-(সংক্ষিপ্ত সংবাদ) for a Bangladeshi technology news portal.
+BANGLA_WRITER_PROMPT = """You are a Bangla news-desk reporter writing original
+reports for a Bangladeshi news portal.
 
-You receive ONE feed item: a headline (in English OR Bangla), a short summary
-snippet, the outlet name and the URL. That snippet is ALL the information you have —
-you do not have the full article, so never assume anything beyond it.
+You receive ONE item: a headline (in English OR Bangla), a summary snippet, the
+outlet name, the URL, and usually "source_text" — the text of the source
+article. The "material" field tells you which you have.
+
+HOW MUCH TO WRITE IS DECIDED BY WHAT YOU WERE GIVEN, never by a target length:
+
+- material = "full": you have the source article. Write a PROPER REPORT of
+  5-8 body paragraphs. Use the specifics that make journalism worth reading —
+  names, numbers, dates, places, what was said and by whom. This is the
+  difference between a page worth publishing and a stub.
+- material = "snippet-only": you have two sentences and nothing more. Write
+  2-3 short paragraphs and STOP. Do not pad, do not speculate, do not restate
+  the same fact in different words to reach a length. A short honest brief is
+  correct here; an inflated one is a lie about how much we know.
+
+USING source_text — this matters legally and professionally:
+  - Take the FACTS. Write every sentence yourself, in your own Bangla.
+  - Never translate the source sentence-by-sentence, and never reproduce its
+    phrasing or structure. Translation of an article is the copyright owner's
+    exclusive right; stating the facts it reports is not.
+  - Quote at most ONE short direct quotation, in quotation marks, attributed
+    to the person who said it.
+  - Attribute throughout: "রয়টার্সের প্রতিবেদন অনুযায়ী", "প্রথম আলোর খবরে বলা হয়েছে".
+  - If source_text contradicts the headline, trust source_text.
 
 If the source item is ALREADY in Bangla, you must still write your own sentences.
 Do not lift, lightly edit, or re-order the source's phrasing — read it, take the
@@ -184,10 +208,13 @@ compact. This is a news brief, not an essay.
   Well-known product and company names stay in English (ChatGPT, Google, Linux).
   Keep people's names in Bangla transliteration.
 - lead: ONE sentence — what happened.
-- body: 2-3 SHORT paragraphs (2-3 sentences each) stating the facts from the
-  snippet in your own plain Bangla phrasing. Open the first body paragraph with
-  attribution: "টেকক্রাঞ্চের প্রতিবেদন অনুযায়ী", "হ্যাকার নিউজে প্রকাশিত তথ্য অনুযায়ী",
-  "গুগলের ব্লগ পোস্টে বলা হয়েছে" — whatever fits the outlet.
+- body: paragraphs of 2-4 sentences each, in your own plain Bangla. How many
+  is set by "material": 5-8 when you have the full source text, 2-3 when you
+  only have the snippet. Open the first paragraph with attribution:
+  "টেকক্রাঞ্চের প্রতিবেদন অনুযায়ী", "গুগলের ব্লগ পোস্টে বলা হয়েছে" — whatever fits
+  the outlet. With full material, structure it the way a reporter would:
+  what happened → the detail and the numbers → who said what → why it matters
+  to a Bangladeshi reader → what happens next.
 
 STRUCTURE THAT SETS THIS PAPER APART. Readers do not just want the event; they
 want to know what it means for them. Fill these when — and ONLY when — the facts
@@ -792,21 +819,75 @@ def pick_candidates(items: list[dict], used: set[str]) -> list[dict]:
     return picked
 
 
+READABLE_TAGS = re.compile(r"<(script|style|nav|header|footer|aside|form)\b[^>]*>.*?</\1>",
+                           re.I | re.S)
+
+
+def fetch_source_text(url: str, limit: int = 7000) -> str:
+    """Read the source article so there are facts enough to report from.
+
+    A feed gives roughly 150 characters, which is why briefs come out at 45
+    words: the writer has nothing else. Reading the page is ordinary
+    reporting — the facts are used to write our own account, and the source's
+    own sentences are never reproduced. Returns "" on any failure, and the
+    writer falls back to the snippet.
+    """
+    if not url.startswith("http"):
+        return ""
+    try:
+        req = urllib.request.Request(url, headers={
+            "User-Agent": "Mozilla/5.0 (compatible; BDSiteNewsBot/1.0; "
+                          "+https://www.bdsitenews.com)",
+            "Accept": "text/html,application/xhtml+xml",
+        })
+        with urllib.request.urlopen(req, timeout=25) as resp:
+            if "html" not in resp.headers.get("Content-Type", ""):
+                return ""
+            raw = resp.read(1_500_000).decode("utf-8", "ignore")
+    except Exception as exc:
+        log(f"    source not readable: {str(exc)[:60]}")
+        return ""
+
+    raw = READABLE_TAGS.sub(" ", raw)
+    # Paragraph text is where the reporting lives; headers and menus are not.
+    paras = re.findall(r"<p\b[^>]*>(.*?)</p>", raw, re.I | re.S)
+    junk = re.compile(
+        r"copyright|all rights reserved|unauthorized use|subscribe|newsletter|"
+        r"cookie|privacy policy|terms of|follow us|share this|read more|"
+        r"advertisement|sign up|log in", re.I)
+    kept = []
+    for p in paras:
+        line = clean_text(re.sub(r"<[^>]+>", " ", p)).strip()
+        # Boilerplate is short and formulaic; real paragraphs are neither.
+        if len(line) < 40 or junk.search(line):
+            continue
+        kept.append(line)
+    text = " ".join(" ".join(kept).split())
+    if len(text) < 400:  # a paywall, a consent wall, or a stub
+        return ""
+    return text[:limit]
+
+
 def write_article(client, item: dict) -> dict | None:
     """One Claude call → one original Bangla article."""
+    source_text = fetch_source_text(item["url"])
+    if source_text:
+        log(f"    ↓ read source ({len(source_text)} chars)")
     payload = json.dumps(
         {
             "headline": item["title"],
             "summary": item["summary"],
             "outlet": item["source"],
             "url": item["url"],
+            "source_text": source_text,
+            "material": "full" if source_text else "snippet-only",
         },
         ensure_ascii=False,
     )
     try:
         message = client.messages.create(
             model=MODEL,
-            max_tokens=3000,
+            max_tokens=5000,
             system=BANGLA_WRITER_PROMPT,
             messages=[{"role": "user", "content": payload}],
             output_config={"format": {"type": "json_schema", "schema": ARTICLE_SCHEMA}},
