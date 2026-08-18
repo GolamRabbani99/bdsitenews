@@ -15,5 +15,5 @@ export const site = {
 
   // Paste your Google Analytics 4 Measurement ID (G-XXXXXXXXXX) —
   // tracking activates automatically; empty string loads nothing.
-  gaMeasurementId: "",
+  gaMeasurementId: "G-X0XG18CQ9B",
 };
