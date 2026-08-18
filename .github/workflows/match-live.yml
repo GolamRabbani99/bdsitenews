@@ -12,7 +12,12 @@ permissions:
   contents: write
 
 concurrency:
-  group: auto-publish # never write or post while another run is doing so
+  # Its own group. Sharing one with auto-publish meant a slow publishing run
+  # held the lock while 20-minute score checks queued behind it, and GitHub
+  # cancels the queued run when a newer one arrives — four sessions in a row
+  # were dropped that way. Concurrent writes are already safe: the push
+  # rebases and retries.
+  group: match-live
   cancel-in-progress: false
 
 jobs:
