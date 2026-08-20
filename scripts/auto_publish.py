@@ -47,6 +47,13 @@ STORIES_PATH = DATA / "stories.json"
 # monetised and risks Google's scaled-content-abuse policy; two proper
 # reports are worth more than thirty stubs.
 MAX_NEW_ARTICLES = int(os.environ.get("MAX_NEW_ARTICLES", "3"))
+# Nothing older than this gets written up. Ranking alone sorted by weight
+# first, so a three-day-old high-weight story beat this morning's news — the
+# site read as a digest of the week rather than a news portal.
+MAX_ITEM_AGE_HOURS = int(os.environ.get("MAX_ITEM_AGE_HOURS", "36"))
+# Scholarships are the exception: a call published five days ago is still
+# open, and its value is the deadline rather than the announcement.
+SLOW_DESKS = {"বিদেশে পড়াশোনা": 24 * 7}
 # Desks that get a guaranteed slot each run. Ranked purely on freshness
 # neither would ever win one, yet these are the two people come back for:
 # study-abroad keeps its value for months, football is simply the most read.
@@ -207,6 +214,21 @@ for _query, _weight, _lang in FOOTBALL_DESKS:
             "kind": "gnews",
         }
     )
+
+# Direct football feeds. Google News hands back news.google.com redirect
+# links whose real article URL cannot be recovered, so those items can only
+# ever be a 150-character snippet. These give the publisher's own URL, which
+# means the writer can read the match report and write a real one.
+FEEDS += [
+    {"name": "BBC Sport Football", "url": "https://feeds.bbci.co.uk/sport/football/rss.xml",
+     "cat": "ফুটবল", "weight": 5},
+    {"name": "Sky Sports Football", "url": "https://www.skysports.com/rss/12040",
+     "cat": "ফুটবল", "weight": 4},
+    {"name": "ESPN Soccer", "url": "https://www.espn.com/espn/rss/soccer/news",
+     "cat": "ফুটবল", "weight": 4},
+    {"name": "The Guardian Football", "url": "https://www.theguardian.com/football/rss",
+     "cat": "ফুটবল", "weight": 4},
+]
 
 # Direct feeds from established Bangladeshi outlets
 FEEDS += [
@@ -908,9 +930,20 @@ def _same_story(a: str, b: str) -> bool:
 def pick_candidates(items: list[dict], used: set[str]) -> list[dict]:
     """Highest-signal unpublished items — de-duplicated at the STORY level,
     filtered for source credibility, and spread across topics."""
+    now = datetime.now(timezone.utc)
+
+    def too_old(i: dict) -> bool:
+        limit = SLOW_DESKS.get(i["category"], MAX_ITEM_AGE_HOURS)
+        try:
+            age = (now - datetime.fromisoformat(i["publishedAt"])).total_seconds() / 3600
+        except (ValueError, TypeError):
+            return False  # unparseable date: judge it on merit, not on a guess
+        return age > limit
+
     fresh = [
         i
         for i in items
+        if not too_old(i)
         if i["url"] not in used
         and len(i["title"]) >= 20
         # AI-voices items are headline-driven (Google News gives a thin
