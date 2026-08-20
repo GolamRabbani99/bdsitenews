@@ -1235,7 +1235,7 @@ def attach_second_portrait(article: dict, query: str, person: str) -> None:
 FB_PAGE_ID = os.environ.get("FACEBOOK_PAGE_ID", "").strip()
 FB_TOKEN = os.environ.get("FACEBOOK_PAGE_TOKEN", "").strip().lstrip("﻿").strip()
 FB_API = "https://graph.facebook.com/v21.0"
-MAX_FB_POSTS = int(os.environ.get("MAX_FB_POSTS", "3"))
+MAX_FB_POSTS = int(os.environ.get("MAX_FB_POSTS", "1"))
 SITE_URL = "https://www.bdsitenews.com"
 
 CATEGORY_TAGS = {
@@ -1378,7 +1378,9 @@ def share_new_articles(written: list[dict], cards: dict | None = None) -> None:
             article["sharedToFacebook"] = True
             posted += 1
             failures = 0
-            time.sleep(4)  # space the posts out
+            # Wide spacing when more than one is allowed: posts made
+            # close together are merged into one aggregated story.
+            time.sleep(90)
         else:
             failures += 1
             # A bad token fails identically every time. Retrying it once per
