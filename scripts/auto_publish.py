@@ -142,6 +142,35 @@ for _cat, _query, _weight in BD_DESKS:
         }
     )
 
+# বিদেশে পড়াশোনা — scholarships, PhD calls, intakes and admission deadlines.
+# Queried in English because that is the language these are announced in; the
+# reports are written in Bangla for students here.
+STUDY_DESKS = [
+    ("fully funded scholarship international students application", 5),
+    ("PhD position fully funded apply deadline", 5),
+    ("Chevening Commonwealth scholarship application", 4),
+    ("Erasmus Mundus joint masters scholarship", 4),
+    ("DAAD scholarship Germany international students", 4),
+    ("Canada study permit international students intake", 3),
+    ("UK university admission international students deadline", 3),
+    ("USA university funding assistantship international students", 3),
+]
+
+for _query, _weight in STUDY_DESKS:
+    FEEDS.append(
+        {
+            "name": f"বিদেশে পড়াশোনা · {_query.split()[0].title()}",
+            "url": (
+                "https://news.google.com/rss/search?q="
+                + urllib.parse.quote_plus(_query)
+                + "+when:7d&hl=en-US&gl=US&ceid=US:en"
+            ),
+            "cat": "বিদেশে পড়াশোনা",
+            "weight": _weight,
+            "kind": "gnews",
+        }
+    )
+
 # Direct feeds from established Bangladeshi outlets
 FEEDS += [
     {"name": "প্রথম আলো", "url": "https://www.prothomalo.com/feed", "cat": "বাংলাদেশ", "weight": 5},
@@ -292,6 +321,26 @@ correct on most routine items.
   scoreboard card, so every number must come from the source — never
   estimate, never round, and leave rows empty if the score is unclear.
 
+- opportunity: fill this ONLY for a genuine study-abroad opportunity — a
+  scholarship, fellowship, PhD call, or an admission intake with a deadline.
+  This becomes a details panel students act on, so accuracy is not
+  negotiable:
+    - deadline: ONLY if the source states one. Copy the date it gives, in
+      Bangla. If no deadline is stated, return an EMPTY string. NEVER infer,
+      estimate, or carry over a date from a previous year — a wrong deadline
+      makes a student miss the opportunity entirely.
+    - official_url: the official scholarship or university page if the source
+      names it. Otherwise empty. Never guess a URL.
+    - funding: what is actually covered as stated (tuition, stipend, airfare,
+      health cover). Do not write "fully funded" unless the source does.
+    - eligibility: the stated requirements. Do not claim Bangladeshi students
+      are eligible unless the source says so or the call is open to all
+      international students.
+    - how_to_apply: the concrete steps the source describes, in order.
+    - country, institution, level (স্নাতক / মাস্টার্স / পিএইচডি / পোস্টডক): as stated.
+  Leave every field empty for a story that is merely ABOUT education policy,
+  visa trends or rankings — that is a news report, not an opportunity.
+
   Rules that matter more than having an image:
     • For crime, court, accident or allegation stories, NEVER request a person.
       Ask only for a neutral setting ("courthouse building", "police vehicle").
@@ -360,6 +409,23 @@ ARTICLE_SCHEMA = {
         "person_name": {"type": "string"},
         "second_person_query": {"type": "string"},
         "second_person_name": {"type": "string"},
+        "opportunity": {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+                "country": {"type": "string"},
+                "institution": {"type": "string"},
+                "level": {"type": "string"},
+                "deadline": {"type": "string"},
+                "funding": {"type": "array", "items": {"type": "string"}},
+                "eligibility": {"type": "array", "items": {"type": "string"}},
+                "how_to_apply": {"type": "array", "items": {"type": "string"}},
+                "official_url": {"type": "string"},
+            },
+            "required": ["country", "institution", "level", "deadline",
+                         "funding", "eligibility", "how_to_apply",
+                         "official_url"],
+        },
         "scoreboard": {
             "type": "object",
             "additionalProperties": False,
@@ -397,6 +463,7 @@ ARTICLE_SCHEMA = {
         "category", "image_query", "image_is_of_subject",
         "quote_text", "quote_by", "quote_role",
         "person_name", "second_person_query", "second_person_name",
+        "opportunity",
         "scoreboard",
     ],
 }
@@ -541,6 +608,10 @@ def clean_text(raw: str | None) -> str:
 # education, so we read the text. Order matters: the first desk that matches
 # wins, and the distinctive desks are checked before the broad ones.
 CATEGORY_RULES: list[tuple[str, tuple[str, ...]]] = [
+    ("বিদেশে পড়াশোনা", ("স্কলারশিপ", "বৃত্তি", "ফুল ফান্ডেড", "ফেলোশিপ",
+                        "পিএইচডি", "মাস্টার্স", "আবেদনের শেষ", "ইনটেক",
+                        "চিভনিং", "কমনওয়েলথ", "ইরাসমাস", "ড্যাড",
+                        "স্টুডেন্ট ভিসা", "বিদেশে উচ্চশিক্ষা", "টিউশন ফি")),
     ("খেলা", ("ক্রিকেট", "ফুটবল", "উইকেট", "টি-টোয়েন্টি", "টেস্ট ম্যাচ", "ওয়ানডে",
               "বিশ্বকাপ", "খেলোয়াড়", "টাইগার", "গোল করে", "ম্যাচে", "সিরিজ",
               "টুর্নামেন্ট", "লিগ", "ব্যাটিং", "বোলিং")),
@@ -947,6 +1018,19 @@ def write_article(client, item: dict) -> dict | None:
             if person == quote_by:
                 image["person"] = person
 
+    opp = draft.get("opportunity") or {}
+    if any((opp.get(k) or "") for k in ("country", "institution", "deadline")):
+        article["opportunity"] = {
+            "country": (opp.get("country") or "").strip(),
+            "institution": (opp.get("institution") or "").strip(),
+            "level": (opp.get("level") or "").strip(),
+            "deadline": (opp.get("deadline") or "").strip(),
+            "funding": [x.strip() for x in (opp.get("funding") or []) if x.strip()],
+            "eligibility": [x.strip() for x in (opp.get("eligibility") or []) if x.strip()],
+            "howToApply": [x.strip() for x in (opp.get("how_to_apply") or []) if x.strip()],
+            "officialUrl": (opp.get("official_url") or "").strip(),
+        }
+
     board = draft.get("scoreboard") or {}
     rows = [r for r in (board.get("rows") or [])
             if (r.get("team") or "").strip() and (r.get("score") or "").strip()]
@@ -1244,6 +1328,7 @@ CATEGORY_TAGS = {
     "বিশ্ব": "#আন্তর্জাতিক", "প্রযুক্তি": "#প্রযুক্তি", "শিক্ষা": "#শিক্ষা",
     "প্রবাস": "#প্রবাস", "জেলা": "#জেলা", "ফ্যাক্ট চেক": "#ফ্যাক্টচেক",
     "ব্যাখ্যা": "#ব্যাখ্যা", "বিতর্ক": "#বিতর্ক",
+    "বিদেশে পড়াশোনা": "#বিদেশে_পড়াশোনা",
 }
 
 

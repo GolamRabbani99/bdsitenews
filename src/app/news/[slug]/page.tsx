@@ -12,6 +12,7 @@ import {
   FactCheckBox,
   ImpactBox,
 } from "@/components/StructuredBlocks";
+import { OpportunityPanel } from "@/components/OpportunityPanel";
 import {
   allArticles,
   formatBnDate,
@@ -149,6 +150,10 @@ export default async function ArticlePage({
         </p>
 
         {article.factcheck && <FactCheckBox factcheck={article.factcheck} />}
+
+        {/* High in the page on purpose: a student scanning for the deadline
+            should not have to read the report to find it. */}
+        <OpportunityPanel article={article} />
 
         {article.questions?.length ? (
           <>

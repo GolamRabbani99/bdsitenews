@@ -31,7 +31,7 @@ PUBLIC = ROOT / "public"
 
 VALID_CATEGORIES = {
     "বাংলাদেশ", "রাজনীতি", "অপরাধ", "খেলা", "বিনোদন", "অর্থনীতি", "বিশ্ব",
-    "প্রযুক্তি", "শিক্ষা", "প্রবাস", "জেলা", "ফ্যাক্ট চেক", "ব্যাখ্যা", "বিতর্ক",
+    "প্রযুক্তি", "শিক্ষা", "প্রবাস", "জেলা", "ফ্যাক্ট চেক", "ব্যাখ্যা", "বিতর্ক", "বিদেশে পড়াশোনা",
     # legacy labels still present on older articles
     "খেলাধুলা", "আন্তর্জাতিক",
 }
@@ -159,6 +159,22 @@ def check_articles(articles) -> None:
                 err(f"{label}: quote has no text")
             if not (quote.get("by") or "").strip():
                 err(f"{label}: quote has no speaker — it would be unattributed")
+
+        # Study-abroad panel: students act on these, so a half-filled panel
+        # is worse than none. An absent deadline is fine and expected; a
+        # deadline with nothing else to act on is not.
+        opp = a.get("opportunity") or {}
+        if opp:
+            if not (opp.get("country") or "").strip() and not (
+                opp.get("institution") or ""
+            ).strip():
+                err(f"{label}: opportunity names neither a country nor an institution")
+            url = (opp.get("officialUrl") or "").strip()
+            if url and not url.startswith("http"):
+                err(f"{label}: opportunity officialUrl is not a real link: {url!r}")
+            actionable = any(opp.get(k) for k in ("funding", "eligibility", "howToApply"))
+            if not actionable and not (opp.get("deadline") or "").strip() and not url:
+                err(f"{label}: opportunity panel has nothing a reader can act on")
 
         board = a.get("scoreboard") or {}
         if board:

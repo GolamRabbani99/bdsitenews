@@ -27,6 +27,18 @@ export type Article = {
     illustrative?: boolean;
   };
   stats?: { title: string; headers: string[]; rows: string[][] };
+  /** বিদেশে পড়াশোনা: the details a student needs in order to act */
+  opportunity?: {
+    country: string;
+    institution: string;
+    level: string;
+    /** Empty whenever the source did not state one — never inferred */
+    deadline: string;
+    funding: string[];
+    eligibility: string[];
+    howToApply: string[];
+    officialUrl: string;
+  };
 };
 
 /**
@@ -48,6 +60,7 @@ export const CATEGORIES = [
   { slug: "fact-check", bn: "ফ্যাক্ট চেক", aliases: [] },
   { slug: "explainer", bn: "ব্যাখ্যা", aliases: [] },
   { slug: "debate", bn: "বিতর্ক", aliases: [] },
+  { slug: "study-abroad", bn: "বিদেশে পড়াশোনা", aliases: [] },
 ] as const;
 
 /** Canonical Bangla name for a category label (handles renamed categories). */
