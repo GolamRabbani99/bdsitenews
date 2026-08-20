@@ -47,6 +47,9 @@ STORIES_PATH = DATA / "stories.json"
 # monetised and risks Google's scaled-content-abuse policy; two proper
 # reports are worth more than thirty stubs.
 MAX_NEW_ARTICLES = int(os.environ.get("MAX_NEW_ARTICLES", "2"))
+# Guarantee the study-abroad desk a slot; it never outranks the day's
+# news on freshness, but it is the desk with lasting value.
+RESERVE_STUDY_SLOT = os.environ.get("RESERVE_STUDY_SLOT", "1") != "0"
 MAX_PER_CATEGORY = int(os.environ.get("MAX_PER_CATEGORY", "2"))
 # Articles must NOT rotate out: at ~24/day a 40-item cap meant every article
 # 404'd about 36 hours after Google indexed it, which destroys the search
@@ -866,10 +869,24 @@ def pick_candidates(items: list[dict], used: set[str]) -> list[dict]:
     ]
     fresh.sort(key=lambda i: (i["weight"], i["publishedAt"]), reverse=True)
 
-    picked: list[dict] = []
+    # One slot a run is reserved for বিদেশে পড়াশোনা. Ranked purely on weight
+    # and recency it never wins a slot against the day's tech and
+    # entertainment news, yet it is the desk students come back for — and
+    # unlike a news brief, a scholarship call keeps its value for months.
+    reserved: list[dict] = []
+    if RESERVE_STUDY_SLOT:
+        for item in fresh:
+            if item["category"] == "বিদেশে পড়াশোনা":
+                reserved.append(item)
+                break
+
+    picked: list[dict] = list(reserved)
     per_person: dict[str, int] = {}
-    per_category: dict[str, int] = {}
+    per_category: dict[str, int] = {c["category"]: 1 for c in reserved}
+    reserved_urls = {r["url"] for r in reserved}
     for item in fresh:
+        if item["url"] in reserved_urls:
+            continue
         # One brief per real-world story, however many outlets covered it.
         if any(_same_story(item["title"], p["title"]) for p in picked):
             continue
