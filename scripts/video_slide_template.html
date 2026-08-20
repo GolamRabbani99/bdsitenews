@@ -1,0 +1,98 @@
+<meta charset="utf-8" />
+<title>Video slide</title>
+<link href="fonts/bengali.css" rel="stylesheet" />
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  /* 1920×1080 — YouTube's native frame. Shorts get a 1080×1920 crop of the
+     safe area, which is why nothing important sits near the edges. */
+  body { width: 1920px; height: 1080px; overflow: hidden; background: #0d0d0f; }
+
+  .slide {
+    position: relative;
+    width: 1920px; height: 1080px;
+    font-family: "Noto Sans Bengali", sans-serif;
+    display: flex; flex-direction: column;
+    background:
+      radial-gradient(circle at 18% 12%, rgba(200,16,46,.26) 0%, transparent 55%),
+      radial-gradient(circle at 85% 88%, rgba(200,16,46,.14) 0%, transparent 50%),
+      #101014;
+  }
+
+  .photo { position: absolute; inset: 0; }
+  .photo img { width: 100%; height: 100%; object-fit: cover; opacity: .34; }
+  .photo::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(90deg, rgba(13,13,15,.94) 40%, rgba(13,13,15,.55));
+  }
+
+  .top {
+    position: relative;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 54px 88px 0;
+  }
+  .chip {
+    font-size: 38px; font-weight: 700; color: #fff;
+    background: #c8102e; padding: 12px 34px; border-radius: 999px;
+  }
+  .date { font-size: 34px; color: #9aa0a6; font-weight: 500; }
+
+  .body {
+    position: relative; flex: 1;
+    padding: 0 110px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .rule { width: 120px; height: 9px; background: #c8102e; border-radius: 5px;
+          margin-bottom: 40px; }
+  h1 {
+    color: #fff; font-weight: 800;
+    font-size: 96px; line-height: 1.32;
+    text-shadow: 0 4px 26px rgba(0,0,0,.6);
+  }
+  h1.long  { font-size: 78px; }
+  h1.xlong { font-size: 64px; }
+
+  .kicker {
+    margin-top: 34px; font-size: 44px; color: #cfd2d6; font-weight: 600;
+    line-height: 1.45;
+  }
+  .kicker:empty { display: none; }
+
+  .bottom {
+    position: relative;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 88px 52px;
+  }
+  .site { font-size: 40px; font-weight: 700; color: #fff; letter-spacing: .5px; }
+  .tag  { font-size: 32px; color: #9aa0a6; font-weight: 500; }
+</style>
+
+<div class="slide __SLIDECLASS__">
+  <div class="photo" id="photowrap"><img id="photo" src="__IMAGE__" alt="" /></div>
+
+  <div class="top">
+    <span class="chip">__CATEGORY__</span>
+    <div class="date">__DATE__</div>
+  </div>
+
+  <div class="body">
+    <div class="rule"></div>
+    <h1 id="headline">__HEADLINE__</h1>
+    <div class="kicker" id="kicker">__KICKER__</div>
+  </div>
+
+  <div class="bottom">
+    <div class="site">bdsitenews.com</div>
+    <div class="tag">দ্রুত সংবাদ, নির্ভরযোগ্য তথ্য</div>
+  </div>
+</div>
+
+<script>
+  const h = document.getElementById("headline");
+  const n = h.textContent.trim().length;
+  if (n > 78) h.className = "xlong";
+  else if (n > 46) h.className = "long";
+
+  // No photo for this slide: drop the layer rather than leave a broken image.
+  const img = document.getElementById("photo");
+  if (!img.getAttribute("src")) document.getElementById("photowrap").remove();
+</script>

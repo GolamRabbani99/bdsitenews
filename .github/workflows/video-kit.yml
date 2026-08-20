@@ -1,0 +1,48 @@
+name: Make a video kit
+
+# Builds the script, voiceover text and slides for one article, and attaches
+# them as a downloadable zip. Nothing is committed — a kit is working
+# material for the editor, not site content.
+on:
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: "Article slug (leave empty for the newest article)"
+        required: false
+        type: string
+
+jobs:
+  kit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install --quiet anthropic playwright
+
+      - name: Install Chromium for the slides
+        run: python -m playwright install --with-deps chromium
+
+      - name: Build the kit
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CLAUDE_MODEL: claude-sonnet-5
+        run: python scripts/make_video_kit.py "${{ inputs.slug }}"
+
+      - name: Name the kit
+        id: kit
+        run: |
+          DIR=$(ls -d video-kits/*/ 2>/dev/null | head -1)
+          echo "dir=${DIR%/}" >> "$GITHUB_OUTPUT"
+          echo "name=$(basename "${DIR%/}")" >> "$GITHUB_OUTPUT"
+
+      - name: Upload the kit
+        uses: actions/upload-artifact@v4
+        with:
+          name: video-kit-${{ steps.kit.outputs.name }}
+          path: ${{ steps.kit.outputs.dir }}
+          retention-days: 30
