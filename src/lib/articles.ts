@@ -54,6 +54,7 @@ export const CATEGORIES = [
   { slug: "politics", bn: "রাজনীতি", aliases: [] },
   { slug: "crime", bn: "অপরাধ", aliases: ["আইন-আদালত"] },
   { slug: "sports", bn: "খেলা", aliases: ["খেলাধুলা"] },
+  { slug: "football", bn: "ফুটবল", aliases: [] },
   { slug: "entertainment", bn: "বিনোদন", aliases: [] },
   { slug: "business", bn: "অর্থনীতি", aliases: ["ব্যবসা"] },
   { slug: "world", bn: "বিশ্ব", aliases: ["আন্তর্জাতিক"] },

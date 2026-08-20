@@ -46,10 +46,15 @@ STORIES_PATH = DATA / "stories.json"
 # Fewer, deeper. Six 45-word briefs a day is thin content that cannot be
 # monetised and risks Google's scaled-content-abuse policy; two proper
 # reports are worth more than thirty stubs.
-MAX_NEW_ARTICLES = int(os.environ.get("MAX_NEW_ARTICLES", "2"))
-# Guarantee the study-abroad desk a slot; it never outranks the day's
-# news on freshness, but it is the desk with lasting value.
-RESERVE_STUDY_SLOT = os.environ.get("RESERVE_STUDY_SLOT", "1") != "0"
+MAX_NEW_ARTICLES = int(os.environ.get("MAX_NEW_ARTICLES", "3"))
+# Desks that get a guaranteed slot each run. Ranked purely on freshness
+# neither would ever win one, yet these are the two people come back for:
+# study-abroad keeps its value for months, football is simply the most read.
+RESERVED_DESKS = [
+    d.strip()
+    for d in os.environ.get("RESERVED_DESKS", "বিদেশে পড়াশোনা,ফুটবল").split(",")
+    if d.strip()
+]
 MAX_PER_CATEGORY = int(os.environ.get("MAX_PER_CATEGORY", "2"))
 # Articles must NOT rotate out: at ~24/day a 40-item cap meant every article
 # 404'd about 36 hours after Google indexed it, which destroys the search
@@ -174,6 +179,35 @@ for _query, _weight in STUDY_DESKS:
         }
     )
 
+# ফুটবল — the most-read sport online in Bangladesh. Messi and Ronaldo carry
+# the desk; the domestic query keeps it from being only European football.
+FOOTBALL_DESKS = [
+    ("Lionel Messi", 5, "en"),
+    ("Messi Inter Miami goal", 5, "en"),
+    ("Cristiano Ronaldo", 4, "en"),
+    ("Champions League", 4, "en"),
+    ("Premier League", 3, "en"),
+    ("Real Madrid Barcelona La Liga", 3, "en"),
+    ("বাংলাদেশ ফুটবল হামজা চৌধুরী জামাল ভূঁইয়া", 4, "bn"),
+]
+
+for _query, _weight, _lang in FOOTBALL_DESKS:
+    _loc = ("hl=bn&gl=BD&ceid=BD:bn" if _lang == "bn"
+            else "hl=en-US&gl=US&ceid=US:en")
+    FEEDS.append(
+        {
+            "name": f"ফুটবল · {_query.split()[0]}",
+            "url": (
+                "https://news.google.com/rss/search?q="
+                + urllib.parse.quote_plus(_query)
+                + "+when:2d&" + _loc
+            ),
+            "cat": "ফুটবল",
+            "weight": _weight,
+            "kind": "gnews",
+        }
+    )
+
 # Direct feeds from established Bangladeshi outlets
 FEEDS += [
     {"name": "প্রথম আলো", "url": "https://www.prothomalo.com/feed", "cat": "বাংলাদেশ", "weight": 5},
@@ -239,6 +273,19 @@ compact. This is a news brief, not an essay.
   brackets on first use, e.g. কৃত্রিম বুদ্ধিমত্তা (এআই), ওপেন সোর্স (open source).
   Well-known product and company names stay in English (ChatGPT, Google, Linux).
   Keep people's names in Bangla transliteration.
+  FOR FOOTBALL AND SPORT, the headline is the whole product. A Bangladeshi
+  reader scrolling a feed decides in one second, and these rules decide it:
+    • NAME THE STAR. "মেসি" in the headline outperforms "ইন্টার মায়ামি" every
+      time. Readers scan for the name, not the club.
+    • LEAD WITH THE NUMBER OR THE MOMENT — the hat-trick, the 92nd minute,
+      the comeback from two down. Specifics sell; adjectives do not.
+    • Put the stake in it: what it decides, who it beats, what it ends.
+    • The facts almost always supply the drama. If they do not, the story is
+      not worth a dramatic headline — write the plain one. Never manufacture
+      tension, never promise a revelation the report does not contain, never
+      write a question the piece cannot answer. A reader who feels tricked
+      does not come back, and that costs more than the click was worth.
+
 - lead: ONE sentence — what happened.
 - body: paragraphs of 2-4 sentences each, in your own plain Bangla. How many
   is set by "material": 5-8 when you have the full source text, 2-3 when you
@@ -457,7 +504,8 @@ ARTICLE_SCHEMA = {
             "type": "string",
             "enum": [
                 "বাংলাদেশ", "রাজনীতি", "অপরাধ", "খেলা", "বিনোদন", "অর্থনীতি",
-                "বিশ্ব", "প্রযুক্তি", "শিক্ষা", "বিদেশে পড়াশোনা", "প্রবাস", "জেলা",
+                "বিশ্ব", "প্রযুক্তি", "শিক্ষা", "বিদেশে পড়াশোনা", "ফুটবল",
+                "প্রবাস", "জেলা",
                 "ফ্যাক্ট চেক",
             ],
         },
@@ -612,6 +660,9 @@ def clean_text(raw: str | None) -> str:
 # education, so we read the text. Order matters: the first desk that matches
 # wins, and the distinctive desks are checked before the broad ones.
 CATEGORY_RULES: list[tuple[str, tuple[str, ...]]] = [
+    ("ফুটবল", ("মেসি", "রোনালদো", "ফুটবল", "গোল করে", "চ্যাম্পিয়নস লিগ",
+               "প্রিমিয়ার লিগ", "লা লিগা", "বার্সেলোনা", "রিয়াল মাদ্রিদ",
+               "ইন্টার মায়ামি", "আর্জেন্টিনা", "ব্রাজিল", "ফিফা", "হ্যাটট্রিক")),
     ("বিদেশে পড়াশোনা", ("স্কলারশিপ", "বৃত্তি", "ফুল ফান্ডেড", "ফেলোশিপ",
                         "পিএইচডি", "মাস্টার্স", "আবেদনের শেষ", "ইনটেক",
                         "চিভনিং", "কমনওয়েলথ", "ইরাসমাস", "ড্যাড",
@@ -870,14 +921,11 @@ def pick_candidates(items: list[dict], used: set[str]) -> list[dict]:
     ]
     fresh.sort(key=lambda i: (i["weight"], i["publishedAt"]), reverse=True)
 
-    # One slot a run is reserved for বিদেশে পড়াশোনা. Ranked purely on weight
-    # and recency it never wins a slot against the day's tech and
-    # entertainment news, yet it is the desk students come back for — and
-    # unlike a news brief, a scholarship call keeps its value for months.
+    # Each reserved desk takes one slot before ranking decides the rest.
     reserved: list[dict] = []
-    if RESERVE_STUDY_SLOT:
+    for desk in RESERVED_DESKS:
         for item in fresh:
-            if item["category"] == "বিদেশে পড়াশোনা":
+            if item["category"] == desk and item not in reserved:
                 reserved.append(item)
                 break
 
@@ -1345,7 +1393,7 @@ CATEGORY_TAGS = {
     "খেলা": "#খেলা", "বিনোদন": "#বিনোদন", "অর্থনীতি": "#অর্থনীতি",
     "বিশ্ব": "#আন্তর্জাতিক", "প্রযুক্তি": "#প্রযুক্তি", "শিক্ষা": "#শিক্ষা",
     "প্রবাস": "#প্রবাস", "জেলা": "#জেলা", "ফ্যাক্ট চেক": "#ফ্যাক্টচেক",
-    "ব্যাখ্যা": "#ব্যাখ্যা", "বিতর্ক": "#বিতর্ক",
+    "ব্যাখ্যা": "#ব্যাখ্যা", "বিতর্ক": "#বিতর্ক", "ফুটবল": "#ফুটবল",
     "বিদেশে পড়াশোনা": "#বিদেশে_পড়াশোনা",
 }
 
