@@ -1,11 +1,9 @@
-# BCB media accreditation — application
+# BCB media accreditation — ready to send
 
-**Send to:** BCB Media & Communications Department
-**Find the current address at:** https://www.tigercricket.com.bd (Contact) — or
-message the official **Bangladesh Cricket Board** Facebook page and ask for the
-media department's email.
+**To:** social@tigercricket.com.bd
+**Subject:** Media accreditation request — BD Site News (bdsitenews.com)
 
-**Subject:** Media accreditation request — bdsitenews.com (online news portal)
+Copy everything between the lines into the email body.
 
 ---
 
@@ -15,6 +13,10 @@ Bangladesh Cricket Board
 I am writing to request media accreditation for **BD Site News**
 (https://www.bdsitenews.com), a Bangla-language online news portal.
 
+If this address is not the right one for accreditation, I would be grateful
+if you could forward this to the appropriate desk or point me to the correct
+contact.
+
 **About the publication**
 
 BD Site News publishes original Bangla reporting across national news,
@@ -23,12 +25,20 @@ publish daily and cite the source of every report.
 
 Recent cricket coverage includes:
 
-- A report on Bangladesh's first Test victory in Australia, Darwin, August 2026
-- A profile of Mohammad Ashraful's tenure as national batting coach, with
-  team batting figures since his appointment
+- A report on Bangladesh's first Test victory on Australian soil, Darwin,
+  August 2026
+  https://www.bdsitenews.com/news/23-bchhrer-opeksha-4-diner-uttr-ostrelij-ar-9b3e02
+
+- A profile of Mohammad Ashraful's tenure as national batting coach, set
+  against the team's batting record since his appointment
+  https://www.bdsitenews.com/news/ashraphuler-9-mas-ostrelij-ar-matite-prthm-8c4d21
+
 - An analysis of Australia–Bangladesh Test scheduling and its relationship to
   the ICC revenue distribution model
-- Live scoreboard coverage through the Darwin Test
+  https://www.bdsitenews.com/news/26-bchhre-matr-6-test-ostrelij-ar-obhelar-2ae25f
+
+- A tactical preview of the third day's play in the Darwin Test
+  https://www.bdsitenews.com/news/tritij-diner-prthm-seshne-match-bangladesher-7f1a05
 
 **What we are requesting**
 
@@ -36,30 +46,32 @@ Recent cricket coverage includes:
    to BCB or the named photographer
 2. Inclusion on the BCB media distribution list for press releases, squad
    announcements and fixture confirmations
-3. Guidance on the procedure for match-day accreditation for our reporter at
-   future home international fixtures
+3. Guidance on the procedure for match-day accreditation at future home
+   international fixtures
 
 **Why we are asking**
 
 We currently illustrate cricket reports with openly licensed photographs and
-our own data graphics, because we will not publish agency or third-party
+our own data graphics, because we do not publish agency or third-party
 photographs without a licence. This limits how well we can serve readers on
-the biggest cricket stories. Access to BCB's official images would let us
-report Bangladesh cricket properly and credit the Board correctly.
+the biggest cricket stories. Access to BCB's official images would allow us
+to report Bangladesh cricket properly and to credit the Board correctly.
+
+Should full accreditation not be possible at this stage, we would welcome
+written confirmation of whether BCB's published match photographs may be used
+for editorial purposes with credit.
 
 **Publication details**
 
-| | |
-|---|---|
-| Publication | BD Site News |
-| Website | https://www.bdsitenews.com |
-| Type | Online news portal, Bangla |
-| Editorial contact | Golam Rabbani |
-| Email | *(your email)* |
-| Phone | *(your phone)* |
-| Facebook | https://www.facebook.com/Bdsitenews |
+Publication: BD Site News
+Website: https://www.bdsitenews.com
+Facebook: https://www.facebook.com/Bdsitenews
+Type: Online news portal, Bangla language
+Editorial contact: Golam Rabbani
+Email: golamrabbani6174@gmail.com
+Phone: +880 1745-879885
 
-I am happy to provide any further documentation the Board requires.
+I am happy to provide any further information the Board requires.
 
 With thanks,
 
@@ -69,20 +81,24 @@ https://www.bdsitenews.com
 
 ---
 
-## Before sending
+## Before you press send
 
-- Fill in the email and phone placeholders.
-- Attach or link two or three of the cricket reports above — they are the
-  strongest evidence that this is a working publication.
-- Send from an address on your own domain if you have one
-  (`editor@bdsitenews.com`). A Gmail address is accepted, but a domain
-  address reads as an established outlet.
-- Expect no reply for two to three weeks. Follow up once after that; boards
-  are slow rather than unwilling.
+- Check the phone and email above — they are the ones listed publicly on your
+  Facebook Page. Change them if you would rather use different ones.
+- Send it from the address you want the reply to arrive at.
+- `social@tigercricket.com.bd` is the social media desk rather than the media
+  accreditation desk, which is why the note asking them to forward it is in
+  there. If nothing comes back in three weeks, try the general contact address
+  on tigercricket.com.bd as well.
 
-## If they decline
+## What to do with the reply
 
-Ask specifically whether BCB's published match photographs may be used for
-editorial purposes with credit. That is a narrower request than full
-accreditation and is often granted in writing — which is all we need to start
-using them legally.
+- **Accreditation granted** — tell me and I will wire the official image
+  source into the pipeline so cricket reports use BCB photographs with credit.
+- **Only image permission granted** — that alone solves the cricket photo
+  problem. Keep the email; written permission is what makes the use lawful.
+- **Declined** — ask what the Board requires of an outlet before it will
+  consider accreditation, and we work towards it. Traffic figures usually
+  matter, which is why Analytics and Search Console now exist.
+- **No reply** — follow up once after three weeks. Boards are slow rather
+  than unwilling.
