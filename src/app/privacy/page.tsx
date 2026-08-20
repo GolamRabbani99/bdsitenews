@@ -61,6 +61,15 @@ export default function PrivacyPage() {
           articles readers find useful. We do not sell personal data to anyone.
         </p>
 
+        <h2 className="mt-6 text-lg font-semibold">Embedded content</h2>
+        <p className="mt-2">
+          Some articles embed a public post from Facebook or a video from
+          YouTube. That content is served by those platforms, not by us, and
+          they may set cookies or collect data when it loads. We embed rather
+          than copy so that the original author keeps control of their post.
+          Videos are embedded through YouTube&apos;s privacy-enhanced domain.
+        </p>
+
         <h2 className="mt-6 text-lg font-semibold">External links</h2>
         <p className="mt-2">
           Our articles cite and link to original sources. Those sites have their own

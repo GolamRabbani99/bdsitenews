@@ -27,6 +27,10 @@ export type Article = {
     illustrative?: boolean;
   };
   stats?: { title: string; headers: string[]; rows: string[][] };
+  /** A public post embedded beneath the report — served by the platform,
+   *  never copied. Added by an editor; never invented by the writer, which
+   *  would produce a URL that does not exist. */
+  embed?: { platform: "facebook" | "youtube"; url: string; caption?: string };
   /** বিদেশে পড়াশোনা: the details a student needs in order to act */
   opportunity?: {
     country: string;

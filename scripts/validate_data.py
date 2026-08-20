@@ -160,6 +160,15 @@ def check_articles(articles) -> None:
             if not (quote.get("by") or "").strip():
                 err(f"{label}: quote has no speaker — it would be unattributed")
 
+        # Embeds: a wrong or invented URL renders an empty grey box, and the
+        # reader cannot tell that from a deleted post.
+        embed = a.get("embed") or {}
+        if embed:
+            if embed.get("platform") not in {"facebook", "youtube"}:
+                err(f"{label}: embed platform {embed.get('platform')!r} not supported")
+            if not (embed.get("url") or "").startswith("http"):
+                err(f"{label}: embed has no valid URL")
+
         # Study-abroad panel: students act on these, so a half-filled panel
         # is worse than none. An absent deadline is fine and expected; a
         # deadline with nothing else to act on is not.

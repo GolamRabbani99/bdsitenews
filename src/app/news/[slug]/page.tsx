@@ -13,6 +13,7 @@ import {
   ImpactBox,
 } from "@/components/StructuredBlocks";
 import { OpportunityPanel } from "@/components/OpportunityPanel";
+import { SocialEmbed } from "@/components/SocialEmbed";
 import {
   allArticles,
   formatBnDate,
@@ -242,6 +243,9 @@ export default async function ArticlePage({
             বিডি সাইট নিউজের নিজস্ব ভাষায় লেখা।
           </p>
         </footer>
+        {/* After the reporting, before the sources: the post is supporting
+            material, not the story. */}
+        <SocialEmbed article={article} />
       </article>
 
       <AdSlot placement="end-article" />
