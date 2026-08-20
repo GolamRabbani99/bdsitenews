@@ -1247,10 +1247,20 @@ CATEGORY_TAGS = {
 }
 
 
-def facebook_caption(article: dict) -> str:
+def article_url(article: dict) -> str:
+    return f"{SITE_URL}/news/{article['slug']}"
+
+
+def facebook_caption(article: dict, with_link: bool = True) -> str:
     """Headline, the lead, then the link — the shape that actually gets read
-    in a Bangladeshi feed."""
-    url = f"{SITE_URL}/news/{article['slug']}"
+    in a Bangladeshi feed.
+
+    with_link=False leaves the URL out so it can go in the first comment
+    instead. Facebook demotes posts that send readers off the platform, and
+    every Bangla news page works around it the same way — which is what
+    "বিস্তারিত কমেন্টে" means on their cards.
+    """
+    url = article_url(article)
     tags = " ".join(
         t for t in ["#বিডিসাইটনিউজ", CATEGORY_TAGS.get(article["category"], "")] if t
     )
@@ -1265,60 +1275,96 @@ def facebook_caption(article: dict) -> str:
         prefix = "🧠 ব্যাখ্যা\n\n"
     else:
         prefix = ""
-    return f"{prefix}{article['title']}\n\n{lead}\n\n👉 বিস্তারিত: {url}\n\n{tags}"
+    pointer = f"👉 বিস্তারিত: {url}" if with_link else "👇 বিস্তারিত কমেন্টে"
+    return f"{prefix}{article['title']}\n\n{lead}\n\n{pointer}\n\n{tags}"
+
+
+CRLF = "\r\n"
+
+
+def _fb_error(raw: str) -> str:
+    try:
+        err = json.loads(raw).get("error", {})
+        code = err.get("code", "?")
+        return f"code {code}: " + " ".join(err.get("message", "").split())[:250]
+    except json.JSONDecodeError:
+        return raw[:220]
+
+
+def _fb_post(path: str, fields: dict, file: Path | None = None) -> dict | None:
+    """One Graph API POST — form-encoded, or multipart when sending a file."""
+    payload = {**fields, "access_token": FB_TOKEN}
+    if file is None:
+        data = urllib.parse.urlencode(payload).encode()
+        headers = {"Content-Type": "application/x-www-form-urlencoded"}
+    else:
+        boundary = "----bdsitenews" + uuid.uuid4().hex
+        chunks: list[bytes] = []
+        for name, value in payload.items():
+            chunks.append(
+                ("--" + boundary + CRLF
+                 + 'Content-Disposition: form-data; name="' + name + '"'
+                 + CRLF + CRLF + str(value) + CRLF).encode()
+            )
+        chunks.append(
+            ("--" + boundary + CRLF
+             + 'Content-Disposition: form-data; name="source"; filename="'
+             + file.name + '"' + CRLF
+             + "Content-Type: image/jpeg" + CRLF + CRLF).encode()
+        )
+        chunks.append(file.read_bytes())
+        chunks.append((CRLF + "--" + boundary + "--" + CRLF).encode())
+        data = b"".join(chunks)
+        headers = {"Content-Type": "multipart/form-data; boundary=" + boundary}
+
+    req = urllib.request.Request(f"{FB_API}/{path}", data=data, method="POST",
+                                 headers=headers)
+    try:
+        with urllib.request.urlopen(req, timeout=90) as resp:
+            return json.load(resp)
+    except urllib.error.HTTPError as exc:
+        log(f"    ! facebook {path}: {_fb_error(exc.read().decode('utf-8', 'ignore'))}")
+    except Exception as exc:
+        log(f"    ! facebook {path} failed: {str(exc)[:140]}")
+    return None
 
 
 def post_photocard_to_facebook(article: dict, card: Path) -> bool:
-    """Publish the article as a photocard with the link in the caption.
+    """Publish the card as its own feed post, with the link in a comment.
 
-    Photocards are what Bangladeshi outlets actually post, and they take far
-    more feed space than a link preview. The link still rides in the caption
-    so readers can reach the site — a photo post alone keeps everyone on
-    Facebook, which grows the Page but earns nothing.
+    Two choices, both learned from what the Page actually looked like:
+
+    The photo is uploaded UNPUBLISHED and then attached to a feed post rather
+    than posted straight to /photos. Photos posted directly join the Page's
+    album, and Facebook merges those into one "added N new photos" story —
+    fifty posts were showing on the Page as a single item.
+
+    The link goes in the first comment, not the caption. Facebook demotes
+    posts that send readers off the platform.
     """
-    boundary = f"----bdsitenews{uuid.uuid4().hex}"
-    fields = {
-        "message": facebook_caption(article),
-        "access_token": FB_TOKEN,
-    }
-    parts: list[bytes] = []
-    for name, value in fields.items():
-        parts.append(
-            f"--{boundary}\r\n"
-            f'Content-Disposition: form-data; name="{name}"\r\n\r\n'
-            f"{value}\r\n".encode()
-        )
-    parts.append(
-        f"--{boundary}\r\n"
-        f'Content-Disposition: form-data; name="source"; filename="{card.name}"\r\n'
-        f"Content-Type: image/jpeg\r\n\r\n".encode()
-    )
-    parts.append(card.read_bytes())
-    parts.append(f"\r\n--{boundary}--\r\n".encode())
-    body = b"".join(parts)
+    photo = _fb_post(f"{FB_PAGE_ID}/photos", {"published": "false"}, file=card)
+    if not photo or not photo.get("id"):
+        return False
 
-    req = urllib.request.Request(
-        f"{FB_API}/{FB_PAGE_ID}/photos",
-        data=body,
-        method="POST",
-        headers={"Content-Type": f"multipart/form-data; boundary={boundary}"},
-    )
-    try:
-        with urllib.request.urlopen(req, timeout=90) as resp:
-            payload = json.load(resp)
-        log(f"    🖼 photocard posted: {payload.get('post_id', payload.get('id', 'ok'))}")
+    post = _fb_post(f"{FB_PAGE_ID}/feed", {
+        "message": facebook_caption(article, with_link=False),
+        "attached_media[0]": json.dumps({"media_fbid": photo["id"]}),
+    })
+    if not post or not post.get("id"):
+        return False
+    log(f"    🖼 posted: {post['id']}")
+
+    url = article_url(article)
+    if _fb_post(f"{post['id']}/comments", {"message": f"বিস্তারিত পড়ুন 👇\n{url}"}):
+        log("    💬 link added as the first comment")
         return True
-    except urllib.error.HTTPError as exc:
-        raw = exc.read().decode("utf-8", "ignore")
-        try:
-            error = json.loads(raw).get("error", {})
-            detail = " ".join(error.get("message", raw).split())
-            log(f"    ! photocard rejected (code {error.get('code','?')}): {detail[:300]}")
-        except json.JSONDecodeError:
-            log(f"    ! photocard rejected: {raw[:250]}")
-    except Exception as exc:
-        log(f"    ! photocard upload failed: {str(exc)[:140]}")
-    return False
+
+    # Commenting needs pages_manage_engagement, which may not be granted.
+    # Never leave a post with no route to the story: put the link back into
+    # the caption rather than publish a dead end.
+    log("    ! could not comment — restoring the link to the caption")
+    _fb_post(post["id"], {"message": facebook_caption(article, with_link=True)})
+    return True
 
 
 def post_to_facebook(article: dict) -> bool:
