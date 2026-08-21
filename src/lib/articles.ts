@@ -31,6 +31,15 @@ export type Article = {
     illustrative?: boolean;
   };
   stats?: { title: string; headers: string[]; rows: string[][] };
+  /** ইংরেজি শিখুন: a lesson from the pre-written course */
+  lesson?: {
+    number: number;
+    pattern: string;
+    examples: { english: string; bangla: string; note?: string }[];
+    mistakes: { wrong: string; right: string; why: string }[];
+    practice: string[];
+    speakingTip: string;
+  };
   /** A public post embedded beneath the report — served by the platform,
    *  never copied. Added by an editor; never invented by the writer, which
    *  would produce a URL that does not exist. */
@@ -64,6 +73,7 @@ export const CATEGORIES = [
   { slug: "world", bn: "বিশ্ব", aliases: ["আন্তর্জাতিক"] },
   { slug: "tech", bn: "প্রযুক্তি", aliases: [] },
   { slug: "education", bn: "শিক্ষা", aliases: [] },
+  { slug: "learn-english", bn: "ইংরেজি শিখুন", aliases: [] },
   { slug: "probash", bn: "প্রবাস", aliases: ["প্রবাসী"] },
   { slug: "district", bn: "জেলা", aliases: [] },
   { slug: "fact-check", bn: "ফ্যাক্ট চেক", aliases: [] },

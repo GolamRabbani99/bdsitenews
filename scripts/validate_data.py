@@ -31,7 +31,7 @@ PUBLIC = ROOT / "public"
 
 VALID_CATEGORIES = {
     "বাংলাদেশ", "রাজনীতি", "অপরাধ", "খেলা", "বিনোদন", "অর্থনীতি", "বিশ্ব",
-    "প্রযুক্তি", "শিক্ষা", "প্রবাস", "জেলা", "ফ্যাক্ট চেক", "ব্যাখ্যা", "বিতর্ক", "বিদেশে পড়াশোনা", "ফুটবল",
+    "প্রযুক্তি", "শিক্ষা", "প্রবাস", "জেলা", "ফ্যাক্ট চেক", "ব্যাখ্যা", "বিতর্ক", "বিদেশে পড়াশোনা", "ফুটবল", "ইংরেজি শিখুন",
     # legacy labels still present on older articles
     "খেলাধুলা", "আন্তর্জাতিক",
 }
@@ -184,6 +184,18 @@ def check_articles(articles) -> None:
             actionable = any(opp.get(k) for k in ("funding", "eligibility", "howToApply"))
             if not actionable and not (opp.get("deadline") or "").strip() and not url:
                 err(f"{label}: opportunity panel has nothing a reader can act on")
+
+        # A lesson with no examples teaches nothing — publishing one would
+        # waste the reader's visit and the slot.
+        lesson = a.get("lesson") or {}
+        if lesson:
+            if not (lesson.get("pattern") or "").strip():
+                err(f"{label}: lesson has no pattern")
+            if len(lesson.get("examples") or []) < 3:
+                err(f"{label}: lesson has fewer than three examples")
+            for ex in lesson.get("examples") or []:
+                if not (ex.get("english") or "").strip() or not (ex.get("bangla") or "").strip():
+                    err(f"{label}: an example is missing its English or its Bangla")
 
         board = a.get("scoreboard") or {}
         if board:

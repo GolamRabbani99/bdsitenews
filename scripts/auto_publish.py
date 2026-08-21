@@ -1465,6 +1465,7 @@ CATEGORY_TAGS = {
     "বিশ্ব": "#আন্তর্জাতিক", "প্রযুক্তি": "#প্রযুক্তি", "শিক্ষা": "#শিক্ষা",
     "প্রবাস": "#প্রবাস", "জেলা": "#জেলা", "ফ্যাক্ট চেক": "#ফ্যাক্টচেক",
     "ব্যাখ্যা": "#ব্যাখ্যা", "বিতর্ক": "#বিতর্ক", "ফুটবল": "#ফুটবল",
+    "ইংরেজি শিখুন": "#ইংরেজি_শিখুন",
     "বিদেশে পড়াশোনা": "#বিদেশে_পড়াশোনা",
 }
 
@@ -1772,6 +1773,55 @@ def write_explainer(client, cluster: list[dict]) -> dict | None:
     }
 
 
+LESSON_QUEUE = DATA / "lesson_queue.json"
+
+
+def release_lesson(articles: list[dict]) -> dict | None:
+    """Move one pre-written English lesson onto the site.
+
+    No model call: the course was generated once and sits in a queue, so a
+    daily lesson costs nothing to publish. Runs at most once a day.
+    """
+    today = datetime.now(timezone(timedelta(hours=6))).date().isoformat()
+    if any(a.get("category") == "ইংরেজি শিখুন"
+           and a.get("publishedAt", "").startswith(today) for a in articles):
+        return None
+    if not LESSON_QUEUE.exists():
+        return None
+    try:
+        queue = json.loads(LESSON_QUEUE.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        log("  ! lesson queue is malformed — skipping")
+        return None
+
+    published = {a.get("slug") for a in articles}
+    nxt = next((l for l in queue if l.get("slug") not in published), None)
+    if not nxt:
+        log("  lesson queue is empty — run scripts/make_lessons.py for more")
+        return None
+
+    log(f"  ✎ ইংরেজি শিখুন {nxt['lessonNumber']}: {nxt['title'][:44]}")
+    return {
+        "slug": nxt["slug"],
+        "title": nxt["title"],
+        "category": "ইংরেজি শিখুন",
+        "lead": nxt["intro"],
+        "body": nxt.get("patternExplained") or [],
+        "lesson": {
+            "number": nxt["lessonNumber"],
+            "pattern": nxt["pattern"],
+            "examples": nxt.get("examples") or [],
+            "mistakes": nxt.get("mistakes") or [],
+            "practice": nxt.get("practice") or [],
+            "speakingTip": nxt.get("speakingTip", ""),
+        },
+        "sources": [{"name": "বিডি সাইট নিউজ শিক্ষা ডেস্ক",
+                     "url": f"{SITE_URL}/category/learn-english"}],
+        "publishedAt": datetime.now(timezone(timedelta(hours=6))).isoformat(
+            timespec="seconds"),
+    }
+
+
 def already_debated_today(articles: list[dict]) -> bool:
     today = datetime.now(timezone(timedelta(hours=6))).date().isoformat()
     return any(
@@ -1912,6 +1962,10 @@ def main() -> int:
             debate = write_debate(client, cluster)
             if debate:
                 written.insert(0, debate)
+
+    lesson = release_lesson(articles)
+    if lesson:
+        written.append(lesson)
 
     if not written:
         log("  no articles produced")

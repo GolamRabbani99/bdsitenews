@@ -1,0 +1,43 @@
+name: Generate English lessons
+
+# One-off. Writes the ইংরেজি শিখুন course into the queue; the daily publish
+# run then releases one lesson a day at no further cost.
+on:
+  workflow_dispatch:
+    inputs:
+      count:
+        description: "How many lessons to generate this run"
+        required: false
+        default: "5"
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  lessons:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install --quiet anthropic
+      - name: Write the lessons
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CLAUDE_MODEL: claude-sonnet-5
+        run: python scripts/make_lessons.py "${{ inputs.count }}"
+      - name: Commit the queue
+        run: |
+          git config user.name  "BD Site News Bot"
+          git config user.email "bot@bdsitenews.com"
+          git add src/data/lesson_queue.json
+          if git diff --staged --quiet; then echo "No new lessons."; exit 0; fi
+          git commit -m "Add English lessons to the queue"
+          for attempt in 1 2 3; do
+            if git push; then exit 0; fi
+            git pull --rebase origin main || { git rebase --abort || true; exit 1; }
+          done
+          exit 1

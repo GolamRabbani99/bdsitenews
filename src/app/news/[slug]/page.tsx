@@ -14,6 +14,7 @@ import {
 } from "@/components/StructuredBlocks";
 import { OpportunityPanel } from "@/components/OpportunityPanel";
 import { SocialEmbed } from "@/components/SocialEmbed";
+import { LessonBlocks } from "@/components/LessonBlocks";
 import {
   allArticles,
   formatBnDate,
@@ -181,6 +182,8 @@ export default async function ArticlePage({
             ))}
           </>
         )}
+
+        <LessonBlocks article={article} />
 
         {article.impact?.length ? <ImpactBox impact={article.impact} /> : null}
         {article.context?.length ? (
