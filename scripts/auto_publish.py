@@ -428,7 +428,9 @@ correct on most routine items.
   reader who cannot see it well — "ডারউইন টেস্টে ব্যাট করছেন নাজমুল হোসেন শান্ত",
   not "শান্তর ছবি". Describe only what your image_query would return. Leave
   empty when image_query is empty. Never describe the event itself unless the
-  photo is of that event, which it never is here.
+  photo is of that event, which it never is here. Do NOT write "প্রতীকী ছবি"
+  or "ফাইল ছবি" inside the caption — the page prints that label itself, and
+  repeating it reads as a mistake.
 
   Rules that matter more than having an image:
     • For crime, court, accident or allegation stories, NEVER request a person.
