@@ -977,8 +977,17 @@ def pick_candidates(items: list[dict], used: set[str]) -> list[dict]:
     fresh.sort(key=lambda i: (i["weight"], i["publishedAt"]), reverse=True)
 
     # Each reserved desk takes one slot before ranking decides the rest.
+    # Reservations must never consume every slot, or the day's actual news
+    # never gets published. When there are more reserved desks than spare
+    # slots, rotate by date so each still appears every couple of days.
+    spare = max(1, MAX_NEW_ARTICLES - 1)
+    desks = RESERVED_DESKS
+    if len(desks) > spare:
+        offset = datetime.now(timezone.utc).timetuple().tm_yday % len(desks)
+        desks = (desks[offset:] + desks[:offset])[:spare]
+
     reserved: list[dict] = []
-    for desk in RESERVED_DESKS:
+    for desk in desks:
         for item in fresh:
             if item["category"] == desk and item not in reserved:
                 reserved.append(item)

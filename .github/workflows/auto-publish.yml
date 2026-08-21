@@ -3,10 +3,11 @@ name: Auto-publish news
 # Runs in GitHub's cloud — your computer does not need to be on.
 on:
   schedule:
-    # Bangladesh time (UTC+6): 07:00, 14:00 and 21:00 daily
-    - cron: "0 1 * * *"
+    # Once a day, 14:00 Bangladesh time. Cut from three runs while the site
+    # has no measured audience: publishing volume was costing ~$21/month and
+    # the constraint is readers, not articles. Restore the 01:00 and 15:00
+    # crons when analytics justifies it.
     - cron: "0 8 * * *"
-    - cron: "0 15 * * *"
   workflow_dispatch: # lets you (or Claude) trigger a run manually
 
 permissions:
@@ -40,7 +41,7 @@ jobs:
           # Optional — posting is skipped entirely when these are absent.
           FACEBOOK_PAGE_ID: ${{ secrets.FACEBOOK_PAGE_ID }}
           FACEBOOK_PAGE_TOKEN: ${{ secrets.FACEBOOK_PAGE_TOKEN }}
-          MAX_NEW_ARTICLES: "3"
+          MAX_NEW_ARTICLES: "2"
           # One per run. Facebook merges photo posts made minutes apart
           # into a single "added N new photos" story, so three posts
           # in one run appeared on the Page as one item.
