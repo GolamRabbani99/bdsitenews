@@ -1153,7 +1153,18 @@ def write_article(client, item: dict) -> dict | None:
                 image["person"] = person
 
     opp = draft.get("opportunity") or {}
-    if any((opp.get(k) or "") for k in ("country", "institution", "deadline")):
+    # Attach the panel only when a reader could act on it. A panel naming a
+    # country and nothing else fails the gate, and a failed gate discards
+    # every other article the run just paid for.
+    actionable = (
+        any((opp.get(k) or "") for k in ("country", "institution"))
+        and (
+            (opp.get("deadline") or "").strip()
+            or (opp.get("official_url") or "").strip()
+            or any(opp.get(k) for k in ("funding", "eligibility", "how_to_apply"))
+        )
+    )
+    if actionable:
         article["opportunity"] = {
             "country": (opp.get("country") or "").strip(),
             "institution": (opp.get("institution") or "").strip(),
