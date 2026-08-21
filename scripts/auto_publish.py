@@ -308,6 +308,12 @@ compact. This is a news brief, not an essay.
       write a question the piece cannot answer. A reader who feels tricked
       does not come back, and that costs more than the click was worth.
 
+  LEAD THE HEADLINE WITH THE CONCRETE FACT, not the framing. The number, the
+  age, the score, the name — first, where a scrolling reader sees it.
+  "৫৯ বছর বয়সে গোল, নতুন রেকর্ড কাজুইউশি মিউরার" works because the number is
+  the first thing on screen. "রেকর্ড গড়লেন এক জাপানি ফুটবলার" wastes the only
+  second you get. Never bury the fact behind a description of the fact.
+
 - lead: ONE sentence — what happened.
 - body: paragraphs of 2-4 sentences each, in your own plain Bangla. How many
   is set by "material": 5-8 when you have the full source text, 2-3 when you
@@ -413,6 +419,17 @@ correct on most routine items.
   Leave every field empty for a story that is merely ABOUT education policy,
   visa trends or rankings — that is a news report, not an opportunity.
 
+- source_line: the Bangla attribution line that closes the report, in the
+  form "সূত্র: রয়টার্স" — the outlet whose reporting this is, written in Bangla
+  (রয়টার্স, এএফপি, বিবিসি, এপি, প্রথম আলো, দ্য ডেইলি স্টার). This credits the
+  reporting, which is separate from any photograph. One line, nothing else.
+
+- image_caption: one line of Bangla describing WHAT THE PHOTO SHOWS, for the
+  reader who cannot see it well — "ডারউইন টেস্টে ব্যাট করছেন নাজমুল হোসেন শান্ত",
+  not "শান্তর ছবি". Describe only what your image_query would return. Leave
+  empty when image_query is empty. Never describe the event itself unless the
+  photo is of that event, which it never is here.
+
   Rules that matter more than having an image:
     • For crime, court, accident or allegation stories, NEVER request a person.
       Ask only for a neutral setting ("courthouse building", "police vehicle").
@@ -475,6 +492,8 @@ ARTICLE_SCHEMA = {
         # English keywords for a representative photo, or "" if none is safe
         "image_query": {"type": "string"},
         "image_is_of_subject": {"type": "boolean"},
+        "source_line": {"type": "string"},
+        "image_caption": {"type": "string"},
         "quote_text": {"type": "string"},
         "quote_by": {"type": "string"},
         "quote_role": {"type": "string"},
@@ -535,6 +554,7 @@ ARTICLE_SCHEMA = {
     "required": [
         "title", "lead", "body", "impact", "context", "verdict", "claim",
         "category", "image_query", "image_is_of_subject",
+        "source_line", "image_caption",
         "quote_text", "quote_by", "quote_role",
         "person_name", "second_person_query", "second_person_name",
         "opportunity",
@@ -1101,6 +1121,10 @@ def write_article(client, item: dict) -> dict | None:
     if context:
         article["context"] = context
 
+    source_line = (draft.get("source_line") or "").strip()
+    if source_line:
+        article["sourceLine"] = source_line
+
     quote_text = (draft.get("quote_text") or "").strip()
     quote_by = (draft.get("quote_by") or "").strip()
     if quote_text and quote_by:
@@ -1148,6 +1172,9 @@ def write_article(client, item: dict) -> dict | None:
     # A picture where one genuinely helps; the designed headline card otherwise.
     attach_image(article, draft.get("image_query", ""),
                  of_subject=bool(draft.get("image_is_of_subject")))
+    caption = (draft.get("image_caption") or "").strip()
+    if caption and article.get("image"):
+        article["image"]["caption"] = caption
 
     # A second portrait, only when the first one is genuinely of a person —
     # otherwise the duo card would pair a real face with a stock stand-in and

@@ -17,12 +17,16 @@ export type Article = {
   questions?: { question: string; answer: string[] }[];
   /** For explainers — the desk the underlying story belongs to */
   topic?: string;
+  /** Bangla attribution closing the report, e.g. "সূত্র: রয়টার্স" */
+  sourceLine?: string;
   sources: { name: string; url: string }[];
   publishedAt: string;
   image?: {
     url: string;
     alt: string;
     credit?: string;
+    /** One line of Bangla describing what the photo shows */
+    caption?: string;
     /** True when the photo illustrates the subject rather than the event */
     illustrative?: boolean;
   };

@@ -6,6 +6,7 @@ type CoverImage = {
   url: string;
   alt: string;
   credit?: string;
+  caption?: string;
   illustrative?: boolean;
 };
 
@@ -88,14 +89,27 @@ export function Cover({
             loading="lazy"
           />
         </div>
-        {(image.credit || image.illustrative) && (
-          <figcaption className="mt-1 flex flex-wrap items-center justify-between gap-2 text-[10px] text-ink-soft">
-            {image.illustrative && (
-              <span className="bg-ink/85 px-1.5 py-0.5 font-[family-name:var(--font-bengali)] font-semibold text-paper">
-                প্রতীকী ছবি
-              </span>
+        {(image.caption || image.credit || image.illustrative) && (
+          <figcaption className="mt-1.5 text-[11px] leading-relaxed text-ink-soft">
+            {/* The caption says what the picture shows; the line under it says
+                where it came from and whether it is a stand-in. Two different
+                claims, so they are never merged into one string. */}
+            {image.caption && (
+              <p
+                className="font-[family-name:var(--font-bengali)] text-ink"
+                lang="bn"
+              >
+                {image.caption}
+              </p>
             )}
-            {image.credit && <span className="ml-auto">ছবি: {image.credit}</span>}
+            <span className="mt-1 flex flex-wrap items-center justify-between gap-2 text-[10px]">
+              {image.illustrative && (
+                <span className="bg-ink/85 px-1.5 py-0.5 font-[family-name:var(--font-bengali)] font-semibold text-paper">
+                  প্রতীকী ছবি
+                </span>
+              )}
+              {image.credit && <span className="ml-auto">ছবি: {image.credit}</span>}
+            </span>
           </figcaption>
         )}
       </figure>

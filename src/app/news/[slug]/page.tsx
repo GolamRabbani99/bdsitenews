@@ -222,6 +222,15 @@ export default async function ArticlePage({
 
         <ShareBar url={url} title={article.title} />
 
+        {/* The Bangla papers' convention: one attribution line closing the
+            report itself, before the link list. It credits whose reporting
+            this is — a separate claim from where any photograph came from. */}
+        {article.sourceLine && (
+          <p className="mt-7 text-sm font-semibold text-ink-soft">
+            {article.sourceLine}
+          </p>
+        )}
+
         <footer className="mt-8 border-t border-rule pt-5">
           <p className="text-sm font-semibold">তথ্যসূত্র</p>
           <ul className="mt-2 space-y-1 text-sm text-ink-soft">
